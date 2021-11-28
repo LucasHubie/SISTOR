@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SISTOR.Configuration;
+using SISTOR.Interfaces;
+using SISTOR.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +32,13 @@ namespace SISTOR
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddCors();
+
+            //services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
+            services.AddTransient<IUsuarioRepositorio, UsuarioRepositorio>();
+            services.AddTransient<IClienteRepositorio, ClienteRepositorio>();
+            services.AddTransient<IOrcamentoRepositorio, OrcamentoRepositorio>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +57,8 @@ namespace SISTOR
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseCors(option => option.AllowAnyOrigin());
+
             app.UseRouting();
 
             app.UseAuthorization();
@@ -58,6 +69,8 @@ namespace SISTOR
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            //app.UseCors(option => option.AllowAnyOrigin());
         }
     }
 }

@@ -283,6 +283,10 @@ namespace SISTOR.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Nome")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Senha")
                         .HasColumnType("nvarchar(max)");
 
