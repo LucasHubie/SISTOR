@@ -10,7 +10,7 @@ using SISTOR.Configuration;
 namespace SISTOR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211127181252_InicialCreate")]
+    [Migration("20211127162247_InicialCreate")]
     partial class InicialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -282,10 +282,6 @@ namespace SISTOR.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Login")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Nome")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 

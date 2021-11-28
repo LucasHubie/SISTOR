@@ -94,7 +94,6 @@ namespace SISTOR.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Login = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Senha = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdPessoa = table.Column<int>(type: "int", nullable: true)
