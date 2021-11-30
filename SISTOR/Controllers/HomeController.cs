@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SISTOR.Models;
+using SISTOR.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,9 +24,29 @@ namespace SISTOR.Controllers
             return View();
         }
 
+        //public IActionResult Login(UsuarioVM user)
+        //{
+        //    bool resultado = true;
+        //    if (user.Nome == "Lucas" || user.Senha == "123")
+        //    {
+        //         resultado = true;
+        //    }
+        //    else
+        //    {
+        //        resultado = false;
+        //    }
+        //    return Json(resultado);
+        //}
+
         public IActionResult Privacy()
         {
-            return View();
+            List<Object> resultado = new List<object>();
+            resultado.Add(new
+            {
+                Nome = "Linha de Código",
+                URL = "www.linhadecodigo.com.br"
+            });
+            return Json(resultado);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

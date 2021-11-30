@@ -11,6 +11,10 @@ namespace SISTOR.Models
     {
         public int Id { get; set; }
 
+        [Display(Name = "Nome")]
+        [MaxLength(100)]
+        public string Nome { get; set; }
+
         [Display(Name = "Login")]
         [MaxLength(100)]
         public string Login { get; set; }

@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SISTOR.Configuration;
+using SISTOR.Interfaces;
+using SISTOR.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +34,20 @@ namespace SISTOR
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                     "AllowOrigin",
+                     builder =>
+    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
+
+            //services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
+            services.AddTransient<IUsuarioRepositorio, UsuarioRepositorio>();
+            services.AddTransient<IFuncionarioRepositorio, FuncionarioRepositorio>();
+            services.AddTransient<IClienteRepositorio, ClienteRepositorio>();
+            services.AddTransient<IOrcamentoRepositorio, OrcamentoRepositorio>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +66,13 @@ namespace SISTOR
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseCors(x =>
+            {
+                x.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+
             app.UseRouting();
 
             app.UseAuthorization();
@@ -58,6 +83,7 @@ namespace SISTOR
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }

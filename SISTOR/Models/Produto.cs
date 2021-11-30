@@ -13,7 +13,7 @@ namespace SISTOR.Models
 
         [Display(Name = "Descrição")]
         [MaxLength(200)]
-        public string Descrição { get; set; }
+        public string Descricao { get; set; }
 
         [Display(Name = "Código")]
         public int Codigo { get; set; }

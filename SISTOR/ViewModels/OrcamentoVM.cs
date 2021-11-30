@@ -1,4 +1,5 @@
-﻿using SISTOR.Models.Enums;
+﻿using SISTOR.Models;
+using SISTOR.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,22 +10,10 @@ namespace SISTOR.ViewModels
 {
     public class OrcamentoVM
     {
-        [Display(Name = "Data de Inclusão")]
-        public DateTime DataInclusao { get; set; }
+        public Orcamento orcamento { get; set; }
 
-        [Display(Name = "Descrição")]
-        public string Descricao { get; set; }
+        public Cliente cliente { get; set; }
 
-        [Display(Name = "Mão de Obra")]
-        public decimal MaoDeObra { get; set; }
-
-        [Display(Name = "Valor Total")]
-        public decimal ValorTotal { get; set; }
-
-        [Display(Name = "Situação")]
-        public Situacao Situacao { get; set; }
-
-        [Display(Name = "Nome do Cliente")]
-        public string NomeCliente { get; set; }
+        public List<ItensVM> lstprodutos { get; set; }
     }
 }
