@@ -1,4 +1,5 @@
-﻿using SISTOR.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using SISTOR.Configuration;
 using SISTOR.Controllers;
 using SISTOR.Interfaces;
 using SISTOR.Models;
@@ -38,6 +39,11 @@ namespace SISTOR.Repository
         public List<Pessoa> GetFuncionario()
         {
             return _context.Pessoa.ToList();
+        }
+
+        public List<Funcionario> GetFuncionarios()
+        {
+            return _context.Funcionario.Include(x => x.Pessoa).ToList();
         }
 
     }

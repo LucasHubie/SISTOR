@@ -22,24 +22,24 @@
         <template v-slot="{row}">
           <b-media no-body class="align-items-center">
             <b-media-body>
-              <span class="font-weight-600 name mb-0 text-sm">{{row.nome}}</span>
+              <span class="font-weight-600 name mb-0 text-sm">{{row.pessoa.nome}}</span>
             </b-media-body>
           </b-media>
         </template>
       </el-table-column>
       <el-table-column label="E-mail"
-                       prop="email"
+                       prop="pessoa.email"
                        min-width="140px">
       </el-table-column>
       <el-table-column label="Telefone"
-                       prop="telefone"
+                       prop="pessoa.telefone"
                        min-width="170px">
       </el-table-column>
       <el-table-column label="Ações"
                        min-width="170px"
                        prop="">
         <template v-slot="{row}">
-          <el-dropdown trigger="click" class="dropdown">
+          <el-dropdown v-if="false" trigger="click" class="dropdown">
             <base-button size="sm" type="default" style="background-color: rgb(58 99 167); margin-right: .5rem;"><b-icon icon="three-dots" font-scale="1"></b-icon></base-button>
             <!--<el-dropdown-menu class="dropdown-menu dropdown-menu-arrow show" slot="dropdown">
               <b-dropdown-item>Gerar Ordem de Serviço</b-dropdown-item>
@@ -48,7 +48,7 @@
             </el-dropdown-menu>-->
           </el-dropdown>
           <base-button size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon> </base-button>
-          <!--<base-button size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>-->
+          <base-button size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
           <base-button size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
 
         </template>
@@ -296,7 +296,7 @@
           });
       },
       getFuncionario() {
-        axios.get("https://localhost:44376/Funcionario/Index", {
+        axios.get("https://localhost:44376/Funcionario/Grid", {
           params: this.model
         }).then(response => {
           console.log(response.data)

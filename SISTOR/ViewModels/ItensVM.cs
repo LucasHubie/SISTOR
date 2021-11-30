@@ -8,6 +8,8 @@ namespace SISTOR.ViewModels
 {
     public class ItensVM
     {
+        public int idItem { get; set; }
+
         public string Descricao { get; set; }
 
         public int Quantidade { get; set; }

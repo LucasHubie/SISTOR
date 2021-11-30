@@ -12,9 +12,14 @@ namespace SISTOR.Interfaces
         Orcamento CriarOrcamento(OrcamentoVM orcamento);
         Orcamento UpdateOrcamento(OrcamentoVM orcamento);
 
+
+       public void  CriarOrdemServico(OrdemServico os);
         public void Delete(int id);
 
         public List<Orcamento> GetOrcamentos();
+
+        public List<OrdemServico> GetOrdensServico();
+        
 
         public OrcamentoVM GetOrcamentoById(int id);
     }

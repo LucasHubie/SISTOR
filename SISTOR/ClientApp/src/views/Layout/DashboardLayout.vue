@@ -70,7 +70,6 @@
           <router-view></router-view>
         </fade-transition>
       </div>
-      <content-footer v-if="!$route.meta.hideFooter"></content-footer>
     </div>
   </div>
 </template>

@@ -25,6 +25,13 @@ namespace SISTOR.Controllers
             return Json(funcionario);
         }
 
+        public IActionResult Grid()
+        {
+            List<Funcionario> funcionario = _funcionarioRepositorio.GetFuncionarios();
+            return Json(funcionario);
+        }
+
+
         public IActionResult CriarFuncionario(Pessoa funcionario)
         {
             bool sucess = true;

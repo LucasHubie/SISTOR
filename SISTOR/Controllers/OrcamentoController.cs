@@ -30,6 +30,13 @@ namespace SISTOR.Controllers
             return Json(orc);
         }
 
+        public IActionResult GridOS()
+        {
+            List<OrdemServico> orc = _orcamentoRepositorio.GetOrdensServico();
+            return Json(orc);
+        }
+        
+
         public IActionResult GetOrcamentoById(int id)
         {
             bool sucess = true;
@@ -117,6 +124,27 @@ namespace SISTOR.Controllers
             {
                 sucess = false;
                 description = "Orcamento não excluido";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult CriaOrdemServico([FromBody] OrdemServico obj)
+        {
+            bool sucess = true;
+            var description = "";
+
+            try
+            {
+                _orcamentoRepositorio.CriarOrdemServico(obj);
+                sucess = true;
+                description = "Orcamento criado com sucesso!";
+                return Json(new { sucess = sucess, description = description });
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Orcamento não criado";
                 return Json(new { sucess = sucess, description = ex.Message });
             }
         }

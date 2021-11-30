@@ -11,5 +11,7 @@ namespace SISTOR.Interfaces
         Pessoa CriarFuncionario(Pessoa funcionario);
         //int GetFuncionarioId(int? id);
         List<Pessoa> GetFuncionario();
+
+        List<Funcionario> GetFuncionarios();
     }
 }

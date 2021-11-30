@@ -51,8 +51,8 @@
           <el-dropdown trigger="click" class="dropdown">
             <base-button size="sm" type="default" style="background-color: rgb(58 99 167); margin-right: .5rem;"><b-icon icon="three-dots" font-scale="1"></b-icon></base-button>
             <el-dropdown-menu class="dropdown-menu dropdown-menu-arrow show" slot="dropdown">
-              <b-dropdown-item v-b-modal.modal-2>Gerar Ordem de Serviço</b-dropdown-item>
-              <b-dropdown-item v-b-modal.modal-3>Alterar Situação</b-dropdown-item>
+              <b-dropdown-item  v-on:click="showModalOS(row.id, row.cliente.id, row.tagIdentificacao)" >Gerar Ordem de Serviço</b-dropdown-item>
+              <b-dropdown-item v-on:click="funcDesenv()">Alterar Situação</b-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <base-button  v-on:click="funcDesenv()" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon> </base-button>
@@ -88,11 +88,18 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col lg="6">
+            <b-col lg="6" v-if="selected == 'F'">
               <base-input type="text"
                           label="Nome"
                           placeholder="Nome"
                           v-model="cliente.pessoa.nome">
+              </base-input>
+            </b-col>
+            <b-col lg="6" v-if="selected == 'J'">
+              <base-input type="text"
+                          label="Nome Fantasia"
+                          placeholder="Nome Fantasia"
+                          v-model="cliente.pessoa.nomeFantasia">
               </base-input>
             </b-col>
             <b-col lg="6" v-if="selected == 'F'">
@@ -143,7 +150,7 @@
               <base-input type="text"
                           label="Razão Social"
                           placeholder="Razão Social"
-                          v-model="cliente.pessoa.razaosocial">
+                          v-model="cliente.pessoa.razaoSocial">
               </base-input>
             </b-col>
             <b-col lg="6">
@@ -220,7 +227,7 @@
             <base-input type="text"
                         label="Tag Identificação"
                         placeholder="Tag Identificação"
-                        v-model="orcamento.tagidentificacao">
+                        v-model="orcamento.tagIdentificacao">
             </base-input>
           </b-col>
         </b-row>
@@ -267,7 +274,7 @@
               <base-input type="number"
                           label="Valor"
                           placeholder="Valor"
-                          v-model="produto.valoritem">
+                          v-model="produto.valorItem">
               </base-input>
             </b-col>
           </b-row>
@@ -314,7 +321,7 @@
                 <template v-slot="{row}">
                   <b-media no-body class="align-items-center">
                     <b-media-body>
-                      <span class="font-weight-600 name mb-0 text-sm">R${{row.valoritem}}</span>
+                      <span class="font-weight-600 name mb-0 text-sm">R${{row.valorItem}}</span>
                     </b-media-body>
                   </b-media>
                 </template>
@@ -325,7 +332,7 @@
                 <template v-slot="{row}">
                   <b-media no-body class="align-items-center">
                     <b-media-body>
-                      <span class="font-weight-600 name mb-0 text-sm">R${{row.valortotal}}</span>
+                      <span class="font-weight-600 name mb-0 text-sm">R${{row.quantidade * row.quantidade }}</span>
                     </b-media-body>
                   </b-media>
                 </template>
@@ -343,7 +350,7 @@
             <base-input type="text"
                         label="Valor Mão de Obra"
                         placeholder="Valor Mão de Obra"
-                        v-model="orcamento.maodeobra">
+                        v-model="orcamento.maoDeObra">
             </base-input>
           </b-col>
           <b-col lg="3">
@@ -357,7 +364,7 @@
             <base-input type="text"
                         label="Valor Total"
                         placeholder="Valor"
-                        v-model="orcamento.valortotal">
+                        v-model="orcamento.valorTotal">
             </base-input>
           </b-col>
         </b-row>
@@ -382,50 +389,32 @@
         <h6 class="heading-small text-muted mb-4">Informações da Ordem Serviço</h6>
         <div class="">
           <b-row>
-            <b-col lg="12">
-              <base-input type="text"
-                          label="Nome"
-                          placeholder="Nome"
-                          v-model="orcamento.desc">
-              </base-input>
-            </b-col>
+            <label>
+              Tag Identificação: {{ordemServico.nome}}
+            </label>
           </b-row>
         </div>
-
-
         <b-row>
           <b-col lg="6">
-            <base-input type="text"
-                        label="Funcionário"
-                        placeholder="Funcionário"
-                        v-model="orcamento.func">
-              <select class="form-control">
-                <option>Lucas Noga</option>
-                <option>Rafael Souza</option>
-              </select>
-            </base-input>
-          </b-col>
-          <b-col lg="6">
-            <base-input type="text"
-                        label="Data Prevista Entrega"
-                        placeholder="00/00/0000"
-                        v-model="orcamento.dtFin">
-            </base-input>
+            <label>
+              Funcionário
+            </label>
+            <b-form-select v-model="ordemServico.idFuncionario" :options="funcionarios"></b-form-select>
           </b-col>
         </b-row>
         <b-row>
           <div class="">
             <b-form-group label="Descrição Adicional" label-class="form-control-label" class="mb-0" label-for="about-form-textaria">
               <!--  <label class="form-control-label">About Me</label> -->
-              <b-form-textarea rows="4" value="Motor deve ser testado antes de realizar a entrega" id="about-form-textaria" placeholder="A few words about you ..."></b-form-textarea>
+              <b-form-textarea rows="4" v-model="ordemServico.observacoes" id="about-form-textaria" placeholder="Descrição da Ordem de Serviço"></b-form-textarea>
             </b-form-group>
           </div>
         </b-row>
       </b-form>
       <template #modal-footer>
-        <b-row v-if="showNovoCliente">
+        <b-row>
           <b-col lg="12">
-            <base-button type="success" class="float-right" style="margin-right: 10px;">
+            <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendFormOS()">
               <span class="btn-inner--text">Confirmar</span>
             </base-button>
             <base-button type="secondary" class="float-right" style="margin-right: 10px;">
@@ -537,6 +526,8 @@
         produto: {
 
         },
+        ordemServico: {},
+        funcionarios:[],
         lstprodutos: [],
         showBtBuscar: true,
         showNovoCliente: false,
@@ -572,10 +563,28 @@
         axios.get("https://localhost:44376/Orcamento/Index", {
         }).then(response => {
           console.log(response.data)
-          this.orcamentos = response.data
+          this.orcamentos = response.data;
+          console.log('carrega orcamentos', this.orcamentos)
         })
           .catch(function (error) {
             alert("Falha ao Carregar Orcamentos");
+          });
+      },
+
+      getFuncionarios() {
+        axios.get("https://localhost:44376/Funcionario/Grid", {
+        }).then(response => {
+
+          console.log('func', response.data);
+          for (var i = 0; i < response.data.length; i++) {
+            var opt = { value: response.data[i].id, text: response.data[i].pessoa.nome };
+            this.funcionarios.push(opt);
+          }
+          console.log('lstfunc', this.funcionarios);
+
+        })
+          .catch(function (error) {
+            alert("Falha ao Carregar Funcionarios");
           });
       },
       buscarCliente() {
@@ -620,14 +629,30 @@
             alert(error);
           });
       },
+      showModalOS(id, idcliente, tag) {
+        console.log(id, idcliente);
+        this.ordemServico.idOrcamento = id;
+        this.ordemServico.idCliente = idcliente;
+        this.ordemServico.nome = tag;
+        this.$bvModal.show("modal-2");
+      },
       showModal(tipo, id) {
         axios.get("https://localhost:44376/Orcamento/GetOrcamentoById", {
           params: { "id": id}
-          }).then(response => {
-            if (response.data.sucess) {
+        }).then(response => {
+          console.log(response.data);
+          if (response.data.sucess) {
+
               this.orcamento = response.data.obj.orcamento;
-              this.cliente = response.data.obj.cliente;
-              this.lstprodutos = response.data.lstprodutos;
+              this.cliente = response.data.obj.orcamento.cliente;
+            this.lstprodutos = response.data.obj.lstprodutos;
+        
+              if (response.data.obj.orcamento.cliente.pessoa.tipoPessoa == 2) {
+                this.selected = 'J';
+              }
+              else {
+                this.selected = 'F';
+              }
               this.$bvModal.show("modal-1");
               this.tpOperacao = tipo;
             }
@@ -645,8 +670,34 @@
         this.produto = {};
         this.showNovoProduto = false;
       },
+      sendFormOS() {
+
+        axios.post("https://localhost:44376/Orcamento/CriaOrdemServico", this.ordemServico).then(response => {
+          if (response.data.sucess = true) {
+            alert(response.data.description)
+            this.$bvModal.hide("modal-2")
+          }
+          else {
+            alert(response.data.description)
+          }
+        })
+          .catch(function (error) {
+            alert(error);
+          });
+        // this will be called only after form is valid. You can do api call here to login
+      },
       sendForm() {
-        axios.post("https://localhost:44376/Orcamento/Create", {
+        var url = "https://localhost:44376/Orcamento/Create";
+        if (this.tpOperacao = "Alterar") {
+          url = "https://localhost:44376/Orcamento/Editar";
+        }
+        if (this.selected == 'J') {
+          this.cliente.pessoa.tipoPessoa = 2;
+        }
+        else {
+          this.cliente.pessoa.tipoPessoa = 1;
+        }
+        axios.post(url, {
           orcamento: this.orcamento, cliente: this.cliente, lstprodutos: this.lstprodutos
         }).then(response => {
           if (response.data.sucess = true) {
@@ -668,6 +719,7 @@
     },
     mounted() {
       this.getOrcamentos();
+      this.getFuncionarios();
     }
   }
 </script>
