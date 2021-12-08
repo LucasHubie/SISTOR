@@ -138,13 +138,13 @@ namespace SISTOR.Controllers
             {
                 _orcamentoRepositorio.CriarOrdemServico(obj);
                 sucess = true;
-                description = "Orcamento criado com sucesso!";
+                description = "Ordem de Servico criado com sucesso!";
                 return Json(new { sucess = sucess, description = description });
             }
             catch (Exception ex)
             {
                 sucess = false;
-                description = "Orcamento não criado";
+                description = "Ordem de Servico não criado";
                 return Json(new { sucess = sucess, description = ex.Message });
             }
         }

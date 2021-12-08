@@ -23,8 +23,8 @@ namespace SISTOR.Repository
         {
             if (funcionario != null)
             {
-                funcionario.CPF = Md5Hash.CalculaHash(funcionario.CPF);
-                funcionario.RG = Md5Hash.CalculaHash(funcionario.RG);
+                //funcionario.CPF = Md5Hash.CalculaHash(funcionario.CPF);
+               // funcionario.RG = Md5Hash.CalculaHash(funcionario.RG);
                 _context.Add(funcionario);
                 _context.SaveChanges();
             }

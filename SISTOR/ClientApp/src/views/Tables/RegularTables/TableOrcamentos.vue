@@ -6,7 +6,7 @@
         <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
         <span class="btn-inner--text">Filtrar</span>
       </base-button>
-      <base-button  v-b-modal.modal-1 v-on:click="tpOperacao = 'Adicionar'" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
+      <base-button  v-b-modal.modal-1 v-on:click="tpOperacao = 'Adicionar'; cliente = { pessoa: {}}" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
         <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
         <span class="btn-inner--text">Adicionar</span>
       </base-button>
@@ -99,7 +99,7 @@
               <base-input type="text"
                           label="Nome Fantasia"
                           placeholder="Nome Fantasia"
-                          v-model="cliente.pessoa.nomeFantasia">
+                          v-model="cliente.pessoa.nome">
               </base-input>
             </b-col>
             <b-col lg="6" v-if="selected == 'F'">
@@ -112,7 +112,7 @@
             <b-col lg="6" v-if="selected == 'J'">
               <base-input type="text"
                           label="CNPJ"
-                          placeholder="000.000.000-00"
+                          placeholder="00.000.000/0000-00"
                           v-model="cliente.pessoa.cnpj">
               </base-input>
             </b-col>
@@ -332,7 +332,7 @@
                 <template v-slot="{row}">
                   <b-media no-body class="align-items-center">
                     <b-media-body>
-                      <span class="font-weight-600 name mb-0 text-sm">R${{row.quantidade * row.quantidade }}</span>
+                      <span class="font-weight-600 name mb-0 text-sm">R${{row.valorItem * row.quantidade }}</span>
                     </b-media-body>
                   </b-media>
                 </template>
@@ -688,7 +688,7 @@
       },
       sendForm() {
         var url = "https://localhost:44376/Orcamento/Create";
-        if (this.tpOperacao = "Alterar") {
+        if (this.tpOperacao == "Editar") {
           url = "https://localhost:44376/Orcamento/Editar";
         }
         if (this.selected == 'J') {
