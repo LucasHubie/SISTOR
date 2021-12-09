@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SISTOR.Configuration;
 using SISTOR.Models;
+using SISTOR.Service;
 using SISTOR.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -13,30 +15,26 @@ namespace SISTOR.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly AppDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, AppDbContext context)
         {
+            _context = context;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
+            List<UF> uf = UFService.GetEstados();
+            foreach (var item in uf)
+            {
+                _context.Add(item);
+            }
+            _context.SaveChanges();
             return View();
         }
 
-        //public IActionResult Login(UsuarioVM user)
-        //{
-        //    bool resultado = true;
-        //    if (user.Nome == "Lucas" || user.Senha == "123")
-        //    {
-        //         resultado = true;
-        //    }
-        //    else
-        //    {
-        //        resultado = false;
-        //    }
-        //    return Json(resultado);
-        //}
+       
 
         public IActionResult Privacy()
         {
