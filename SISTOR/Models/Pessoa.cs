@@ -65,6 +65,13 @@ namespace SISTOR.Models
         [MaxLength(100)]
         public string Endereco { get; set; }
 
+        [Display(Name = "Cidade")]
+        [MaxLength(100)]
+        public string Cidade { get; set; }
+
+        [Display(Name = "UF")]
+        public UF UF { get; set; }
+
         [Display(Name = "Tipo de Pessoa")]
         public TipoPessoa TipoPessoa { get; set; }
 
