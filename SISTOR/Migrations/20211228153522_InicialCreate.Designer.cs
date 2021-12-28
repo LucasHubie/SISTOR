@@ -10,7 +10,7 @@ using SISTOR.Configuration;
 namespace SISTOR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211209012256_InicialCreate")]
+    [Migration("20211228153522_InicialCreate")]
     partial class InicialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -307,9 +307,6 @@ namespace SISTOR.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("IdPessoa")
-                        .HasColumnType("int");
-
                     b.Property<string>("Login")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -322,8 +319,6 @@ namespace SISTOR.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdPessoa");
 
                     b.ToTable("Usuario");
                 });
@@ -404,15 +399,6 @@ namespace SISTOR.Migrations
                         .HasForeignKey("UFId");
 
                     b.Navigation("UF");
-                });
-
-            modelBuilder.Entity("SISTOR.Models.Usuario", b =>
-                {
-                    b.HasOne("SISTOR.Models.Pessoa", "Pessoa")
-                        .WithMany()
-                        .HasForeignKey("IdPessoa");
-
-                    b.Navigation("Pessoa");
                 });
 #pragma warning restore 612, 618
         }

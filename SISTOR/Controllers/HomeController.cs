@@ -25,12 +25,12 @@ namespace SISTOR.Controllers
 
         public IActionResult Index()
         {
-            List<UF> uf = UFService.GetEstados();
-            foreach (var item in uf)
-            {
-                _context.Add(item);
-            }
-            _context.SaveChanges();
+            //List<UF> uf = UFService.GetEstados();
+            //foreach (var item in uf)
+            //{
+            //    _context.Add(item);
+            //}
+            //_context.SaveChanges();
             return View();
         }
 

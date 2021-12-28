@@ -38,6 +38,21 @@ namespace SISTOR.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Usuario",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Login = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Senha = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuario", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Pessoa",
                 columns: table => new
                 {
@@ -104,28 +119,6 @@ namespace SISTOR.Migrations
                     table.PrimaryKey("PK_Funcionario", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Funcionario_Pessoa_IdPessoa",
-                        column: x => x.IdPessoa,
-                        principalTable: "Pessoa",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Usuario",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Login = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Senha = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IdPessoa = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Usuario", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Usuario_Pessoa_IdPessoa",
                         column: x => x.IdPessoa,
                         principalTable: "Pessoa",
                         principalColumn: "Id",
@@ -281,11 +274,6 @@ namespace SISTOR.Migrations
                 name: "IX_Pessoa_UFId",
                 table: "Pessoa",
                 column: "UFId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Usuario_IdPessoa",
-                table: "Usuario",
-                column: "IdPessoa");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
