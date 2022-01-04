@@ -8,12 +8,41 @@ namespace SISTOR.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Pessoa",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    RG = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CPF = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CNPJ = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: true),
+                    RazaoSocial = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    NomeFantasia = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Telefone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Celular = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CEP = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    Numero = table.Column<int>(type: "int", nullable: false),
+                    Complemento = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Referencia = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Endereco = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    UF = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
+                    TipoPessoa = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pessoa", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Produto",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Descricao = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Descricao = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Codigo = table.Column<int>(type: "int", nullable: false),
                     TipoMedida = table.Column<int>(type: "int", nullable: false),
                     Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
@@ -21,20 +50,6 @@ namespace SISTOR.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Produto", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UF",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EstadoNome = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    EstadoSigla = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UF", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,41 +65,6 @@ namespace SISTOR.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuario", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pessoa",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    RG = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    CPF = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    CNPJ = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: true),
-                    RazaoSocial = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    NomeFantasia = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    Telefone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Celular = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    CEP = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    Numero = table.Column<int>(type: "int", nullable: false),
-                    Complemento = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Referencia = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Endereco = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    UFId = table.Column<int>(type: "int", nullable: true),
-                    TipoPessoa = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pessoa", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Pessoa_UF_UFId",
-                        column: x => x.UFId,
-                        principalTable: "UF",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,9 +111,9 @@ namespace SISTOR.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TagIdentificacao = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    TagIdentificacao = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DataInclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Descricao = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     MaoDeObra = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ValorTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Situacao = table.Column<int>(type: "int", nullable: false),
@@ -269,11 +249,6 @@ namespace SISTOR.Migrations
                 name: "IX_OrdemServico_IdOrcamento",
                 table: "OrdemServico",
                 column: "IdOrcamento");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pessoa_UFId",
-                table: "Pessoa",
-                column: "UFId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -301,9 +276,6 @@ namespace SISTOR.Migrations
 
             migrationBuilder.DropTable(
                 name: "Pessoa");
-
-            migrationBuilder.DropTable(
-                name: "UF");
         }
     }
 }

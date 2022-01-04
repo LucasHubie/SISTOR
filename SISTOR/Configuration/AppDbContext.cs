@@ -21,7 +21,6 @@ namespace SISTOR.Configuration
         public DbSet<Orcamento> Orcamento { get; set; }
         public DbSet<OrdemServico> OrdemServico { get; set; }
         public DbSet<Produto> Produto { get; set; }
-        public DbSet<UF> UF { get; set; }
     }
 
 

@@ -101,6 +101,7 @@ namespace SISTOR.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -114,6 +115,7 @@ namespace SISTOR.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("TagIdentificacao")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -198,6 +200,7 @@ namespace SISTOR.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Cidade")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -206,6 +209,7 @@ namespace SISTOR.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -214,6 +218,7 @@ namespace SISTOR.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Nome")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -243,12 +248,11 @@ namespace SISTOR.Migrations
                     b.Property<int>("TipoPessoa")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UFId")
-                        .HasColumnType("int");
+                    b.Property<string>("UF")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UFId");
 
                     b.ToTable("Pessoa");
                 });
@@ -264,6 +268,7 @@ namespace SISTOR.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descricao")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -276,26 +281,6 @@ namespace SISTOR.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Produto");
-                });
-
-            modelBuilder.Entity("SISTOR.Models.UF", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("EstadoNome")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("EstadoSigla")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UF");
                 });
 
             modelBuilder.Entity("SISTOR.Models.Usuario", b =>
@@ -388,15 +373,6 @@ namespace SISTOR.Migrations
                     b.Navigation("Funcionario");
 
                     b.Navigation("Orcamento");
-                });
-
-            modelBuilder.Entity("SISTOR.Models.Pessoa", b =>
-                {
-                    b.HasOne("SISTOR.Models.UF", "UF")
-                        .WithMany()
-                        .HasForeignKey("UFId");
-
-                    b.Navigation("UF");
                 });
 #pragma warning restore 612, 618
         }

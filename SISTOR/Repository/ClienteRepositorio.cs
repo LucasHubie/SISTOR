@@ -28,7 +28,14 @@ namespace SISTOR.Repository
                 //cliente.Pessoa.CPF = Md5Hash.CalculaHash(cliente.Pessoa.CPF);
                 //cliente.Pessoa.RG = Md5Hash.CalculaHash(cliente.Pessoa.RG);
                 _context.Add(cliente);
-                _context.SaveChanges();
+                if(cliente.Pessoa.Nome != null && cliente.Pessoa.Nome != "")
+                {
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("Falha ao criar novo Cliente");
+                }
             }
 
             catch (Exception ex ){
@@ -56,5 +63,7 @@ namespace SISTOR.Repository
         {
             return _context.Cliente.Where(x => x.Pessoa.Nome.Contains(nome)).Include(prop => prop.Pessoa).FirstOrDefault();
         }
+
+        
     }
 }

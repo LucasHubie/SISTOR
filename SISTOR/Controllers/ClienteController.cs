@@ -97,5 +97,7 @@ namespace SISTOR.Controllers
                 return Json(new { sucess = sucess, description = ex.Message });
             }
         }
+
+        
     }
 }
