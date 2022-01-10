@@ -12,6 +12,7 @@ namespace SISTOR.Models
     {
         public int Id { get; set; }
 
+        [Required]
         [Display(Name = "Tag de Identificação")]
         [MaxLength(50)]
         public string TagIdentificacao { get; set; }
@@ -19,13 +20,16 @@ namespace SISTOR.Models
         [Display(Name = "Data de Inclusão")]
         public DateTime DataInclusao { get; set; }
 
+        [Required]
         [Display(Name = "Descrição")]
         [MaxLength(50)]
         public string Descricao { get; set; }
 
+        [Required]
         [Display(Name = "Mão de Obra")]
         public decimal MaoDeObra { get; set; }
 
+        [Required]
         [Display(Name = "Valor Total")]
         public decimal ValorTotal { get; set; }
 

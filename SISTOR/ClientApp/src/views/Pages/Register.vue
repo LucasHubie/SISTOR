@@ -74,7 +74,7 @@
                   </base-input>
                   <div class="text-muted font-italic">
                     <small>
-                      força da senha: <span class="text-success font-weight-700">forte</span>
+                      <!--força da senha: <span class="text-success font-weight-700">forte</span>-->
                     </small>
                   </div>
                   <b-row class=" my-4">

@@ -22,9 +22,9 @@ namespace SISTOR.Models
         [Display(Name = "Senha")]
         public string Senha { get; set; }
 
-        [Display(Name ="Pessoa")]
-        [ForeignKey("Pessoa")]
-        public int? IdPessoa { get; set; }
-        public virtual Pessoa Pessoa { get; set; }
+        //[Display(Name ="Pessoa")]
+        //[ForeignKey("Pessoa")]
+        //public int? IdPessoa { get; set; }
+        //public virtual Pessoa Pessoa { get; set; }
     }
 }

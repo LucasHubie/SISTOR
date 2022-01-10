@@ -23,9 +23,11 @@ namespace SISTOR.Models
         [MaxLength(300)]
         public string Observacoes { get; set; }
 
+        [Required]
         [Display(Name = "Mão de Obra")]
         public decimal MaoDeObra { get; set; }
 
+        [Required]
         [Display(Name = "Valor Total")]
         public decimal ValorTotal { get; set; }
 

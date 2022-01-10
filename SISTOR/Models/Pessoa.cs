@@ -10,6 +10,7 @@ namespace SISTOR.Models
     {
         public int Id { get; set; }
 
+        [Required]
         [Display(Name = "Nome")]
         [MaxLength(200)]
         public string Nome { get; set; }
@@ -42,6 +43,7 @@ namespace SISTOR.Models
         [MaxLength(20)]
         public string Celular { get; set; }
 
+        [Required]
         [Display(Name = "Email")]
         [MaxLength(100)]
         public string Email { get; set; }
@@ -64,6 +66,15 @@ namespace SISTOR.Models
         [Display(Name = "Endereço")]
         [MaxLength(100)]
         public string Endereco { get; set; }
+
+        [Required]
+        [Display(Name = "Cidade")]
+        [MaxLength(100)]
+        public string Cidade { get; set; }
+
+        [MaxLength(5)]
+        [Display(Name = "UF")]
+        public string UF { get; set; }
 
         [Display(Name = "Tipo de Pessoa")]
         public TipoPessoa TipoPessoa { get; set; }

@@ -60,140 +60,168 @@
       <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
     </b-card-footer>
     <b-modal id="modal-1" title="Cliente" size="xl">
-      <b-form @submit.prevent="updateProfile">
-        <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
+
+      <validation-observer v-slot="{handleSubmit}" ref="formValidator">
+
+        <b-form id="form" @submit.prevent="handleSubmit(sendForm)">
+          <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
 
 
-        <div class="">
-          <b-form-group>
-            <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
-            <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
-          </b-form-group>
-          <b-row>
-            <b-col lg="6">
-              <base-input type="text"
-                          label="Nome"
-                          placeholder="Nome"
-                          v-model="Cliente.Pessoa.Nome">
-              </base-input>
-            </b-col>
-            <b-col lg="6" v-if="selected == 'F'">
-              <base-input type="text"
-                          label="CPF"
-                          placeholder="000.000.000-00"
-                          v-model="Cliente.Pessoa.CPF">
-              </base-input>
-            </b-col>
-            <b-col lg="6" v-if="selected == 'J'">
-              <base-input type="text"
-                          label="CNPJ"
-                          placeholder="000.000.000-00"
-                          v-model="Cliente.Pessoa.CNPJ">
-              </base-input>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col lg="6" v-if="selected == 'F'">
-              <base-input type="text"
-                          label="RG"
-                          placeholder="RG"
-                          v-model="Cliente.Pessoa.RG">
-              </base-input>
-            </b-col>
-            <b-col lg="6" v-if="selected == 'J'">
-              <base-input type="text"
-                          label="Razão Social"
-                          placeholder="RG"
-                          v-model="Cliente.Pessoa.RazaoSocial">
-              </base-input>
-            </b-col>
-            <b-col lg="6">
-              <base-input type="text"
-                          label="E-mail"
-                          placeholder="E-mail"
-                          v-model="Cliente.Pessoa.Email">
-              </base-input>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col lg="6">
-              <base-input type="text"
-                          label="Telefone"
-                          placeholder="Telefone"
-                          v-model="Cliente.Pessoa.Telefone">
-              </base-input>
-            </b-col>
-            <b-col lg="6">
-              <base-input type="text"
-                          label="Telefone Celular"
-                          placeholder="Telefone Celular"
-                          v-model="Cliente.Pessoa.Celular">
-              </base-input>
-            </b-col>
-          </b-row>
+          <div class="">
+            <b-form-group>
+              <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
+              <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
+            </b-form-group>
+            <b-row>
+              
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Nome"
+                            placeholder="Nome"
+                            required
+                            v-model="Cliente.Pessoa.Nome">
+                </base-input>
+              </b-col>
+              <b-col lg="6" v-if="selected == 'F'">
+                <base-input type="text"
+                            label="CPF"
+                            placeholder="000.000.000-00"
+                            v-model="Cliente.Pessoa.CPF">
+                </base-input>
+              </b-col>
+              <b-col lg="6" v-if="selected == 'J'">
+                <base-input type="text"
+                            label="CNPJ"
+                            placeholder="000.000.000-00"
+                            v-model="Cliente.Pessoa.CNPJ">
+                </base-input>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6" v-if="selected == 'F'">
+                <base-input type="text"
+                            label="RG"
+                            placeholder="RG"
+                            v-model="Cliente.Pessoa.RG">
+                </base-input>
+              </b-col>
+              <b-col lg="6" v-if="selected == 'J'">
+                <base-input type="text"
+                            label="Razão Social"
+                            placeholder="Razão Social"
+                            v-model="Cliente.Pessoa.RazaoSocial">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="E-mail"
+                            placeholder="E-mail"
+                            v-model="Cliente.Pessoa.Email">
+                </base-input>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Telefone"
+                            placeholder="Telefone"
+                            v-model="Cliente.Pessoa.Telefone">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Celular"
+                            placeholder="Celular"
+                            v-model="Cliente.Pessoa.Celular">
+                </base-input>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Cidade"
+                            placeholder="Cidade"
+                            v-model="Cliente.Pessoa.Cidade">
+                </base-input>
+              </b-col>
+              <b-col lg="3">
+                <label>
+                  UF
+                </label>
+                <b-form-select v-model="Cliente.Pessoa.UF" :options="options"></b-form-select>
+
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                
+                <base-input type="text"
+                            label="CEP"
+                            placeholder="CEP"
+                            v-model="Cliente.Pessoa.CEP">
+                </base-input>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="8">
+                <base-input type="text"
+                            label="Endereço"
+                            placeholder="Endereço"
+                            v-model="Cliente.Pessoa.Endereco">
+                </base-input>
+              </b-col>
+              <b-col lg="4">
+                <base-input type="text"
+                            label="Número"
+                            placeholder="Número"
+                            v-model="Cliente.Pessoa.Numero">
+                </base-input>
+              </b-col>
+
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Referência"
+                            placeholder="Referência"
+                            v-model="Cliente.Pessoa.Referencia">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Complemento"
+                            placeholder="Complemento"
+                            v-model="Cliente.Pessoa.Complemento">
+                </base-input>
+              </b-col>
+            </b-row>
+            <hr class="my-4">
+
+
+          </div>
+
+
+        </b-form>
+
+      </validation-observer>
+
+        <template #modal-footer="{ cancel }">
           <b-row>
             <b-col lg="12">
-              <base-input type="text"
-                          label="Endereço"
-                          placeholder="Endereço"
-                          v-model="Cliente.Pessoa.Endereco">
-              </base-input>
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
+                <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
+                <span class="btn-inner--text">Incluir</span>
+              </base-button>
+
+              <!--<b-button type="submit" variant="primary" class="mt-4" v:onClick="onSubmit">Criar conta</b-button>-->
+
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
+
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
             </b-col>
           </b-row>
-          <b-row>
-            <b-col lg="6">
-              <base-input type="text"
-                          label="CEP"
-                          placeholder="CEP"
-                          v-model="Cliente.Pessoa.CEP">
-              </base-input>
-            </b-col>
-            <b-col lg="6">
-              <base-input type="text"
-                          label="Número"
-                          placeholder="Número"
-                          v-model="Cliente.Pessoa.Numero">
-              </base-input>
-            </b-col>
-
-          </b-row>
-          <b-row>
-            <b-col lg="6">
-              <base-input type="text"
-                          label="Referência"
-                          placeholder="Referência"
-                          v-model="Cliente.Pessoa.Referencia">
-              </base-input>
-            </b-col>
-            <b-col lg="6">
-              <base-input type="text"
-                          label="Complemento"
-                          placeholder="Complemento"
-                          v-model="Cliente.Pessoa.Complemento">
-              </base-input>
-            </b-col>
-          </b-row>
-          <hr class="my-4">
-
-
-        </div>
-
-
-      </b-form>
-      <template #modal-footer="{ cancel }">
-        <b-row>
-          <b-col lg="12">
-            <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
-              <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
-              <span class="btn-inner--text">Incluir</span>
-            </base-button>
-            <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
-
-              <span class="btn-inner--text">Cancelar</span>
-            </base-button>
-          </b-col>
-        </b-row>
-      </template>
+        </template>
     </b-modal>
   </b-card>
 
@@ -215,6 +243,7 @@
       return {
         clientes: [],
         products,
+        uf: [],
         currentPage: 1,
         selected: 'F',
         Cliente: {
@@ -242,6 +271,36 @@
         produto: {
 
         },
+        uf: {
+
+        },
+        options: [
+          { value: "AL", text: "Alagoas"},
+          { value: "AC", text: "Acre" },
+          { value: "AP", text: "Amapa" },
+          { value: "AM", text: "Amazonas" },
+          { value: "BA", text: "Bahia" },
+          { value: "CE", text: "Ceará" },
+          { value: "DF", text: "Distrito Federal" },
+          { value: "ES", text: "Espirito Santo" },
+          { value: "GO", text: "Goias" },
+          { value: "MA", text: "Maranhao" },
+          { value: "MT", text: "Mato Grosso" },
+          { value: "MS", text: "Mato Grosso do Sul" },
+          { value: "MG", text: "Minas Gerais" },
+          { value: "PR", text: "Parana" },
+          { value: "PB", text: "Paraiba" },
+          { value: "PA", text: "Para" },
+          { value: "PE", text: "Pernambuco" },
+          { value: "RJ", text: "Rio de Janeiro" },
+          { value: "RS", text: "Rio Grande do Sul" },
+          { Evalue: "RR", text: "Roraima" },
+          { value: "RO", text: "Rondonia" },
+          { value: "SP", text: "São Paulo" },
+          { Evalue: "SC", text: "Santa Catarina" },
+          { value: "SE", text: "Sergipe" },
+          { value: "TO", text: "Tocantins" }
+        ],
         showNovoProduto: false
       };
     },
@@ -257,6 +316,12 @@
           });
       },
       sendForm() {
+        //if ($("#form").valid()) {
+        //  alert("valido");
+        //}
+        //else {
+        //  alert("inválido");
+        //}
         axios.post("https://localhost:44376/Cliente/Create", {
           Pessoa: this.Cliente.Pessoa
         }).then(response => {
@@ -275,10 +340,21 @@
             alert(error);
           });
         // this will be called only after form is valid. You can do api call here to login
+      },
+      getUF() {
+        axios.get("https://localhost:44376/Cliente/GetUF", {
+        }).then(response => {
+          console.log(response.data)
+          this.uf = response.data
+        })
+          .catch(function (error) {
+          alert(error);
+        });
       }
     },
     mounted() {
       this.getClientes();
+      this.getUF();
     }
   }
 </script>
