@@ -28,7 +28,7 @@ namespace SISTOR.Repository
                 //cliente.Pessoa.CPF = Md5Hash.CalculaHash(cliente.Pessoa.CPF);
                 //cliente.Pessoa.RG = Md5Hash.CalculaHash(cliente.Pessoa.RG);
                 _context.Add(cliente);
-                if(cliente.Pessoa.Nome != null && cliente.Pessoa.Nome != "")
+                if(cliente != null)
                 {
                     _context.SaveChanges();
                 }

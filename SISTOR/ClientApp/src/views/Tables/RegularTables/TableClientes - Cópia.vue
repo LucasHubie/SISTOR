@@ -3,30 +3,26 @@
     <b-card style="box-shadow: 3px 0px 5px 3px #0000007d;" no-body>
       <b-card-header class="border-0">
         <h3 class="mb-0 float-left">Clientes</h3>
-
-
         <base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
           <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Filtrar</span>
         </base-button>
-
+        
 
         <base-button v-b-modal.modal-1 type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="">
           <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Adicionar</span>
         </base-button>
 
-
+        <b-col cols="6">
+          <router-link to="/register" class="text-light float-right"><small>Cadastre-se</small></router-link>
+        </b-col>
 
       </b-card-header>
-
-      
 
       <el-table class="table-responsive table"
                 header-row-class-name="thead-light"
                 :data="clientes">
-
-
         <el-table-column label="Nome"
                          min-width="310px"
                          prop="name">
@@ -38,35 +34,26 @@
             </b-media>
           </template>
         </el-table-column>
-
-        <el-table-column label="Nome Fantasia"
-                         prop="pessoa.nomeFantasia"
-                         min-width="250px">
-        </el-table-column>
         <el-table-column label="E-mail"
                          prop="pessoa.email"
-                         min-width="250px">
+                         min-width="140px">
         </el-table-column>
         <el-table-column label="Telefone"
                          prop="pessoa.telefone"
-                         min-width="160px">
-        </el-table-column>
-        <el-table-column label="Celular"
-                         prop="pessoa.celular"
-                         min-width="160px">
+                         min-width="170px">
         </el-table-column>
         <el-table-column label="Ações"
-                         min-width="200px"
+                         min-width="170px"
                          prop="">
           <template v-slot="{row}">
-            <!--<el-dropdown trigger="click" class="dropdown">
-        <base-button size="sm" type="default" style="background-color: rgb(58 99 167); margin-right: .5rem;"><b-icon icon="three-dots" font-scale="1"></b-icon></base-button>
-        <el-dropdown-menu class="dropdown-menu dropdown-menu-arrow show" slot="dropdown">
-          <b-dropdown-item>Gerar Ordem de Serviço</b-dropdown-item>
-          <b-dropdown-item>Alterar Situação</b-dropdown-item>
+            <el-dropdown trigger="click" class="dropdown">
+              <base-button size="sm" type="default" style="background-color: rgb(58 99 167); margin-right: .5rem;"><b-icon icon="three-dots" font-scale="1"></b-icon></base-button>
+              <el-dropdown-menu class="dropdown-menu dropdown-menu-arrow show" slot="dropdown">
+                <b-dropdown-item>Gerar Ordem de Serviço</b-dropdown-item>
+                <b-dropdown-item>Alterar Situação</b-dropdown-item>
 
-        </el-dropdown-menu>
-      </el-dropdown>-->
+              </el-dropdown-menu>
+            </el-dropdown>
             <base-button v-b-modal.modal-1 size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon> </base-button>
             <base-button size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
             <base-button size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
@@ -79,53 +66,29 @@
       <b-card-footer class="py-4 d-flex justify-content-end">
         <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
       </b-card-footer>
-      <b-modal id="modal-1" title="Incluir Cliente" size="xl" @show="resetModal"
-      @hidden="resetModal"
-      @ok="handleOk">
+      <b-modal id="modal-1" title="Incluir Cliente" size="xl">
 
-        <form ref="form" @submit.stop.prevent="handleSubmit">
+        <validation-observer v-slot="{handleSubmit}" ref="formValidator">
 
-          <b-form-group>
-
+          <b-form id="form" @submit.prevent="handleSubmit(sendForm)">
             <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
+
 
             <div class="">
               <b-form-group>
                 <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
                 <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
-
               </b-form-group>
               <b-row>
 
-                <b-col lg="6" v-if="selected == 'F'">
-
-                  <b-form-group label="Nome"
-                                label-for="name-input"
-                                invalid-feedback="Nome é obrigatório"
-                                :state="nameState">
-                    <b-form-input id="name-input"
-                                  placeholder="Nome"
-                                  v-model="Cliente.Pessoa.Nome"
-                                  :state="nameState"
-                                  required></b-form-input>
-                  </b-form-group>
-
+                <b-col lg="6">
+                  <base-input type="text"
+                              label="Nome"
+                              placeholder="Nome"
+                              required
+                              v-model="Cliente.Pessoa.Nome">
+                  </base-input>
                 </b-col>
-                <b-col lg="6" v-if="selected == 'J'">
-
-                  <b-form-group label="Nome Fantasia"
-                                label-for="name-input"
-                                invalid-feedback="Nome Fantasia é obrigatório"
-                                :state="nameState">
-                    <b-form-input id="name-input"
-                                  placeholder="Nome Fantasia"
-                                  v-model="Cliente.Pessoa.NomeFantasia"
-                                  :state="nameState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
                 <b-col lg="6" v-if="selected == 'F'">
                   <base-input type="text"
                               label="CPF"
@@ -182,19 +145,11 @@
               </b-row>
               <b-row>
                 <b-col lg="6">
-
-                  <b-form-group label="Cidade"
-                                label-for="cidade-input"
-                                invalid-feedback="Cidade é obrigatório"
-                                :state="cidadeState">
-                    <b-form-input id="cidade-input"
-                                  placeholder="Cidade"
-                                  v-model="Cliente.Pessoa.Cidade"
-                                  :state="cidadeState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-
+                  <base-input type="text"
+                              label="Cidade"
+                              placeholder="Cidade"
+                              v-model="Cliente.Pessoa.Cidade">
+                  </base-input>
                 </b-col>
                 <b-col lg="3">
                   <label>
@@ -253,12 +208,11 @@
             </div>
 
 
-          </b-form-group>
+          </b-form>
 
-        </form>
+        </validation-observer>
 
-
-        <!--<template #modal-footer="{ cancel }">
+        <template #modal-footer="{ cancel }">
           <b-row>
             <b-col lg="12">
               <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
@@ -266,6 +220,7 @@
                 <span class="btn-inner--text">Incluir</span>
               </base-button>
 
+              <!--<b-button type="submit" variant="primary" class="mt-4" v:onClick="onSubmit">Criar conta</b-button>-->
 
               <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
 
@@ -273,15 +228,11 @@
               </base-button>
             </b-col>
           </b-row>
-        </template>-->
-
+        </template>
       </b-modal>
     </b-card>
   </div>
-
-
 </template>
-
 <script>
   import axios from 'axios'
   import products from '../products'
@@ -302,7 +253,6 @@
         uf: [],
         currentPage: 1,
         selected: 'F',
-        nameState: null,
         Cliente: {
           Pessoa: {
             Nome: "",
@@ -313,7 +263,6 @@
             NomeFantasia: "",
             Telefone: "",
             Celular: "",
-            Cidade: "",
             Email: "",
             CEP: "",
             Numero: 0,
@@ -321,7 +270,6 @@
             Referencia: "",
             Endereco: "",
             TipoPessoa: 0,
-            UF: "",
           }
         },
         orcamento: {
@@ -330,9 +278,13 @@
         produto: {
 
         },
-        
+        computed: {
+          NameIsValid() {
+            return !!this.Cliente.Nome
+          }
+        },
         options: [
-          { value: "AL", text: "Alagoas" },
+          { value: "AL", text: "Alagoas"},
           { value: "AC", text: "Acre" },
           { value: "AP", text: "Amapa" },
           { value: "AM", text: "Amazonas" },
@@ -351,10 +303,10 @@
           { value: "PE", text: "Pernambuco" },
           { value: "RJ", text: "Rio de Janeiro" },
           { value: "RS", text: "Rio Grande do Sul" },
-          { value: "RR", text: "Roraima" },
+          { Evalue: "RR", text: "Roraima" },
           { value: "RO", text: "Rondonia" },
           { value: "SP", text: "São Paulo" },
-          { value: "SC", text: "Santa Catarina" },
+          { Evalue: "SC", text: "Santa Catarina" },
           { value: "SE", text: "Sergipe" },
           { value: "TO", text: "Tocantins" }
         ],
@@ -362,59 +314,6 @@
       };
     },
     methods: {
-      checkFormValidity() {
-        const valid = this.$refs.form.checkValidity()
-        this.nameState = valid
-        /*this.cidadeState = valid*/
-        return valid
-      },
-      resetModal() {
-        this.Cliente.Pessoa.Nome = ''
-        this.Cliente.Pessoa.CPF = ''
-        this.Cliente.Pessoa.Celular = ''
-        this.Cliente.Pessoa.CEP = ''
-        this.Cliente.Pessoa.CNPJ = ''
-        this.Cliente.Pessoa.Complemento = ''
-        this.Cliente.Pessoa.Email = ''
-        this.Cliente.Pessoa.Endereco = ''
-        this.Cliente.Pessoa.NomeFantasia = ''
-        this.Cliente.Pessoa.RazaoSocial = ''
-        this.Cliente.Pessoa.Numero = ''
-        this.Cliente.Pessoa.UF = ''
-        this.Cliente.Pessoa.Referencia = ''
-        this.Cliente.Pessoa.RG = ''
-        this.Cliente.Pessoa.Telefone = ''
-        this.Cliente.Pessoa.Cidade = ''
-        this.nameState = null
-      },
-      tipoPessoa() {
-        if (this.selected == 'F') {
-          this.Cliente.Pessoa.TipoPessoa = 1
-        } if (this.selected == 'J') {
-          this.Cliente.Pessoa.TipoPessoa = 2
-        }
-      },
-      handleOk(bvModalEvt) {
-        // Prevent modal from closing
-        bvModalEvt.preventDefault()
-        // chama função tipoPessoa
-        this.tipoPessoa()
-        // Trigger submit handler
-        this.handleSubmit()
-      },
-      handleSubmit() {
-        // Exit when the form isn't valid
-        if (!this.checkFormValidity()) {
-          return
-        }
-        // Push the name to submitted names
-        this.sendForm();
-        // Hide the modal manually
-        this.$nextTick(() => {
-          this.$bvModal.hide('modal-1')
-        })
-      },
-
       getClientes() {
         axios.get("https://localhost:44376/Cliente/Index", {
         }).then(response => {
@@ -425,9 +324,21 @@
             alert(error);
           });
       },
-
       sendForm() {
-       
+        //if ($("#form").valid()) {
+        //  alert("valido");
+        //}
+        //else {
+        //  alert("inválido");
+        //}
+        const FormIsValid = this.NameIsValid
+        if (FormIsValid) {
+          alert("valido")
+        }
+        else
+        {
+          alert("Nome inválido")
+        }
         axios.post("https://localhost:44376/Cliente/Create", {
           Pessoa: this.Cliente.Pessoa
         }).then(response => {
@@ -446,11 +357,21 @@
             alert(error);
           });
         // this will be called only after form is valid. You can do api call here to login
+      },
+      getUF() {
+        axios.get("https://localhost:44376/Cliente/GetUF", {
+        }).then(response => {
+          console.log(response.data)
+          this.uf = response.data
+        })
+          .catch(function (error) {
+          alert(error);
+        });
       }
-      
     },
     mounted() {
       this.getClientes();
+      this.getUF();
     }
   }
 </script>

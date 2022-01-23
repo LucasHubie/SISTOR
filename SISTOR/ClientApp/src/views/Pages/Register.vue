@@ -52,6 +52,7 @@
                               name="Nome"
                               :rules="{required: true}"
                               v-model="model.Nome">
+
                   </base-input>
 
                   <base-input alternative
