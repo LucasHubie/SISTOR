@@ -18,7 +18,6 @@
   import projects from './Tables/projects'
   import users from './Tables/users'
   import TableClientes from "./Tables/RegularTables/TableClientes";
-  /*import TableClientes from "./Pages/UserProfile/Register";*/
 
   export default {
     components: {

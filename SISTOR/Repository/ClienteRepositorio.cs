@@ -54,6 +54,11 @@ namespace SISTOR.Repository
             return _context.Cliente.Include(x => x.Pessoa).ToList();
         }
 
+        public Cliente GetClienteById(int id)
+        {
+            return _context.Cliente.Where(p => p.Id == id).FirstOrDefault();
+        }
+
         public Cliente GetClienteByCPF(string cpf)
         {
             return _context.Cliente.Include(x => x.Pessoa).Where(b => b.Pessoa.CPF == cpf).FirstOrDefault();

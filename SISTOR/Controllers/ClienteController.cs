@@ -49,6 +49,26 @@ namespace SISTOR.Controllers
             }
         }
 
+        public IActionResult GetClienteById(int id)
+        {
+            bool sucess = true;
+            var description = "";
+
+            try
+            {
+                _clienteRepositorio.GetClienteById(id);
+                sucess = true;
+                description = "Cliente encontrado com sucesso!";
+                return Json(new { sucess = sucess, description = description });
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Cliente não encontrado criado";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
         public IActionResult GetClienteByCPF(string cpf)
         {
             bool sucess = true;

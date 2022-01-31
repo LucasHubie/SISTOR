@@ -16,5 +16,7 @@ namespace SISTOR.Interfaces
 
         Cliente GetClienteByNome(string cpf);
 
+        Cliente GetClienteById(int id);
+
     }
 }

@@ -66,9 +66,12 @@
       <b-card-footer class="py-4 d-flex justify-content-end">
         <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
       </b-card-footer>
-      <b-modal id="modal-1" title="Incluir Cliente" size="xl">
 
-        <validation-observer v-slot="{handleSubmit}" ref="formValidator">
+      <b-modal id="modal-1" title="Incluir Cliente" size="xl" @show="resetModal"
+      @hidden="resetModal"
+      @ok="handleOk">
+
+        <form>
 
           <b-form id="form" @submit.prevent="handleSubmit(sendForm)">
             <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
@@ -82,13 +85,30 @@
               <b-row>
 
                 <b-col lg="6">
-                  <base-input type="text"
-                              label="Nome"
-                              placeholder="Nome"
-                              required
-                              v-model="Cliente.Pessoa.Nome">
-                  </base-input>
+                    <base-input type="text"
+                        label="Nome"
+                        placeholder="Nome"
+                        required
+                        v-model="Cliente.Pessoa.Nome">
+                    </base-input>
                 </b-col>
+
+                <!--<b-col lg="6" v-if="selected == 'F'">
+
+                  <b-form-group label="Nome"
+                                label-for="name-input"
+                                invalid-feedback="Nome é obrigatório"
+                                :state="nameState">
+                    <b-form-input id="name-input"
+                                  placeholder="Nome"
+                                  v-model="Cliente.Pessoa.Nome"
+                                  :state="nameState"
+                                  required></b-form-input>
+                  </b-form-group>
+
+                </b-col>-->
+
+
                 <b-col lg="6" v-if="selected == 'F'">
                   <base-input type="text"
                               label="CPF"
@@ -210,25 +230,26 @@
 
           </b-form>
 
-        </validation-observer>
 
-        <template #modal-footer="{ cancel }">
-          <b-row>
-            <b-col lg="12">
-              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
-                <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
-                <span class="btn-inner--text">Incluir</span>
-              </base-button>
+          <!--<template #modal-footer="{ cancel }">
+            <b-row>
+              <b-col lg="12">
+                <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
+                  <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
+                  <span class="btn-inner--text">Incluir</span>
+                </base-button>
 
-              <!--<b-button type="submit" variant="primary" class="mt-4" v:onClick="onSubmit">Criar conta</b-button>-->
 
-              <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
+                <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
 
-                <span class="btn-inner--text">Cancelar</span>
-              </base-button>
-            </b-col>
-          </b-row>
-        </template>
+                  <span class="btn-inner--text">Cancelar</span>
+                </base-button>
+              </b-col>
+            </b-row>
+          </template>-->
+
+        </form>
+
       </b-modal>
     </b-card>
   </div>
@@ -253,6 +274,7 @@
         uf: [],
         currentPage: 1,
         selected: 'F',
+        nameState: null,
         Cliente: {
           Pessoa: {
             Nome: "",
@@ -270,6 +292,7 @@
             Referencia: "",
             Endereco: "",
             TipoPessoa: 0,
+            UF: "",
           }
         },
         orcamento: {
@@ -277,11 +300,6 @@
         },
         produto: {
 
-        },
-        computed: {
-          NameIsValid() {
-            return !!this.Cliente.Nome
-          }
         },
         options: [
           { value: "AL", text: "Alagoas"},
@@ -314,6 +332,62 @@
       };
     },
     methods: {
+      checkFormValidity() {
+        const valid = this.$refs.form.checkValidity()
+        this.nameState = valid
+        return valid
+      },
+
+      resetModal() {
+        this.Cliente.Pessoa.Nome = ''
+        this.Cliente.Pessoa.CPF = ''
+        this.Cliente.Pessoa.Celular = ''
+        this.Cliente.Pessoa.CEP = ''
+        this.Cliente.Pessoa.CNPJ = ''
+        this.Cliente.Pessoa.Complemento = ''
+        this.Cliente.Pessoa.Email = ''
+        this.Cliente.Pessoa.Endereco = ''
+        this.Cliente.Pessoa.NomeFantasia = ''
+        this.Cliente.Pessoa.RazaoSocial = ''
+        this.Cliente.Pessoa.Numero = ''
+        this.Cliente.Pessoa.UF = ''
+        this.Cliente.Pessoa.Referencia = ''
+        this.Cliente.Pessoa.RG = ''
+        this.Cliente.Pessoa.Telefone = ''
+        this.Cliente.Pessoa.Cidade = ''
+        this.nameState = null
+      },
+
+      tipoPessoa() {
+        if (this.selected == 'F') {
+          this.Cliente.Pessoa.TipoPessoa = 1
+        } if (this.selected == 'J') {
+          this.Cliente.Pessoa.TipoPessoa = 2
+        }
+      },
+
+      handleOk(bvModalEvt) {
+        // Prevent modal from closing
+        bvModalEvt.preventDefault()
+        // chama função tipoPessoa
+        this.tipoPessoa()
+        // Trigger submit handler
+        this.handleSubmit()
+      },
+
+      handleSubmit() {
+        // Exit when the form isn't valid
+        if (!this.checkFormValidity()) {
+          return
+        }
+        // chama função post
+        this.sendForm();
+        // Hide the modal manually
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-1')
+        })
+      },
+
       getClientes() {
         axios.get("https://localhost:44376/Cliente/Index", {
         }).then(response => {
@@ -324,21 +398,8 @@
             alert(error);
           });
       },
+
       sendForm() {
-        //if ($("#form").valid()) {
-        //  alert("valido");
-        //}
-        //else {
-        //  alert("inválido");
-        //}
-        const FormIsValid = this.NameIsValid
-        if (FormIsValid) {
-          alert("valido")
-        }
-        else
-        {
-          alert("Nome inválido")
-        }
         axios.post("https://localhost:44376/Cliente/Create", {
           Pessoa: this.Cliente.Pessoa
         }).then(response => {
@@ -357,21 +418,11 @@
             alert(error);
           });
         // this will be called only after form is valid. You can do api call here to login
-      },
-      getUF() {
-        axios.get("https://localhost:44376/Cliente/GetUF", {
-        }).then(response => {
-          console.log(response.data)
-          this.uf = response.data
-        })
-          .catch(function (error) {
-          alert(error);
-        });
       }
     },
+      
     mounted() {
       this.getClientes();
-      this.getUF();
     }
   }
 </script>
