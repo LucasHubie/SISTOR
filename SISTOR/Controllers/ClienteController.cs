@@ -49,6 +49,27 @@ namespace SISTOR.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult Update([FromBody] Cliente cliente)
+        {
+            bool sucess = true;
+            var description = "";
+
+            try
+            {
+                _clienteRepositorio.AtualizarCliente(cliente);
+                sucess = true;
+                description = "Cliente atualizado com sucesso!";
+                return Json(new { sucess = sucess, description = description });
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Cliente não atualizado";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
         public IActionResult GetClienteById(int id)
         {
             bool sucess = true;
@@ -56,10 +77,10 @@ namespace SISTOR.Controllers
 
             try
             {
-                _clienteRepositorio.GetClienteById(id);
+                var cliente = _clienteRepositorio.GetClienteById(id);
                 sucess = true;
                 description = "Cliente encontrado com sucesso!";
-                return Json(new { sucess = sucess, description = description });
+                return Json(new { sucess = sucess, description = description, cliente = cliente });
             }
             catch (Exception ex)
             {
@@ -67,6 +88,7 @@ namespace SISTOR.Controllers
                 description = "Cliente não encontrado criado";
                 return Json(new { sucess = sucess, description = ex.Message });
             }
+            
         }
 
         public IActionResult GetClienteByCPF(string cpf)

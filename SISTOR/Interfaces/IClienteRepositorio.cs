@@ -18,5 +18,7 @@ namespace SISTOR.Interfaces
 
         Cliente GetClienteById(int id);
 
+        Cliente AtualizarCliente(Cliente cliente);
+
     }
 }

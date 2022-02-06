@@ -49,6 +49,33 @@ namespace SISTOR.Repository
             return cliente;
         }
 
+        public Cliente AtualizarCliente(Cliente cliente)
+        {
+            try
+            {
+                _context.Update(cliente);
+                if (cliente != null)
+                {
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("Falha ao atualizar Cliente");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                if (ex.InnerException is SqlException)
+                {
+                    var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
+                    throw new Exception(msg, ex);
+                }
+                throw new Exception("Falha ao atualizar Cliente", ex);
+            }
+            return cliente;
+        }
+
         public List<Cliente> GetClientes()
         {
             return _context.Cliente.Include(x => x.Pessoa).ToList();
@@ -56,7 +83,7 @@ namespace SISTOR.Repository
 
         public Cliente GetClienteById(int id)
         {
-            return _context.Cliente.Where(p => p.Id == id).FirstOrDefault();
+            return _context.Cliente.Where(p => p.Id == id).Include(p => p.Pessoa).FirstOrDefault();
         }
 
         public Cliente GetClienteByCPF(string cpf)

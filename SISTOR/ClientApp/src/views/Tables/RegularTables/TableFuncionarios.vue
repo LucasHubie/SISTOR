@@ -41,11 +41,15 @@
                          prop="pessoa.telefone"
                          min-width="160px">
         </el-table-column>
+        <el-table-column label="Celular"
+                         prop="pessoa.celular"
+                         min-width="160px">
+        </el-table-column>
         <el-table-column label="Ações"
                          min-width="200px"
                          prop="">
           <template v-slot="{row}">
-            
+
             <base-button v-on:click="buscarCliente" v-b-modal.modal-1 size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon></base-button>
             <base-button size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
             <base-button size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
