@@ -20,5 +20,9 @@ namespace SISTOR.Interfaces
 
         Cliente AtualizarCliente(Cliente cliente);
 
+        List<Pessoa> GetPessoaCliente();
+
+        void Delete(int id);
+
     }
 }

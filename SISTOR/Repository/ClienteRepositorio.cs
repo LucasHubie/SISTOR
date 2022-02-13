@@ -76,9 +76,43 @@ namespace SISTOR.Repository
             return cliente;
         }
 
+        public void Delete(int id)
+        {
+            try
+            {
+                //Cliente cliente = new Cliente() { Id = id };
+                var cliente = GetClienteById( id);
+                if (cliente != null)
+                {
+                    _context.Remove(cliente);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("Cliente não encontrado");
+                }
+                
+            }
+
+            catch (Exception ex)
+            {
+                if (ex.InnerException is SqlException)
+                {
+                    var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
+                    throw new Exception(msg, ex);
+                }
+                throw new Exception("Falha ao criar novo Cliente", ex);
+            }
+        }
+
         public List<Cliente> GetClientes()
         {
             return _context.Cliente.Include(x => x.Pessoa).ToList();
+        }
+
+        public List<Pessoa> GetPessoaCliente()
+        {
+            return _context.Pessoa.ToList();
         }
 
         public Cliente GetClienteById(int id)
