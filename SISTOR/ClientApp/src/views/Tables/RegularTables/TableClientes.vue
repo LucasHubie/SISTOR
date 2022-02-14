@@ -1,8 +1,22 @@
 <template>
   <div>
+
+    <b-alert :show="dismissCountDown"
+             dismissible
+             variant="warning"
+             @dismissed="dismissCountDown=0"
+             @dismiss-count-down="countDownChanged">
+      Confirmado com sucesso! <!--{{ dismissCountDown }}-->
+    </b-alert>
+
     <b-card style="box-shadow: 3px 0px 5px 3px #0000007d;" no-body>
       <b-card-header class="border-0">
         <h3 class="mb-0 float-left">Clientes</h3>
+
+        <base-button v-b-modal.modal-scrollable type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="">
+          <b-icon icon="question-circle-fill" aria-label="Help"></b-icon>
+        </base-button>
+
 
         <base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
           <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
@@ -13,6 +27,8 @@
           <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Adicionar</span>
         </base-button>
+
+
 
       </b-card-header>
 
@@ -62,6 +78,31 @@
       <b-card-footer class="py-4 d-flex justify-content-end">
         <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
       </b-card-footer>
+
+      <!--Modal Ajuda-->
+      <b-button v-b-modal.modal-scrollable>Launch scrolling modal</b-button>
+
+      <b-modal id="modal-scrollable" scrollable title="Tela de Clientes">
+        <p class="my-4" v-for="i in 1" :key="i">
+          Para inclusão de um novo cliente basta clicar sobre o botão "Adicionar" e preencher todos os campos com os dados sobre o mesmo.
+          <br />
+          <br />
+          Um pouco mais abaixo temos uma listagem de todos os clientes já inclusos no sistema, caso esteja em branco, isso se da por não haver nenhum cliente incluso até o momento.
+          <br />
+          <br />
+          Dentro dessa listagem sobre cada cliente, temos 3 opções em cada um deles. Começando da esquerda para a direita, temos o botão de detalhes, representado pelo ícone do olho,
+          onde após clicado será mostrado todos os detalhes do cliente, visto que na tela inicial não cabem todos os detalhes do mesmo.
+          <br />
+          <br />
+          Na sequência temos o botão do meio que se refere ao botão de alteração do cliente, representado pelo ícone de lápis. Então clicando sobre ele, será carregado todos os dados
+          do cliente para alteração.
+          <br />
+          <br />
+          E por último temos o botão de exclusão, representado pelo ícone da lata de lixo. Onde após clicado, abrirá uma tela de confirmação de exclusão, onde terá a opção de confirmar
+          ou não a exclusão do cliente.
+        </p>
+      </b-modal>
+
       <!--Modal inclusão-->
       <b-modal id="modal-1" title="Incluir Cliente" size="xl" @show="resetModal"
                @hidden="resetModal"
@@ -77,7 +118,6 @@
               <b-form-group>
                 <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
                 <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
-
               </b-form-group>
               <b-row>
 
@@ -572,17 +612,17 @@
 
               <!--<b-col lg="6">
 
-                <b-form-group label="Tipo Pessoa"
-                              label-for="pessoatipo-input"
-                              :state="tipopessoaState">
-                  <b-form-input id="pessoatipo-input"
-                                placeholder="Tipo de pessoa"
-                                v-model="Cliente.Pessoa.tipoPessoa"
-                                :state="tipopessoaState"
-                                ></b-form-input>
-                </b-form-group>
+            <b-form-group label="Tipo Pessoa"
+                          label-for="pessoatipo-input"
+                          :state="tipopessoaState">
+              <b-form-input id="pessoatipo-input"
+                            placeholder="Tipo de pessoa"
+                            v-model="Cliente.Pessoa.tipoPessoa"
+                            :state="tipopessoaState"
+                            ></b-form-input>
+            </b-form-group>
 
-              </b-col>-->
+          </b-col>-->
 
               <b-row>
 
@@ -813,8 +853,11 @@
       <!--Modal detail-->
 
     </b-card>
-  </div>
 
+
+
+  </div>
+ 
 
 </template>
 
@@ -848,6 +891,8 @@
         enderecoState: null,
         cnpjState: null,
         razaosocialState: null,
+        dismissSecs: 5,
+        dismissCountDown: 0,
         Cliente: {
           Pessoa: {
             Nome: "",
@@ -907,21 +952,7 @@
       };
     },
     methods: {
-      checkFormValidity() {
-        const valid = this.$refs.form.checkValidity()
-        this.nameState = valid
-        this.cidadeState = valid
-        this.emailState = valid
-        this.cpfState = valid
-        this.rgState = valid
-        this.ufState = valid
-        this.cepState = valid
-        this.enderecoState = valid
-        this.cnpjState = valid
-        this.razaosocialState = valid
-        return valid
-      },
-      
+
       resetModal() {
         this.Cliente.Pessoa.Nome = ''
         this.Cliente.Pessoa.CPF = ''
@@ -950,6 +981,30 @@
         this.cnpjState = null
         this.razaosocialState = null
       },
+
+      countDownChanged(dismissCountDown) {
+        this.dismissCountDown = dismissCountDown
+      },
+      showAlert() {
+        this.dismissCountDown = this.dismissSecs
+      },
+
+      checkFormValidity() {
+        const valid = this.$refs.form.checkValidity()
+        this.nameState = valid
+        this.cidadeState = valid
+        this.emailState = valid
+        this.cpfState = valid
+        this.rgState = valid
+        this.ufState = valid
+        this.cepState = valid
+        this.enderecoState = valid
+        this.cnpjState = valid
+        this.razaosocialState = valid
+        return valid
+      },
+      
+      
       tipoPessoa() {
         if (this.selected == 'F') {
           this.Cliente.Pessoa.TipoPessoa = 1
@@ -1041,8 +1096,9 @@
         }).then(response => {
           if (response.data.sucess = true) {
             console.log(response.data)
-            alert(response.data.description)
+            //alert(response.data.description)
             //window.location.href = "#/funcionarios"
+            this.showAlert()
             this.$bvModal.hide("modal-1")
             this.getClientes()
           }
@@ -1057,7 +1113,7 @@
       },
 
       deleteClienteConfirmed(id) {
-        this.$bvModal.msgBoxConfirm('Por favor confirme a exclusão.', {
+        this.$bvModal.msgBoxConfirm('Por favor confirme a exclusão do cliente', {
           title: 'Deseja excluir este cliente?',
           size: 'sm',
           buttonSize: 'sm',
@@ -1070,8 +1126,12 @@
         })
           .then(value => {
             this.boxTwo = value
-            this.deleteCliente(id)
             console.log(value)
+            if (this.boxTwo == true) {
+              this.deleteCliente(id)
+            } else {
+              this.cancelTitle
+            }
           })
           .catch(err => {
             // An error occurred
@@ -1084,7 +1144,8 @@
       }).then(response => {
         if (response.data.sucess = true) {
           console.log(response.data)
-          alert(response.data.description)
+          /*alert(response.data.description)*/
+          this.showAlert()
           this.getClientes()
         }
         else {
@@ -1103,7 +1164,8 @@
         }).then(response => {
           if (response.data.sucess = true) {
             console.log(response.data)
-            alert(response.data.description)
+            //alert(response.data.description)
+            this.showAlert()
             this.$bvModal.hide("modal-2")
             this.getClientes()
           }
