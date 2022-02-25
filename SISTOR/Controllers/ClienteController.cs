@@ -25,6 +25,7 @@ namespace SISTOR.Controllers
         public IActionResult Index()
         {
             List<Cliente> cliente = _clienteRepositorio.GetClientes();
+            
             return Json(cliente);
         }
 
@@ -47,6 +48,78 @@ namespace SISTOR.Controllers
                 description = "Cliente não criado";
                 return Json(new { sucess = sucess, description = ex.Message });
             }
+        }
+
+        [HttpPost]
+        public IActionResult Update([FromBody] Cliente cliente)
+        {
+            bool sucess = true;
+            var description = "";
+
+            try
+            {
+                _clienteRepositorio.AtualizarCliente(cliente);
+                sucess = true;
+                description = "Cliente atualizado com sucesso!";
+                return Json(new { sucess = sucess, description = description });
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Cliente não atualizado";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
+        public IActionResult Excluir(int id)
+        {
+            bool sucess = true;
+            var description = "";
+            try
+            {
+                var cliente = _clienteRepositorio.GetClienteById(id);
+                if (cliente != null)
+                {
+                    _clienteRepositorio.Delete(cliente.Id);
+                    sucess = true;
+                    description = "Cliente excluido com sucesso!";
+                    return Json(new { sucess = sucess, description = description });
+                }
+                else
+                {
+                    sucess = false;
+                    description = "Cliente não encontrado";
+                    return Json(new { sucess = sucess, description = description });
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Cliente não excluido";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
+        public IActionResult GetClienteById(int id)
+        {
+            bool sucess = true;
+            var description = "";
+
+            try
+            {
+                var cliente = _clienteRepositorio.GetClienteById(id);
+                sucess = true;
+                description = "Cliente encontrado com sucesso!";
+                return Json(new { sucess = sucess, description = description, cliente = cliente });
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Cliente não encontrado criado";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+            
         }
 
         public IActionResult GetClienteByCPF(string cpf)

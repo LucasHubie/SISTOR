@@ -16,5 +16,13 @@ namespace SISTOR.Interfaces
 
         Cliente GetClienteByNome(string cpf);
 
+        Cliente GetClienteById(int id);
+
+        Cliente AtualizarCliente(Cliente cliente);
+
+        List<Pessoa> GetPessoaCliente();
+
+        void Delete(int id);
+
     }
 }

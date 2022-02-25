@@ -8,7 +8,8 @@ namespace SISTOR.Interfaces
 {
     public interface IFuncionarioRepositorio
     {
-        Pessoa CriarFuncionario(Pessoa funcionario);
+        Funcionario CriarFuncionario(Funcionario funcionario);
+
         //int GetFuncionarioId(int? id);
         List<Pessoa> GetFuncionario();
 

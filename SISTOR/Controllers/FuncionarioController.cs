@@ -19,37 +19,57 @@ namespace SISTOR.Controllers
             _context = context;
             _funcionarioRepositorio = funcionarioRepositorio;
         }
-        public IActionResult Index()
-        {
-            List<Pessoa> funcionario = _funcionarioRepositorio.GetFuncionario();
-            return Json(funcionario);
-        }
+        //public IActionResult Index()
+        //{
+        //    List<Pessoa> funcionario = _funcionarioRepositorio.GetFuncionario();
+        //    return Json(funcionario);
+        //}
 
-        public IActionResult Grid()
+        public IActionResult Index()
         {
             List<Funcionario> funcionario = _funcionarioRepositorio.GetFuncionarios();
             return Json(funcionario);
         }
 
-
-        public IActionResult CriarFuncionario(Pessoa funcionario)
+        [HttpPost]
+        public IActionResult Create([FromBody] Funcionario funcionario)
         {
             bool sucess = true;
             var description = "";
 
-            if (funcionario != null)
+            try
             {
                 _funcionarioRepositorio.CriarFuncionario(funcionario);
                 sucess = true;
                 description = "Funcionário criado com sucesso!";
                 return Json(new { sucess = sucess, description = description });
             }
-            else
+            catch (Exception ex)
             {
                 sucess = false;
                 description = "Funcionário não criado";
-                return Json(new { sucess = sucess, description = description });
+                return Json(new { sucess = sucess, description = ex.Message });
             }
         }
+
+        //public IActionResult CriarFuncionario(Pessoa funcionario)
+        //{
+        //    bool sucess = true;
+        //    var description = "";
+
+        //    if (funcionario != null)
+        //    {
+        //        _funcionarioRepositorio.CriarFuncionario(funcionario);
+        //        sucess = true;
+        //        description = "Funcionário criado com sucesso!";
+        //        return Json(new { sucess = sucess, description = description });
+        //    }
+        //    else
+        //    {
+        //        sucess = false;
+        //        description = "Funcionário não criado";
+        //        return Json(new { sucess = sucess, description = description });
+        //    }
+        //}
     }
 }
