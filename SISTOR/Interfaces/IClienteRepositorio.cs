@@ -24,5 +24,7 @@ namespace SISTOR.Interfaces
 
         void Delete(int id);
 
+
+
     }
 }

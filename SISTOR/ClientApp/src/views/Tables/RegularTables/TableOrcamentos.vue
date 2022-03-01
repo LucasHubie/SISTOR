@@ -2,11 +2,11 @@
   <b-card style="box-shadow: 3px 0px 5px 3px #0000007d;" no-body>
     <b-card-header class="border-0">
       <h3 class="mb-0 float-left">Orçamentos</h3>
-      <base-button v-on:click="funcDesenv()" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
+      <base-button v-on:click="showFiltrar = !showFiltrar" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
         <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
         <span class="btn-inner--text">Filtrar</span>
       </base-button>
-      <base-button  v-b-modal.modal-1 v-on:click="tpOperacao = 'Adicionar'; cliente = { pessoa: {}}" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
+      <base-button v-b-modal.modal-1 v-on:click="tpOperacao = 'Adicionar'; cliente = { pessoa: {}}" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
         <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
         <span class="btn-inner--text">Adicionar</span>
       </base-button>
@@ -14,8 +14,25 @@
         <b-icon icon="card-list" font-scale="1"></b-icon>
         <span class="btn-inner--text">Gerar Relatórios</span>
       </base-button>
-    </b-card-header>
 
+    </b-card-header>
+    <div v-if="showFiltrar" class="modal-body">
+      <b-row>
+        <b-col lg="3">
+          <base-input type="text"
+                      label="Nome"
+                      placeholder="Nome"
+                      v-model="filtro.nome">
+          </base-input>
+        </b-col>
+        <b-col lg="1" v-if="selected == 'F'">
+          <base-button type="success" class="float-right" style=" margin: 0; position: absolute; top: 50%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="sendForm()">
+            <span class="btn-inner--text">Buscar</span>
+          </base-button>
+        </b-col>
+      
+      </b-row>
+    </div>
     <el-table class="table-responsive table"
               header-row-class-name="thead-light"
               :data="orcamentos">
@@ -51,20 +68,20 @@
           <el-dropdown trigger="click" class="dropdown">
             <base-button size="sm" type="default" style="background-color: rgb(58 99 167); margin-right: .5rem;"><b-icon icon="three-dots" font-scale="1"></b-icon></base-button>
             <el-dropdown-menu class="dropdown-menu dropdown-menu-arrow show" slot="dropdown">
-              <b-dropdown-item  v-on:click="showModalOS(row.id, row.cliente.id, row.tagIdentificacao)" >Gerar Ordem de Serviço</b-dropdown-item>
+              <b-dropdown-item v-on:click="showModalOS(row.id, row.cliente.id, row.tagIdentificacao)">Gerar Ordem de Serviço</b-dropdown-item>
               <b-dropdown-item v-on:click="funcDesenv()">Alterar Situação</b-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <base-button  v-on:click="funcDesenv()" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon> </base-button>
-          <base-button  v-on:click="showModal('Editar', row.id)"  size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
-          <base-button  v-on:click="deleteOrcamento('Excluir', row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
+          <base-button v-on:click="funcDesenv()" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon> </base-button>
+          <base-button v-on:click="showModal('Editar', row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
+          <base-button v-on:click="deleteOrcamento('Excluir', row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
         </template>
       </el-table-column>
 
     </el-table>
 
     <b-card-footer class="py-4 d-flex justify-content-end">
-      <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
+      <base-pagination v-model="currentPage" :per-page="10" :total="qntdRegistros" @change="change"></base-pagination>
     </b-card-footer>
     <b-modal id="modal-1" title="Orçamento" size="xl">
       <b-form @submit.prevent="updateProfile">
@@ -485,6 +502,9 @@
     },
     data() {
       return {
+        qntdRegistros: 0,
+        showFiltrar: false,
+        filtro: {nome: ''},
         orcamentos: [],
         options: [
           { value: 1, text: 'Aprovado' },
@@ -559,12 +579,15 @@
         }
         return retorno;
       },
-      getOrcamentos() {
-        axios.get("https://localhost:44376/Orcamento/Index", {
+      getOrcamentos(pageN, pageS) {
+        axios.get("https://localhost:44376/Orcamento/GetOrcamentos", {
+          params: { "pageNumber": pageN, "pageSize": pageS }
         }).then(response => {
           console.log(response.data)
-          this.orcamentos = response.data;
+          this.orcamentos = response.data.lst;
+          this.qntdRegistros = response.data.qntdRegistros;
           console.log('carrega orcamentos', this.orcamentos)
+          console.log('qutnd', this.qntdRegistros)
         })
           .catch(function (error) {
             alert("Falha ao Carregar Orcamentos");
@@ -619,7 +642,7 @@
           if (response.data.sucess = true) {
             console.log(response.data)
             alert(response.data.description)
-            this.getOrcamentos()
+            this.getOrcamentos(1,10)
           }
           else {
             alert(response.data.description)
@@ -705,7 +728,7 @@
             alert(response.data.description)
             //window.location.href = "#/funcionarios"
             this.$bvModal.hide("modal-1")
-            this.getOrcamentos()
+            this.getOrcamentos(1,10)
           }
           else {
             alert(response.data.description)
@@ -715,11 +738,19 @@
             alert(error);
           });
         // this will be called only after form is valid. You can do api call here to login
+      },
+      change(val) {
+        this.getOrcamentos(val, 10);
       }
     },
     mounted() {
-      this.getOrcamentos();
-      this.getFuncionarios();
+      this.getOrcamentos(1,10);
+     // this.getFuncionarios();
+    },
+    watch: {
+      currentPage: function (novo, velho) {
+        console.log('teste');
+      },
     }
   }
 </script>
