@@ -17,20 +17,37 @@
           <b-icon icon="question-circle-fill" aria-label="Help"></b-icon>
         </base-button>
 
-
-        <base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
+        <base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v-on:click="showFiltrar = !showFiltrar">
           <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Filtrar</span>
         </base-button>
 
-        <base-button v-b-modal.modal-1 type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="">
+
+        <base-button v-b-modal.modal-1 type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="resetModal">
           <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Adicionar</span>
         </base-button>
 
 
-
       </b-card-header>
+
+      <div v-if="showFiltrar" class="modal-body">
+        <b-row>
+          <b-col lg="3">
+            <base-input type="text"
+                        label="Pesquisar"
+                        placeholder="Buscar por..."
+                        v-model="filtro.nome">
+            </base-input>
+          </b-col>
+          <b-col lg="1">
+            <base-button  class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="buscaCliente">
+            <span class="btn-inner--text">Buscar</span>
+          </base-button>
+        </b-col>
+      
+      </b-row>
+    </div>
 
       <el-table class="table-responsive table"
                 header-row-class-name="thead-light"
@@ -66,8 +83,8 @@
                          prop="">
           <template v-slot="{row}">
 
-            <base-button v-on:click="getClienteById(row.id)" v-b-modal.modal-3 size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon></base-button>
-            <base-button v-on:click="getClienteById(row.id)" v-b-modal.modal-2 size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
+            <base-button v-on:click="getClienteById(row.id, 'Visualizar')" v-b-modal.modal-3 size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon></base-button>
+            <base-button v-on:click="getClienteById(row.id, 'Alterar')" v-b-modal.modal-2 size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
             <base-button v-on:click="deleteClienteConfirmed(row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
 
           </template>
@@ -80,7 +97,7 @@
       </b-card-footer>
 
       <!--Modal Ajuda-->
-      <b-button v-b-modal.modal-scrollable>Launch scrolling modal</b-button>
+      <b-button v-b-modal.modal-scrollable></b-button>
 
       <b-modal id="modal-scrollable" scrollable title="Tela de Clientes">
         <p class="my-4" v-for="i in 1" :key="i">
@@ -597,7 +614,7 @@
                @hidden="resetModal"
                @ok="handleOKdetail">
 
-        <form ref="form" @submit.stop.prevent="handleSubmitUpdate">
+        <form ref="form" @submit.stop.prevent="handleSubmitDetail">
 
           <b-form-group>
 
@@ -635,6 +652,7 @@
                                   placeholder="Nome"
                                   v-model="Cliente.Pessoa.nome"
                                   :state="nameState"
+                                  :disabled="disable"
                                   required></b-form-input>
                   </b-form-group>
 
@@ -649,6 +667,7 @@
                                   placeholder="Nome Fantasia"
                                   v-model="Cliente.Pessoa.nomeFantasia"
                                   :state="nameState"
+                                  :disabled="disable"
                                   required></b-form-input>
                   </b-form-group>
 
@@ -664,6 +683,7 @@
                                   placeholder="000.000.000-00"
                                   v-model="Cliente.Pessoa.cpf"
                                   :state="cpfState"
+                                  :disabled="disable"
                                   required></b-form-input>
                   </b-form-group>
 
@@ -679,6 +699,7 @@
                                   placeholder="000.000.000-00"
                                   v-model="Cliente.Pessoa.cnpj"
                                   :state="cnpjState"
+                                  :disabled="disable"
                                   required></b-form-input>
                   </b-form-group>
 
@@ -697,6 +718,7 @@
                                   placeholder="RG"
                                   v-model="Cliente.Pessoa.rg"
                                   :state="rgState"
+                                  :disabled="disable"
                                   required></b-form-input>
                   </b-form-group>
 
@@ -712,6 +734,7 @@
                                   placeholder="Razão Social"
                                   v-model="Cliente.Pessoa.razaoSocial"
                                   :state="razaosocialState"
+                                  :disabled="disable"
                                   required></b-form-input>
                   </b-form-group>
 
@@ -727,6 +750,7 @@
                                   placeholder="E-mail"
                                   v-model="Cliente.Pessoa.email"
                                   :state="emailState"
+                                  :disabled="disable"
                                   required></b-form-input>
                   </b-form-group>
 
@@ -738,6 +762,7 @@
                   <base-input type="text"
                               label="Telefone"
                               placeholder="Telefone"
+                              :disabled="disable"
                               v-model="Cliente.Pessoa.telefone">
                   </base-input>
                 </b-col>
@@ -745,6 +770,7 @@
                   <base-input type="text"
                               label="Celular"
                               placeholder="Celular"
+                              :disabled="disable"
                               v-model="Cliente.Pessoa.celular">
                   </base-input>
                 </b-col>
@@ -760,6 +786,7 @@
                                   placeholder="Cidade"
                                   v-model="Cliente.Pessoa.cidade"
                                   :state="cidadeState"
+                                  :disabled="disable"
                                   required></b-form-input>
                   </b-form-group>
 
@@ -772,6 +799,7 @@
 
                     <b-form-input v-model="Cliente.Pessoa.uf"
                                   :state="ufState"
+                                  :disabled="disable"
                                   required
                                   :options="options">
 
@@ -791,6 +819,7 @@
                                   placeholder="CEP"
                                   v-model="Cliente.Pessoa.cep"
                                   :state="cepState"
+                                  :disabled="disable"
                                   required></b-form-input>
                   </b-form-group>
 
@@ -809,6 +838,7 @@
                                   placeholder="Endereço"
                                   v-model="Cliente.Pessoa.endereco"
                                   :state="enderecoState"
+                                  :disabled="disable"
                                   required></b-form-input>
                   </b-form-group>
 
@@ -818,6 +848,7 @@
                   <base-input type="text"
                               label="Número"
                               placeholder="Número"
+                              :disabled="disable"
                               v-model="Cliente.Pessoa.numero">
                   </base-input>
                 </b-col>
@@ -828,6 +859,7 @@
                   <base-input type="text"
                               label="Referência"
                               placeholder="Referência"
+                              :disabled="disable"
                               v-model="Cliente.Pessoa.referencia">
                   </base-input>
                 </b-col>
@@ -835,6 +867,7 @@
                   <base-input type="text"
                               label="Complemento"
                               placeholder="Complemento"
+                              :disabled="disable"
                               v-model="Cliente.Pessoa.complemento">
                   </base-input>
                 </b-col>
@@ -893,6 +926,9 @@
         razaosocialState: null,
         dismissSecs: 5,
         dismissCountDown: 0,
+        disable: false,
+        showFiltrar: false,
+        filtro: { nome: '' },
         Cliente: {
           Pessoa: {
             Nome: "",
@@ -954,22 +990,23 @@
     methods: {
 
       resetModal() {
-        this.Cliente.Pessoa.Nome = ''
-        this.Cliente.Pessoa.CPF = ''
-        this.Cliente.Pessoa.Celular = ''
-        this.Cliente.Pessoa.CEP = ''
-        this.Cliente.Pessoa.CNPJ = ''
-        this.Cliente.Pessoa.Complemento = ''
-        this.Cliente.Pessoa.Email = ''
-        this.Cliente.Pessoa.Endereco = ''
-        this.Cliente.Pessoa.NomeFantasia = ''
-        this.Cliente.Pessoa.RazaoSocial = ''
-        this.Cliente.Pessoa.Numero = 0
-        this.Cliente.Pessoa.UF = ''
-        this.Cliente.Pessoa.Referencia = ''
-        this.Cliente.Pessoa.RG = ''
-        this.Cliente.Pessoa.Telefone = ''
-        this.Cliente.Pessoa.Cidade = ''
+        this.Cliente.Pessoa.id = 0
+        this.Cliente.Pessoa.nome = ''
+        this.Cliente.Pessoa.cpf = ''
+        this.Cliente.Pessoa.celular = ''
+        this.Cliente.Pessoa.cep = ''
+        this.Cliente.Pessoa.cnpj = ''
+        this.Cliente.Pessoa.complemento = ''
+        this.Cliente.Pessoa.email = ''
+        this.Cliente.Pessoa.endereco = ''
+        this.Cliente.Pessoa.nomeFantasia = ''
+        this.Cliente.Pessoa.razaoSocial = ''
+        this.Cliente.Pessoa.numero = 0
+        this.Cliente.Pessoa.uf = ''
+        this.Cliente.Pessoa.referencia = ''
+        this.Cliente.Pessoa.rg = ''
+        this.Cliente.Pessoa.telefone = ''
+        this.Cliente.Pessoa.cidade = ''
         this.nameState = null
         this.cidadeState = null
         this.emailState = null
@@ -980,6 +1017,7 @@
         this.enderecoState = null
         this.cnpjState = null
         this.razaosocialState = null
+
       },
 
       countDownChanged(dismissCountDown) {
@@ -1075,7 +1113,10 @@
           });
       },
 
-      getClienteById(id) {
+      getClienteById(id, tpOperacao) {
+        if (tpOperacao == "Visualizar") {
+          this.disable = true
+        }
         axios.get("https://localhost:44376/Cliente/GetClienteById", {
           params: { "id": id }
         }).then(response => {
@@ -1083,6 +1124,24 @@
           this.Cliente = response.data.cliente
           this.Cliente.Pessoa = response.data.cliente.pessoa
           console.log(this.Cliente)
+        })
+          .catch(function (error) {
+            alert(error);
+          });
+      },
+
+      buscaCliente() {
+        var busca = this.filtro.nome
+        axios.get("https://localhost:44376/Cliente/buscaCliente", {
+          params: { "busca": busca }
+        }).then(response => {
+          if (busca != "") {
+            this.clientes = response.data.cliente
+          } else {
+            this.getClientes()
+          }
+          
+          
         })
           .catch(function (error) {
             alert(error);
@@ -1179,8 +1238,6 @@
       }
       
     },
-
-   
 
     mounted() {
       this.getClientes();

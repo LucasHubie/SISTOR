@@ -52,6 +52,78 @@ namespace SISTOR.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult Update([FromBody] Funcionario funcionario)
+        {
+            bool sucess = true;
+            var description = "";
+
+            try
+            {
+                _funcionarioRepositorio.Atualizarfuncionario(funcionario);
+                sucess = true;
+                description = "Funcionário atualizado com sucesso!";
+                return Json(new { sucess = sucess, description = description });
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Funcionário não atualizado";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
+        public IActionResult GetFuncionarioById(int id)
+        {
+            bool sucess = true;
+            var description = "";
+
+            try
+            {
+                var funcionario = _funcionarioRepositorio.GetFuncionarioById(id);
+                sucess = true;
+                description = "Funcionario encontrado com sucesso!";
+                return Json(new { sucess = sucess, description = description, funcionario = funcionario });
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Funcionario não encontrado criado";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+
+        }
+
+        public IActionResult Excluir(int id)
+        {
+            bool sucess = true;
+            var description = "";
+            try
+            {
+                var funcionario = _funcionarioRepositorio.GetFuncionarioById(id);
+                if (funcionario != null)
+                {
+                    _funcionarioRepositorio.Delete(funcionario.Id);
+                    sucess = true;
+                    description = "Funcionário excluido com sucesso!";
+                    return Json(new { sucess = sucess, description = description });
+                }
+                else
+                {
+                    sucess = false;
+                    description = "Funcionário não encontrado";
+                    return Json(new { sucess = sucess, description = description });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Funcionário não excluido";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
         //public IActionResult CriarFuncionario(Pessoa funcionario)
         //{
         //    bool sucess = true;
