@@ -63,7 +63,7 @@ namespace SISTOR.Repository
                     var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
                     throw new Exception(msg, ex);
                 }
-                throw new Exception("Falha ao criar novo Cliente", ex);
+                throw new Exception("Falha ao criar novo Orcamento", ex);
             }
             return obj.orcamento;
         }
@@ -74,7 +74,7 @@ namespace SISTOR.Repository
             {
 
                 _context.Update(obj.orcamento);
-                foreach (var itemloop in obj.lstprodutos)
+               /* foreach (var itemloop in obj.lstprodutos)
                 {
                     if(itemloop.idItem == 0)
                     {
@@ -91,7 +91,7 @@ namespace SISTOR.Repository
                         objItem.ValorItem = itemloop.ValorItem;
                         _context.Add(objItem);
                     }  
-                }
+                }*/
                 _context.SaveChanges();
             }
 
@@ -102,7 +102,7 @@ namespace SISTOR.Repository
                     var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
                     throw new Exception(msg, ex);
                 }
-                throw new Exception("Falha ao criar novo Cliente", ex);
+                throw new Exception("Falha ao alterar Orcamento", ex);
             }
             return obj.orcamento;
         }

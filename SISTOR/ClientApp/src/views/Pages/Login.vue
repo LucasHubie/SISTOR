@@ -33,7 +33,7 @@
                               name="Login"
                               prepend-icon="ni ni-email-83"
                               placeholder="Login"
-                              :rules="{required: true}"
+                              :rules="{required: true, min: 5}"
                               v-model="model.Login">
                   </base-input>
 
