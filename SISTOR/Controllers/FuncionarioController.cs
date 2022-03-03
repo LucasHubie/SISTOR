@@ -124,6 +124,36 @@ namespace SISTOR.Controllers
             }
         }
 
+        public IActionResult buscaFuncionario(string busca)
+        {
+            bool sucess = true;
+            var description = "";
+
+            try
+            {
+                List<Funcionario> obj = new List<Funcionario>();
+                obj = _funcionarioRepositorio.buscaFuncionario(busca);
+                if (obj != null)
+                {
+                    sucess = true;
+                    description = "Funcionário encontrado com sucesso!";
+                    return Json(new { sucess = sucess, description = description, funcionario = obj });
+                }
+                else
+                {
+                    sucess = false;
+                    description = "Funcionário não encontrado";
+                    return Json(new { sucess = sucess, description = description });
+                }
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Funcionário não encontrado";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
         //public IActionResult CriarFuncionario(Pessoa funcionario)
         //{
         //    bool sucess = true;

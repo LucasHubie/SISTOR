@@ -13,7 +13,11 @@
       <b-card-header class="border-0">
         <h3 class="mb-0 float-left">Funcionários</h3>
 
-        <base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
+        <base-button v-b-modal.modal-scrollable type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="">
+          <b-icon icon="question-circle-fill" aria-label="Help"></b-icon>
+        </base-button>
+
+        <base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v-on:click="showFiltrar = !showFiltrar">
           <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Filtrar</span>
         </base-button>
@@ -24,6 +28,24 @@
         </base-button>
 
       </b-card-header>
+
+      <div v-if="showFiltrar" class="modal-body">
+        <b-row>
+          <b-col lg="3">
+            <base-input type="text"
+                        label="Pesquisar"
+                        placeholder="Buscar por..."
+                        v-model="filtro.nome">
+            </base-input>
+          </b-col>
+          <b-col lg="1">
+            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="buscaCliente">
+              <span class="btn-inner--text">Buscar</span>
+            </base-button>
+          </b-col>
+
+        </b-row>
+      </div>
 
       <el-table class="table-responsive table"
                 header-row-class-name="thead-light"
@@ -72,6 +94,34 @@
         <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
       </b-card-footer>
 
+      <!--Modal Ajuda-->
+      <b-button v-b-modal.modal-scrollable></b-button>
+
+      <b-modal id="modal-scrollable" scrollable title="Tela de Funcionários">
+        <p class="my-4" v-for="i in 1" :key="i">
+          Para inclusão de um novo funcionário basta clicar sobre o botão "Adicionar" e preencher todos os campos com os dados sobre o mesmo.
+          <br />
+          <br />
+          Ao lado do botão de inclusão, temos o botão "Filtrar" que ao clicado abre uma caixa de pesquisa onde pode-se buscar por diferentes opções, como nome, e-mail,
+          cpf, rg e outros.
+          <br />
+          <br />
+          Um pouco mais abaixo temos uma listagem de todos os funcionários já inclusos no sistema, caso esteja em branco, isso se da por não haver nenhum funcionário incluso até o momento.
+          <br />
+          <br />
+          Dentro dessa listagem sobre cada funcionário, temos 3 opções em cada um deles. Começando da esquerda para a direita, temos o botão de detalhes, representado pelo ícone do olho,
+          onde após clicado será mostrado todos os detalhes do funcionário, visto que na tela inicial não cabem todos os detalhes do mesmo.
+          <br />
+          <br />
+          Na sequência temos o botão do meio que se refere ao botão de alteração do funcionário, representado pelo ícone de lápis. Então clicando sobre ele, será carregado todos os dados
+          do funcionário para alteração.
+          <br />
+          <br />
+          E por último temos o botão de exclusão, representado pelo ícone da lata de lixo. Onde após clicado, abrirá uma tela de confirmação de exclusão, onde terá a opção de confirmar
+          ou não a exclusão do funcionário.
+        </p>
+      </b-modal>
+
       <!--Modal inclusão-->
       <b-modal id="modal-1" title="Incluir Funcionário" size="xl" @show="resetModal"
                @hidden="resetModal"
@@ -83,13 +133,15 @@
 
             <h6 class="heading-small text-muted mb-4">Informações do Funcionário</h6>
 
+            <h5 class="redHeading">* Indica item obrigatório</h5>
+
             <div class="">
 
               <b-row>
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="Nome"
+                  <b-form-group label="Nome*"
                                 label-for="name-input"
                                 invalid-feedback="Nome é obrigatório"
                                 :state="nameState">
@@ -104,7 +156,7 @@
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="CPF"
+                  <b-form-group label="CPF*"
                                 label-for="cpf-input"
                                 invalid-feedback="CPF é obrigatório"
                                 :state="cpfState">
@@ -122,7 +174,7 @@
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="RG"
+                  <b-form-group label="RG*"
                                 label-for="rg-input"
                                 invalid-feedback="RG é obrigatório"
                                 :state="rgState">
@@ -138,7 +190,7 @@
 
                 <b-col lg="6">
 
-                  <b-form-group label="E-mail"
+                  <b-form-group label="E-mail*"
                                 label-for="email-input"
                                 invalid-feedback="E-mail é obrigatório"
                                 :state="emailState">
@@ -171,7 +223,7 @@
               <b-row>
                 <b-col lg="6">
 
-                  <b-form-group label="Cidade"
+                  <b-form-group label="Cidade*"
                                 label-for="cidade-input"
                                 invalid-feedback="Cidade é obrigatória"
                                 :state="cidadeState">
@@ -184,7 +236,7 @@
 
                 </b-col>
                 <b-col lg="3">
-                  <b-form-group label="UF"
+                  <b-form-group label="UF*"
                                 label-for="uf-input"
                                 invalid-feedback="UF é obrigatório"
                                 :state="ufState">
@@ -201,7 +253,7 @@
 
                 <b-col lg="6">
 
-                  <b-form-group label="CEP"
+                  <b-form-group label="CEP*"
                                 label-for="cep-input"
                                 invalid-feedback="CEP é obrigatório"
                                 :state="cepState">
@@ -219,7 +271,7 @@
 
                 <b-col lg="6">
 
-                  <b-form-group label="Endereco"
+                  <b-form-group label="Endereco*"
                                 label-for="endereco-input"
                                 invalid-feedback="Endereço é obrigatório"
                                 :state="enderecoState">
@@ -280,13 +332,15 @@
 
             <h6 class="heading-small text-muted mb-4">Informações do Funcionário</h6>
 
+            <h5 class="redHeading">* Indica item obrigatório</h5>
+
             <div class="">
 
               <b-row>
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="Nome"
+                  <b-form-group label="Nome*"
                                 label-for="name-input"
                                 invalid-feedback="Nome é obrigatório"
                                 :state="nameState">
@@ -301,7 +355,7 @@
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="CPF"
+                  <b-form-group label="CPF*"
                                 label-for="cpf-input"
                                 invalid-feedback="CPF é obrigatório"
                                 :state="cpfState">
@@ -319,7 +373,7 @@
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="RG"
+                  <b-form-group label="RG*"
                                 label-for="rg-input"
                                 invalid-feedback="RG é obrigatório"
                                 :state="rgState">
@@ -335,7 +389,7 @@
 
                 <b-col lg="6">
 
-                  <b-form-group label="E-mail"
+                  <b-form-group label="E-mail*"
                                 label-for="email-input"
                                 invalid-feedback="E-mail é obrigatório"
                                 :state="emailState">
@@ -368,7 +422,7 @@
               <b-row>
                 <b-col lg="6">
 
-                  <b-form-group label="Cidade"
+                  <b-form-group label="Cidade*"
                                 label-for="cidade-input"
                                 invalid-feedback="Cidade é obrigatória"
                                 :state="cidadeState">
@@ -381,7 +435,7 @@
 
                 </b-col>
                 <b-col lg="3">
-                  <b-form-group label="UF"
+                  <b-form-group label="UF*"
                                 label-for="uf-input"
                                 invalid-feedback="UF é obrigatório"
                                 :state="ufState">
@@ -398,7 +452,7 @@
 
                 <b-col lg="6">
 
-                  <b-form-group label="CEP"
+                  <b-form-group label="CEP*"
                                 label-for="cep-input"
                                 invalid-feedback="CEP é obrigatório"
                                 :state="cepState">
@@ -416,7 +470,7 @@
 
                 <b-col lg="6">
 
-                  <b-form-group label="Endereco"
+                  <b-form-group label="Endereco*"
                                 label-for="endereco-input"
                                 invalid-feedback="Endereço é obrigatório"
                                 :state="enderecoState">
@@ -713,17 +767,19 @@
         dismissSecs: 5,
         dismissCountDown: 0,
         disable: false,
+        showFiltrar: false,
+        filtro: { nome: '' },
         Funcionario: {
           Pessoa: {
             Nome: "",
             RG: "",
             CPF: "",
-            Telefone: "",
-            Celular: "",
+            telefone: "",
+            celular: "",
             Cidade: "",
             Email: "",
             CEP: "",
-            Numero: 0,
+            numero: 0,
             Complemento: "",
             Referencia: "",
             Endereco: "",
@@ -898,6 +954,22 @@
           });
       },
 
+      buscaCliente() {
+        var busca = this.filtro.nome
+        axios.get("https://localhost:44376/Funcionario/buscaFuncionario", {
+          params: { "busca": busca }
+        }).then(response => {
+          if (busca != "") {
+            this.funcionarios = response.data.funcionario
+          } else {
+            this.getFuncionarios()
+          }
+        })
+          .catch(function (error) {
+            alert(error);
+          });
+      },
+
       sendForm() {
 
         axios.post("https://localhost:44376/Funcionario/Create", {
@@ -967,8 +1039,10 @@
       },
 
       updateFuncionario() {
+        console.log(this.Funcionario)
         axios.post("https://localhost:44376/Funcionario/Update", {
           Funcionario: this.Funcionario.Pessoa,
+          IdPessoa: this.Funcionario.Pessoa.idPessoa,
           id: this.Funcionario.id
         }).then(response => {
           if (response.data.sucess = true) {

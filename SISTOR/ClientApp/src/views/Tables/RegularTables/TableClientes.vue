@@ -104,6 +104,10 @@
           Para inclusão de um novo cliente basta clicar sobre o botão "Adicionar" e preencher todos os campos com os dados sobre o mesmo.
           <br />
           <br />
+          Ao lado do botão de inclusão, temos o botão "Filtrar" que ao clicado abre uma caixa de pesquisa onde pode-se buscar por diferentes opções, como nome, e-mail, nome fantasia,
+          cpf, rg e outros. 
+          <br />
+          <br />
           Um pouco mais abaixo temos uma listagem de todos os clientes já inclusos no sistema, caso esteja em branco, isso se da por não haver nenhum cliente incluso até o momento.
           <br />
           <br />
@@ -131,6 +135,8 @@
 
             <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
 
+            <h5 class="redHeading mb-4">* Indica item obrigatório</h5>
+
             <div class="">
               <b-form-group>
                 <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
@@ -140,7 +146,7 @@
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="Nome"
+                  <b-form-group label="Nome*"
                                 label-for="name-input"
                                 invalid-feedback="Nome é obrigatório"
                                 :state="nameState">
@@ -154,7 +160,7 @@
                 </b-col>
                 <b-col lg="6" v-if="selected == 'J'">
 
-                  <b-form-group label="Nome Fantasia"
+                  <b-form-group label="Nome Fantasia*"
                                 label-for="name-input"
                                 invalid-feedback="Nome Fantasia é obrigatório"
                                 :state="nameState">
@@ -169,7 +175,7 @@
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="CPF"
+                  <b-form-group label="CPF*"
                                 label-for="cpf-input"
                                 invalid-feedback="CPF é obrigatório"
                                 :state="cpfState">
@@ -184,7 +190,7 @@
 
                 <b-col lg="6" v-if="selected == 'J'">
 
-                  <b-form-group label="CNPJ"
+                  <b-form-group label="CNPJ*"
                                 label-for="cnpj-input"
                                 invalid-feedback="CNPJ é obrigatório"
                                 :state="cnpjState">
@@ -202,7 +208,7 @@
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="RG"
+                  <b-form-group label="RG*"
                                 label-for="rg-input"
                                 invalid-feedback="RG é obrigatório"
                                 :state="rgState">
@@ -217,7 +223,7 @@
 
                 <b-col lg="6" v-if="selected == 'J'">
 
-                  <b-form-group label="Razão Social"
+                  <b-form-group label="Razão Social*"
                                 label-for="razaosocial-input"
                                 invalid-feedback="Razão Social é obrigatório"
                                 :state="razaosocialState">
@@ -232,7 +238,7 @@
 
                 <b-col lg="6">
 
-                  <b-form-group label="E-mail"
+                  <b-form-group label="E-mail*"
                                 label-for="email-input"
                                 invalid-feedback="E-mail é obrigatório"
                                 :state="emailState">
@@ -265,7 +271,7 @@
               <b-row>
                 <b-col lg="6">
 
-                  <b-form-group label="Cidade"
+                  <b-form-group label="Cidade*"
                                 label-for="cidade-input"
                                 invalid-feedback="Cidade é obrigatória"
                                 :state="cidadeState">
@@ -278,7 +284,7 @@
 
                 </b-col>
                 <b-col lg="3">
-                  <b-form-group label="UF"
+                  <b-form-group label="UF*"
                                 label-for="uf-input"
                                 invalid-feedback="UF é obrigatório"
                                 :state="ufState">
@@ -296,7 +302,7 @@
 
                 <b-col lg="6">
 
-                  <b-form-group label="CEP"
+                  <b-form-group label="CEP*"
                                 label-for="cep-input"
                                 invalid-feedback="CEP é obrigatório"
                                 :state="cepState">
@@ -314,7 +320,7 @@
 
                 <b-col lg="6">
 
-                  <b-form-group label="Endereco"
+                  <b-form-group label="Endereco*"
                                 label-for="endereco-input"
                                 invalid-feedback="Endereço é obrigatório"
                                 :state="enderecoState">
@@ -375,6 +381,8 @@
 
             <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
 
+            <h5 class="redHeading mb-4">* Indica item obrigatório</h5>
+
             <div class="">
               <b-form-group>
                 <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
@@ -385,7 +393,7 @@
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="Nome"
+                  <b-form-group label="Nome*"
                                 label-for="name-input"
                                 invalid-feedback="Nome é obrigatório"
                                 :state="nameState">
@@ -399,7 +407,7 @@
                 </b-col>
                 <b-col lg="6" v-if="selected == 'J'">
 
-                  <b-form-group label="Nome Fantasia"
+                  <b-form-group label="Nome Fantasia*"
                                 label-for="name-input"
                                 invalid-feedback="Nome Fantasia é obrigatório"
                                 :state="nameState">
@@ -414,7 +422,7 @@
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="CPF"
+                  <b-form-group label="CPF*"
                                 label-for="cpf-input"
                                 invalid-feedback="CPF é obrigatório"
                                 :state="cpfState">
@@ -429,7 +437,7 @@
 
                 <b-col lg="6" v-if="selected == 'J'">
 
-                  <b-form-group label="CNPJ"
+                  <b-form-group label="CNPJ*"
                                 label-for="cnpj-input"
                                 invalid-feedback="CNPJ é obrigatório"
                                 :state="cnpjState">
@@ -447,7 +455,7 @@
 
                 <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="RG"
+                  <b-form-group label="RG*"
                                 label-for="rg-input"
                                 invalid-feedback="RG é obrigatório"
                                 :state="rgState">
@@ -462,7 +470,7 @@
 
                 <b-col lg="6" v-if="selected == 'J'">
 
-                  <b-form-group label="Razão Social"
+                  <b-form-group label="Razão Social*"
                                 label-for="razaosocial-input"
                                 invalid-feedback="Razão Social é obrigatório"
                                 :state="razaosocialState">
@@ -477,7 +485,7 @@
 
                 <b-col lg="6">
 
-                  <b-form-group label="E-mail"
+                  <b-form-group label="E-mail*"
                                 label-for="email-input"
                                 invalid-feedback="E-mail é obrigatório"
                                 :state="emailState">
@@ -510,7 +518,7 @@
               <b-row>
                 <b-col lg="6">
 
-                  <b-form-group label="Cidade"
+                  <b-form-group label="Cidade*"
                                 label-for="cidade-input"
                                 invalid-feedback="Cidade é obrigatória"
                                 :state="cidadeState">
@@ -523,7 +531,7 @@
 
                 </b-col>
                 <b-col lg="3">
-                  <b-form-group label="UF"
+                  <b-form-group label="UF*"
                                 label-for="uf-input"
                                 invalid-feedback="UF é obrigatório"
                                 :state="ufState">
@@ -540,8 +548,8 @@
               <b-row>
 
                 <b-col lg="6">
-
-                  <b-form-group label="CEP"
+                  
+                  <b-form-group label="CEP*"
                                 label-for="cep-input"
                                 invalid-feedback="CEP é obrigatório"
                                 :state="cepState">
@@ -559,7 +567,7 @@
 
                 <b-col lg="6">
 
-                  <b-form-group label="Endereco"
+                  <b-form-group label="Endereco*"
                                 label-for="endereco-input"
                                 invalid-feedback="Endereço é obrigatório"
                                 :state="enderecoState">
@@ -937,12 +945,12 @@
             CNPJ: "",
             RazaoSocial: "",
             NomeFantasia: "",
-            Telefone: "",
-            Celular: "",
+            telefone: "",
+            celular: "",
             Cidade: "",
             Email: "",
             CEP: "",
-            Numero: 0,
+            numero: 0,
             Complemento: "",
             Referencia: "",
             Endereco: "",

@@ -143,5 +143,11 @@ namespace SISTOR.Repository
             return _context.Funcionario.Where(p => p.Id == id).Include(p => p.Pessoa).FirstOrDefault();
         }
 
+        public List<Funcionario> buscaFuncionario(string busca)
+        {
+            return _context.Funcionario.Where(x => x.Pessoa.Nome.Contains(busca) || x.Pessoa.Email.Contains(busca) || x.Pessoa.CPF.Contains(busca)
+            || x.Pessoa.RG.Contains(busca)).Include(prop => prop.Pessoa).ToList();
+        }
+
     }
 }

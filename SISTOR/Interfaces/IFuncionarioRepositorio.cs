@@ -18,5 +18,6 @@ namespace SISTOR.Interfaces
         List<Pessoa> GetFuncionario();
 
         List<Funcionario> GetFuncionarios();
+        List<Funcionario> buscaFuncionario(string busca);
     }
 }
