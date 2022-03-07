@@ -18,9 +18,18 @@ namespace SISTOR.Interfaces
 
         public List<Orcamento> GetOrcamentos();
 
+        public retornoOrcamentos GetOrcamentos(int pageNumber, int pageSize);
+
         public List<OrdemServico> GetOrdensServico();
         
 
         public OrcamentoVM GetOrcamentoById(int id);
+
+        public class retornoOrcamentos
+        {
+            public List<Orcamento> lst;
+
+            public int qntdRegistros;
+        }
     }
 }

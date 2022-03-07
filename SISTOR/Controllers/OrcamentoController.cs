@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SISTOR.Interfaces.IOrcamentoRepositorio;
 
 namespace SISTOR.Controllers
 {
@@ -28,6 +29,12 @@ namespace SISTOR.Controllers
         {
             List<Orcamento> orc = _orcamentoRepositorio.GetOrcamentos();
             return Json(orc);
+        }
+
+        public IActionResult GetOrcamentos(int pageNumber, int pageSize)
+        {
+            retornoOrcamentos retorno = _orcamentoRepositorio.GetOrcamentos(pageNumber, pageSize);
+            return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
         }
 
         public IActionResult GridOS()

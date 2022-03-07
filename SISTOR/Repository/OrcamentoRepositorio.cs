@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using PagedList;
 using SISTOR.Configuration;
 using SISTOR.Controllers;
 using SISTOR.Interfaces;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SISTOR.Interfaces.IOrcamentoRepositorio;
 
 namespace SISTOR.Repository
 {
@@ -111,6 +113,17 @@ namespace SISTOR.Repository
         {
             return _context.Orcamento.Include("Cliente.Pessoa").ToList();
         }
+
+        public retornoOrcamentos GetOrcamentos(int pageNumber, int pageSize)
+        {
+            retornoOrcamentos objretorno = new retornoOrcamentos();
+            var count = _context.Orcamento.Count();
+            var lst = _context.Orcamento.Include("Cliente.Pessoa").Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            objretorno.lst = lst;
+            objretorno.qntdRegistros = count;
+            return objretorno;
+        }
+
 
         public List<OrdemServico> GetOrdensServico()
         {

@@ -26,5 +26,7 @@ namespace SISTOR.Interfaces
         Pessoa GetPessoa(int? id);
         List<Cliente> buscaCliente(string busca);
 
+
+
     }
 }
