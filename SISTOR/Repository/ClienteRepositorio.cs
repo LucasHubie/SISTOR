@@ -84,6 +84,9 @@ namespace SISTOR.Repository
                 var cliente = GetClienteById( id);
                 if (cliente != null)
                 {
+                    Pessoa pessoa = new Pessoa();
+                    pessoa = GetPessoa(cliente.IdPessoa);
+                    _context.Remove(pessoa);
                     _context.Remove(cliente);
                     _context.SaveChanges();
                 }
@@ -105,6 +108,10 @@ namespace SISTOR.Repository
             }
         }
 
+        public Pessoa GetPessoa(int? id)
+        {
+            return _context.Pessoa.Where(x => x.Id == id).FirstOrDefault();
+        }
         public List<Cliente> GetClientes()
         {
             return _context.Cliente.Include(x => x.Pessoa).ToList();
@@ -130,6 +137,13 @@ namespace SISTOR.Repository
             return _context.Cliente.Where(x => x.Pessoa.Nome.Contains(nome)).Include(prop => prop.Pessoa).FirstOrDefault();
         }
 
-        
+        public List<Cliente> buscaCliente(string busca)
+        {
+            //return _context.Cliente.Include(x => x.Pessoa.Nome.Contains(busca) || x.Pessoa.NomeFantasia.Contains(busca)).OrderBy(x => x.Pessoa.Nome).ToList();
+            return _context.Cliente.Where(x => x.Pessoa.Nome.Contains(busca) || x.Pessoa.NomeFantasia.Contains(busca) || x.Pessoa.Email.Contains(busca) || x.Pessoa.CPF.Contains(busca)
+            || x.Pessoa.RG.Contains(busca) || x.Pessoa.CNPJ.Contains(busca) || x.Pessoa.RazaoSocial.Contains(busca))
+                .Include(prop => prop.Pessoa).ToList();
+        }
+
     }
 }

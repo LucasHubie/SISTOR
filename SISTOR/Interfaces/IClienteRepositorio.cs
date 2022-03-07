@@ -23,6 +23,8 @@ namespace SISTOR.Interfaces
         List<Pessoa> GetPessoaCliente();
 
         void Delete(int id);
+        Pessoa GetPessoa(int? id);
+        List<Cliente> buscaCliente(string busca);
 
 
 

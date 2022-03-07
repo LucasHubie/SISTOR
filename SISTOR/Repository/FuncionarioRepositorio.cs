@@ -46,6 +46,66 @@ namespace SISTOR.Repository
             }
             return funcionario;
         }
+
+        public Funcionario Atualizarfuncionario(Funcionario funcionario)
+        {
+            try
+            {
+                _context.Update(funcionario);
+                if (funcionario != null)
+                {
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("Falha ao atualizar funcionário");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                if (ex.InnerException is SqlException)
+                {
+                    var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
+                    throw new Exception(msg, ex);
+                }
+                throw new Exception("Falha ao atualizar funcionário", ex);
+            }
+            return funcionario;
+        }
+
+        public void Delete(int id)
+        {
+            try
+            {
+                //funcionario funcionario = new funcionario() { Id = id };
+                var funcionario = GetFuncionarioById( id);
+                if (funcionario != null)
+                {
+                    Pessoa pessoa = new Pessoa();
+                    pessoa = GetPessoa(funcionario.IdPessoa);
+                    _context.Remove(pessoa);
+                    _context.Remove(funcionario);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("Funcionário não encontrado");
+                }
+                
+            }
+
+            catch (Exception ex)
+            {
+                if (ex.InnerException is SqlException)
+                {
+                    var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
+                    throw new Exception(msg, ex);
+                }
+                throw new Exception("Falha ao criar novo funcionario", ex);
+            }
+        }
+
         //public Pessoa CriarFuncionario(Pessoa funcionario)
         //{
         //    if (funcionario != null)
@@ -63,6 +123,11 @@ namespace SISTOR.Repository
         //    return funcionario;
         //}
 
+        public Pessoa GetPessoa(int? id)
+        {
+            return _context.Pessoa.Where(x => x.Id == id).FirstOrDefault();
+        }
+
         public List<Pessoa> GetFuncionario()
         {
             return _context.Pessoa.ToList();
@@ -71,6 +136,17 @@ namespace SISTOR.Repository
         public List<Funcionario> GetFuncionarios()
         {
             return _context.Funcionario.Include(x => x.Pessoa).ToList();
+        }
+
+        public Funcionario GetFuncionarioById(int id)
+        {
+            return _context.Funcionario.Where(p => p.Id == id).Include(p => p.Pessoa).FirstOrDefault();
+        }
+
+        public List<Funcionario> buscaFuncionario(string busca)
+        {
+            return _context.Funcionario.Where(x => x.Pessoa.Nome.Contains(busca) || x.Pessoa.Email.Contains(busca) || x.Pessoa.CPF.Contains(busca)
+            || x.Pessoa.RG.Contains(busca)).Include(prop => prop.Pessoa).ToList();
         }
 
     }

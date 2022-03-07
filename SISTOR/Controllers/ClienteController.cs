@@ -171,6 +171,35 @@ namespace SISTOR.Controllers
             }
         }
 
-        
+        public IActionResult buscaCliente(string busca)
+        {
+            bool sucess = true;
+            var description = "";
+
+            try
+            {
+                List<Cliente> obj = new List<Cliente>();
+                obj = _clienteRepositorio.buscaCliente(busca);
+                if (obj != null)
+                {
+                    sucess = true;
+                    description = "Cliente encontrado com sucesso!";
+                    return Json(new { sucess = sucess, description = description, cliente = obj });
+                }
+                else
+                {
+                    sucess = false;
+                    description = "Cliente não encontrado";
+                    return Json(new { sucess = sucess, description = description });
+                }
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Cliente não encontrado";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
     }
 }
