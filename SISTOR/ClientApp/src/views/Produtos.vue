@@ -7,7 +7,7 @@
     <b-container fluid class="mt--7">
       <b-row>
         <b-col>
-          <table-funcionarios />
+          <table-produtos />
         </b-col>
       </b-row>
     </b-container>

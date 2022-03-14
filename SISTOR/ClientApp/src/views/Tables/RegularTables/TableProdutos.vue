@@ -1,7 +1,7 @@
 <template>
   <b-card style="box-shadow: 3px 0px 5px 3px #0000007d;" no-body>
     <b-card-header class="border-0">
-      <h3 class="mb-0 float-left">Funcionário</h3>
+      <h3 class="mb-0 float-left">Produto</h3>
       <base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
         <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
         <span class="btn-inner--text">Filtrar</span>
@@ -238,7 +238,7 @@
   import { Table, TableColumn, DropdownMenu, DropdownItem, Dropdown } from 'element-ui'
   import axios from 'axios'
   export default {
-    name: 'table-funcionarios',
+    name: 'table-produtos',
     components: {
       [Table.name]: Table,
       [TableColumn.name]: TableColumn,

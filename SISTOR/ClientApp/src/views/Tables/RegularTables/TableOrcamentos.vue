@@ -595,7 +595,7 @@
       },
 
       getFuncionarios() {
-        axios.get("https://localhost:44376/Funcionario/Grid", {
+        axios.get("https://localhost:44376/Funcionario/Index", {
         }).then(response => {
 
           console.log('func', response.data);
@@ -745,7 +745,7 @@
     },
     mounted() {
       this.getOrcamentos(1,10);
-     // this.getFuncionarios();
+      this.getFuncionarios();
     },
     watch: {
       currentPage: function (novo, velho) {

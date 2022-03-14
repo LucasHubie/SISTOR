@@ -32,17 +32,28 @@ namespace SISTOR.Controllers
         {
             bool sucess = true;
             var description = "";
-            if(user != null)
+            Usuario userAtivo = new Usuario();
+            userAtivo = _usuarioRepositorio.GetUsuarioLogin(user);
+            if (userAtivo != null)
+            {
+                if (user.Login == userAtivo.Login)
+                {
+                    sucess = false;
+                    description = "Usuário não criado, login já existe!";
+                    return Json(new { sucess = sucess, description = description });
+                } else
+                {
+                    _usuarioRepositorio.CriarUsuario(user);
+                    sucess = true;
+                    description = "Usuário criado com sucesso!";
+                    return Json(new { sucess = sucess, description = description });
+                }
+            }
+            else
             {
                 _usuarioRepositorio.CriarUsuario(user);
                 sucess = true;
                 description = "Usuário criado com sucesso!";
-                return Json(new { sucess = sucess, description = description });
-            }
-            else
-            {
-                sucess = false;
-                description = "Usuário não criado";
                 return Json(new { sucess = sucess, description = description });
             }
             

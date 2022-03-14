@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SISTOR.Interfaces.IClienteRepositorio;
 
 namespace SISTOR.Controllers
 {
@@ -22,14 +23,23 @@ namespace SISTOR.Controllers
         }
 
 
-        public IActionResult Index()
-        {
-            List<Cliente> cliente = _clienteRepositorio.GetClientes();
+        //public IActionResult Index()
+        //{
+        //    List<Cliente> cliente = _clienteRepositorio.GetClientes();
             
-            return Json(cliente);
+        //    return Json(cliente);
+        //}
+
+        public IActionResult Index(int pageNumber, int pageSize)
+        {
+            //List<Cliente> cliente = _clienteRepositorio.GetClientes();
+
+
+            retornoClientes retorno = _clienteRepositorio.GetClientes(pageNumber, pageSize);
+            return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
         }
 
-        
+
         [HttpPost]
         public IActionResult Create([FromBody]Cliente cliente)
         {

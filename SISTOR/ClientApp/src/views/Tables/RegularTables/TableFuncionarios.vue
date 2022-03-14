@@ -91,7 +91,7 @@
       </el-table>
 
       <b-card-footer class="py-4 d-flex justify-content-end">
-        <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
+        <base-pagination v-model="currentPage" :per-page="10" :total="qntdRegistros" @change="change"></base-pagination>
       </b-card-footer>
 
       <!--Modal Ajuda-->
@@ -120,6 +120,21 @@
           E por último temos o botão de exclusão, representado pelo ícone da lata de lixo. Onde após clicado, abrirá uma tela de confirmação de exclusão, onde terá a opção de confirmar
           ou não a exclusão do funcionário.
         </p>
+
+        <template #modal-footer>
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="cancelarHelp">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarHelp">
+
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+        </template>
+
       </b-modal>
 
       <!--Modal inclusão-->
@@ -133,7 +148,7 @@
 
             <h6 class="heading-small text-muted mb-4">Informações do Funcionário</h6>
 
-            <h5 class="redHeading">* Indica item obrigatório</h5>
+            <h5 class="redHeading">* Indica item obrigatório (todos os campos obrigatórios devem ser preenchidos)</h5>
 
             <div class="">
 
@@ -318,6 +333,20 @@
           </b-form-group>
 
         </form>
+
+        <template #modal-footer>
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOk">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarInclusao">
+
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+        </template>
 
       </b-modal>
 
@@ -332,7 +361,7 @@
 
             <h6 class="heading-small text-muted mb-4">Informações do Funcionário</h6>
 
-            <h5 class="redHeading">* Indica item obrigatório</h5>
+            <h5 class="redHeading">* Indica item obrigatório (todos os campos obrigatórios devem ser preenchidos)</h5>
 
             <div class="">
 
@@ -517,6 +546,20 @@
           </b-form-group>
 
         </form>
+
+        <template #modal-footer>
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOKupdate">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarUpdate">
+
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+        </template>
 
       </b-modal>
 
@@ -728,6 +771,20 @@
 
         </form>
 
+        <template #modal-footer>
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOKdetail">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarDetail">
+
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+        </template>
+
       </b-modal>
 
     </b-card>
@@ -769,6 +826,7 @@
         disable: false,
         showFiltrar: false,
         filtro: { nome: '' },
+        qntdRegistros: 0,
         Funcionario: {
           Pessoa: {
             Nome: "",
@@ -923,15 +981,52 @@
           this.$bvModal.hide('modal-3')
         })
       },
+      cancelarInclusao() {
+        this.resetModal()
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-1')
+        })
+      },
+      cancelarUpdate() {
+        this.resetModal()
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-2')
+        })
+      },
+      cancelarDetail() {
+        this.resetModal()
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-3')
+        })
+      },
+      cancelarHelp() {
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-scrollable')
+        })
+      },
 
-      getFuncionarios() {
+      //getFuncionarios() {
+      //  axios.get("https://localhost:44376/Funcionario/Index", {
+      //  }).then(response => {
+      //    console.log(response.data)
+      //    this.funcionarios = response.data
+      //  })
+      //    .catch(function (error) {
+      //      alert(error);
+      //    });
+      //},
+      getFuncionarios(pageN, pageS) {
         axios.get("https://localhost:44376/Funcionario/Index", {
+          params: { "pageNumber": pageN, "pageSize": pageS }
         }).then(response => {
           console.log(response.data)
-          this.funcionarios = response.data
+          this.funcionarios = response.data.lst;
+          this.qntdRegistros = response.data.qntdRegistros;
+          console.log('carrega funcionários', this.funcionarios)
+          console.log('qutnd', this.qntdRegistros)
         })
           .catch(function (error) {
-            alert(error);
+            alert("Falha ao Carregar Funcionários");
           });
       },
 
@@ -962,7 +1057,7 @@
           if (busca != "") {
             this.funcionarios = response.data.funcionario
           } else {
-            this.getFuncionarios()
+            this.getFuncionarios(1, 10)
           }
         })
           .catch(function (error) {
@@ -981,7 +1076,7 @@
             //window.location.href = "#/funcionarios"
             this.showAlert();
             this.$bvModal.hide("modal-1")
-            this.getFuncionarios()
+            this.getFuncionarios(1, 10)
           }
           else {
             alert(response.data.description)
@@ -1027,7 +1122,7 @@
             console.log(response.data)
             /*alert(response.data.description)*/
             this.showAlert()
-            this.getFuncionarios()
+            this.getFuncionarios(1, 10)
           }
           else {
             alert(response.data.description)
@@ -1039,10 +1134,8 @@
       },
 
       updateFuncionario() {
-        console.log(this.Funcionario)
         axios.post("https://localhost:44376/Funcionario/Update", {
-          Funcionario: this.Funcionario.Pessoa,
-          IdPessoa: this.Funcionario.Pessoa.idPessoa,
+          Pessoa: this.Funcionario.Pessoa,
           id: this.Funcionario.id
         }).then(response => {
           if (response.data.sucess = true) {
@@ -1059,11 +1152,14 @@
           .catch(function (error) {
             alert(error);
           });
-      }
-
+      },
+      change(val) {
+        console.log("teste")
+        this.getFuncionarios(val, 10);
+      },
     },
     mounted() {
-      this.getFuncionarios();
+      this.getFuncionarios(1, 10);
     }
   }
 </script>

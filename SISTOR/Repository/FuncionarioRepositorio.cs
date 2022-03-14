@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SISTOR.Interfaces.IFuncionarioRepositorio;
 
 namespace SISTOR.Repository
 {
@@ -136,6 +137,16 @@ namespace SISTOR.Repository
         public List<Funcionario> GetFuncionarios()
         {
             return _context.Funcionario.Include(x => x.Pessoa).ToList();
+        }
+
+        public retornoFuncionarios GetFuncionarios(int pageNumber, int pageSize)
+        {
+            retornoFuncionarios objretorno = new retornoFuncionarios();
+            var count = _context.Funcionario.Count();
+            var lst = _context.Funcionario.Include(x => x.Pessoa).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            objretorno.lst = lst;
+            objretorno.qntdRegistros = count;
+            return objretorno;
         }
 
         public Funcionario GetFuncionarioById(int id)

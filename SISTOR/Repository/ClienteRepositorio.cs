@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SISTOR.Interfaces.IClienteRepositorio;
 
 namespace SISTOR.Repository
 {
@@ -18,8 +19,6 @@ namespace SISTOR.Repository
         {
             _context = context;
         }
-
-
 
         public Cliente CriarCliente(Cliente cliente)
         {
@@ -117,6 +116,16 @@ namespace SISTOR.Repository
             return _context.Cliente.Include(x => x.Pessoa).ToList();
         }
 
+        public retornoClientes GetClientes(int pageNumber, int pageSize)
+        {
+            retornoClientes objretorno = new retornoClientes();
+            var count = _context.Cliente.Count();
+            var lst = _context.Cliente.Include(x => x.Pessoa).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            objretorno.lst = lst;
+            objretorno.qntdRegistros = count;
+            return objretorno;
+        }
+
         public List<Pessoa> GetPessoaCliente()
         {
             return _context.Pessoa.ToList();
@@ -144,6 +153,8 @@ namespace SISTOR.Repository
             || x.Pessoa.RG.Contains(busca) || x.Pessoa.CNPJ.Contains(busca) || x.Pessoa.RazaoSocial.Contains(busca))
                 .Include(prop => prop.Pessoa).ToList();
         }
+
+        
 
     }
 }
