@@ -183,17 +183,17 @@ namespace SISTOR.Repository
 
         public Cliente GetClienteByCPF(string cpf)
         {
-            return _context.Cliente.Include(x => x.Pessoa).Where(b => b.Pessoa.CPF == cpf).FirstOrDefault();
+            return _context.Cliente.Include(x => x.Pessoa).AsNoTracking().Where(b => b.Pessoa.CPF == cpf).FirstOrDefault();
         }
 
         public Cliente GetClienteByRG(string rg)
         {
-            return _context.Cliente.Include(x => x.Pessoa).Where(b => b.Pessoa.RG == rg).FirstOrDefault();
+            return _context.Cliente.Include(x => x.Pessoa).AsNoTracking().Where(b => b.Pessoa.RG == rg).FirstOrDefault();
         }
 
         public Cliente GetClienteByCNPJ(string cnpj)
         {
-            return _context.Cliente.Include(x => x.Pessoa).Where(b => b.Pessoa.CNPJ == cnpj).FirstOrDefault();
+            return _context.Cliente.Include(x => x.Pessoa).AsNoTracking().Where(b => b.Pessoa.CNPJ == cnpj).FirstOrDefault();
         }
 
         public Cliente GetClienteByNome(string nome)

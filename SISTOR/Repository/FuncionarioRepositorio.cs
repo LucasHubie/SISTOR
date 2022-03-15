@@ -25,7 +25,23 @@ namespace SISTOR.Repository
         {
             try
             {
-                _context.Add(funcionario);
+                Funcionario cpfDuplicado = new Funcionario();
+                Funcionario rgDuplicado = new Funcionario();
+                cpfDuplicado = GetFuncionarioByCPF(funcionario.Pessoa.CPF);
+                rgDuplicado = GetFuncionarioByRG(funcionario.Pessoa.RG);
+                if (cpfDuplicado != null && cpfDuplicado.Pessoa.CPF != "" && cpfDuplicado.Pessoa.CPF == funcionario.Pessoa.CPF)
+                {
+                    throw new Exception("Falha ao criar novo Funcionário! CPF já cadastrado!");
+                }
+                else if (rgDuplicado != null && rgDuplicado.Pessoa.RG != "" && rgDuplicado.Pessoa.RG == funcionario.Pessoa.RG)
+                {
+                    throw new Exception("Falha ao criar novo Funcionário! RG já cadastrado!");
+                }
+                else
+                {
+                    _context.Add(funcionario);
+                }
+
                 if (funcionario != null)
                 {
                     _context.SaveChanges();
@@ -43,7 +59,7 @@ namespace SISTOR.Repository
                     var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
                     throw new Exception(msg, ex);
                 }
-                throw new Exception("Falha ao criar novo Funcionário", ex);
+                throw;
             }
             return funcionario;
         }
@@ -52,7 +68,23 @@ namespace SISTOR.Repository
         {
             try
             {
-                _context.Update(funcionario);
+                Funcionario cpfDuplicado = new Funcionario();
+                Funcionario rgDuplicado = new Funcionario();
+                cpfDuplicado = GetFuncionarioByCPF(funcionario.Pessoa.CPF);
+                rgDuplicado = GetFuncionarioByRG(funcionario.Pessoa.RG);
+                if (cpfDuplicado != null && cpfDuplicado.Pessoa.CPF != "" && cpfDuplicado.Id != funcionario.Id && cpfDuplicado.Pessoa.CPF == funcionario.Pessoa.CPF)
+                {
+                    throw new Exception("Falha ao atualizar Funcionário! CPF já cadastrado!");
+                }
+                else if (rgDuplicado != null && rgDuplicado.Pessoa.RG != "" && rgDuplicado.Id != funcionario.Id && rgDuplicado.Pessoa.RG == funcionario.Pessoa.RG)
+                {
+                    throw new Exception("Falha ao atualizar Funcionário! RG já cadastrado!");
+                }
+                else
+                {
+                    _context.Update(funcionario);
+                }
+                
                 if (funcionario != null)
                 {
                     _context.SaveChanges();
@@ -70,7 +102,7 @@ namespace SISTOR.Repository
                     var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
                     throw new Exception(msg, ex);
                 }
-                throw new Exception("Falha ao atualizar funcionário", ex);
+                throw;
             }
             return funcionario;
         }
@@ -107,23 +139,6 @@ namespace SISTOR.Repository
             }
         }
 
-        //public Pessoa CriarFuncionario(Pessoa funcionario)
-        //{
-        //    if (funcionario != null)
-        //    {
-        //        funcionario.CPF = Md5Hash.CalculaHash(funcionario.CPF);
-        //        funcionario.RG = Md5Hash.CalculaHash(funcionario.RG);
-        //        _context.Add(funcionario);
-        //        _context.SaveChanges();
-        //    }
-        //    Funcionario func = new Funcionario();
-        //    //func.IdPessoa = GetFuncionarioId(funcionario.Id);
-        //    func.IdPessoa = funcionario.Id;
-        //    _context.Add(func);
-        //    _context.SaveChanges();
-        //    return funcionario;
-        //}
-
         public Pessoa GetPessoa(int? id)
         {
             return _context.Pessoa.Where(x => x.Id == id).FirstOrDefault();
@@ -147,6 +162,16 @@ namespace SISTOR.Repository
             objretorno.lst = lst;
             objretorno.qntdRegistros = count;
             return objretorno;
+        }
+
+        public Funcionario GetFuncionarioByCPF(string cpf)
+        {
+            return _context.Funcionario.Include(x => x.Pessoa).AsNoTracking().Where(b => b.Pessoa.CPF == cpf).FirstOrDefault();
+        }
+
+        public Funcionario GetFuncionarioByRG(string rg)
+        {
+            return _context.Funcionario.Include(x => x.Pessoa).AsNoTracking().Where(b => b.Pessoa.RG == rg).FirstOrDefault();
         }
 
         public Funcionario GetFuncionarioById(int id)

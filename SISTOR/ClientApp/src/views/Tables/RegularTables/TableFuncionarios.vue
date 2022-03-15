@@ -1070,7 +1070,7 @@
         axios.post("https://localhost:44376/Funcionario/Create", {
           Pessoa: this.Funcionario.Pessoa
         }).then(response => {
-          if (response.data.sucess = true) {
+          if (response.data.sucess == true) {
             console.log(response.data)
             //alert(response.data.description)
             //window.location.href = "#/funcionarios"
@@ -1118,7 +1118,7 @@
         axios.get("https://localhost:44376/Funcionario/Excluir", {
           params: { "id": id }
         }).then(response => {
-          if (response.data.sucess = true) {
+          if (response.data.sucess == true) {
             console.log(response.data)
             /*alert(response.data.description)*/
             this.showAlert()
@@ -1138,7 +1138,7 @@
           Pessoa: this.Funcionario.Pessoa,
           id: this.Funcionario.id
         }).then(response => {
-          if (response.data.sucess = true) {
+          if (response.data.sucess == true) {
             console.log(response.data)
             //alert(response.data.description)
             this.showAlert()
