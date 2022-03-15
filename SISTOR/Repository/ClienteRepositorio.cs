@@ -26,7 +26,29 @@ namespace SISTOR.Repository
             {
                 //cliente.Pessoa.CPF = Md5Hash.CalculaHash(cliente.Pessoa.CPF);
                 //cliente.Pessoa.RG = Md5Hash.CalculaHash(cliente.Pessoa.RG);
-                _context.Add(cliente);
+                Cliente cpfDuplicado = new Cliente();
+                Cliente rgDuplicado = new Cliente();
+                Cliente cnpjDuplicado = new Cliente();
+                cpfDuplicado = GetClienteByCPF(cliente.Pessoa.CPF);
+                rgDuplicado = GetClienteByRG(cliente.Pessoa.RG);
+                cnpjDuplicado = GetClienteByCNPJ(cliente.Pessoa.CNPJ);
+                if (cpfDuplicado != null && cpfDuplicado.Pessoa.CPF != "" && cpfDuplicado.Pessoa.CPF == cliente.Pessoa.CPF)
+                {
+                    throw new Exception("Falha ao criar novo Cliente! CPF já cadastrado!");
+                }
+                else if (rgDuplicado != null && rgDuplicado.Pessoa.RG != "" && rgDuplicado.Pessoa.RG == cliente.Pessoa.RG)
+                {
+                    throw new Exception("Falha ao criar novo Cliente! RG já cadastrado!");
+                } 
+                else if (cnpjDuplicado != null && cnpjDuplicado.Pessoa.CNPJ != "" && cnpjDuplicado.Pessoa.CNPJ == cliente.Pessoa.CNPJ)
+                {
+                    throw new Exception("Falha ao criar novo Cliente! CNPJ já cadastrado!");
+                }
+                else
+                {
+                    _context.Add(cliente);
+                }
+                
                 if(cliente != null)
                 {
                     _context.SaveChanges();
@@ -43,7 +65,8 @@ namespace SISTOR.Repository
                     var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
                     throw new Exception(msg, ex);
                 }
-                throw new Exception("Falha ao criar novo Cliente", ex);
+                //throw new Exception("Falha ao criar novo Cliente", ex);
+                throw;
             }
             return cliente;
         }
@@ -52,7 +75,29 @@ namespace SISTOR.Repository
         {
             try
             {
-                _context.Update(cliente);
+                Cliente cpfDuplicado = new Cliente();
+                Cliente rgDuplicado = new Cliente();
+                Cliente cnpjDuplicado = new Cliente();
+                cpfDuplicado = GetClienteByCPF(cliente.Pessoa.CPF);
+                rgDuplicado = GetClienteByRG(cliente.Pessoa.RG);
+                cnpjDuplicado = GetClienteByCNPJ(cliente.Pessoa.CNPJ);
+                if (cpfDuplicado != null && cpfDuplicado.Pessoa.CPF != "" && cpfDuplicado.Id != cliente.Id && cpfDuplicado.Pessoa.CPF == cliente.Pessoa.CPF)
+                {
+                    throw new Exception("Falha ao atualizar Cliente! CPF já cadastrado!");
+                }
+                else if (rgDuplicado != null && rgDuplicado.Pessoa.RG != "" && rgDuplicado.Id != cliente.Id && rgDuplicado.Pessoa.RG == cliente.Pessoa.RG)
+                {
+                    throw new Exception("Falha ao atualizar Cliente! RG já cadastrado!");
+                }
+                else if (cnpjDuplicado != null && cnpjDuplicado.Pessoa.CNPJ != "" && cnpjDuplicado.Pessoa.CNPJ == cliente.Pessoa.CNPJ)
+                {
+                    throw new Exception("Falha ao atualizar Cliente! CNPJ já cadastrado!");
+                }
+                else
+                {
+                    _context.Update(cliente);
+                }
+                
                 if (cliente != null)
                 {
                     _context.SaveChanges();
@@ -70,7 +115,7 @@ namespace SISTOR.Repository
                     var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
                     throw new Exception(msg, ex);
                 }
-                throw new Exception("Falha ao atualizar Cliente", ex);
+                throw;
             }
             return cliente;
         }
@@ -141,6 +186,16 @@ namespace SISTOR.Repository
             return _context.Cliente.Include(x => x.Pessoa).Where(b => b.Pessoa.CPF == cpf).FirstOrDefault();
         }
 
+        public Cliente GetClienteByRG(string rg)
+        {
+            return _context.Cliente.Include(x => x.Pessoa).Where(b => b.Pessoa.RG == rg).FirstOrDefault();
+        }
+
+        public Cliente GetClienteByCNPJ(string cnpj)
+        {
+            return _context.Cliente.Include(x => x.Pessoa).Where(b => b.Pessoa.CNPJ == cnpj).FirstOrDefault();
+        }
+
         public Cliente GetClienteByNome(string nome)
         {
             return _context.Cliente.Where(x => x.Pessoa.Nome.Contains(nome)).Include(prop => prop.Pessoa).FirstOrDefault();
@@ -154,7 +209,7 @@ namespace SISTOR.Repository
                 .Include(prop => prop.Pessoa).ToList();
         }
 
-        
+       
 
     }
 }

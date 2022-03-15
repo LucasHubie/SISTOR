@@ -1143,7 +1143,7 @@
             //alert(response.data.description)
             this.showAlert()
             this.$bvModal.hide("modal-2")
-            this.getFuncionarios()
+            this.getFuncionarios(1, 10)
           }
           else {
             alert(response.data.description)

@@ -1230,7 +1230,7 @@
           if (busca != "") {
             this.clientes = response.data.cliente
           } else {
-            this.getClientes()
+            this.getClientes(1, 10)
           }
           
           
@@ -1245,13 +1245,13 @@
         axios.post("https://localhost:44376/Cliente/Create", {
           Pessoa: this.Cliente.Pessoa
         }).then(response => {
-          if (response.data.sucess = true) {
+          if (response.data.sucess == true) {
             console.log(response.data)
             //alert(response.data.description)
             //window.location.href = "#/funcionarios"
             this.showAlert()
             this.$bvModal.hide("modal-1")
-            this.getClientes()
+            this.getClientes(1, 10)
           }
           else {
             alert(response.data.description)
@@ -1297,7 +1297,7 @@
           console.log(response.data)
           /*alert(response.data.description)*/
           this.showAlert()
-          this.getClientes()
+          this.getClientes(1, 10)
         }
         else {
           alert(response.data.description)
@@ -1311,14 +1311,15 @@
       updateCliente() {
         axios.post("https://localhost:44376/Cliente/Update", {
           Pessoa: this.Cliente.Pessoa,
+          IdPessoa: this.Cliente.IdPessoa,
           id: this.Cliente.id
         }).then(response => {
-          if (response.data.sucess = true) {
+          if (response.data.sucess == true) {
             console.log(response.data)
             //alert(response.data.description)
             this.showAlert()
             this.$bvModal.hide("modal-2")
-            this.getClientes()
+            this.getClientes(1, 10)
           }
           else {
             alert(response.data.description)
