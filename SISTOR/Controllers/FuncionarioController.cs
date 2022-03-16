@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SISTOR.Interfaces.IFuncionarioRepositorio;
 
 namespace SISTOR.Controllers
 {
@@ -19,17 +20,18 @@ namespace SISTOR.Controllers
             _context = context;
             _funcionarioRepositorio = funcionarioRepositorio;
         }
+
+        public IActionResult Index(int pageNumber, int pageSize)
+        {
+            retornoFuncionarios retorno = _funcionarioRepositorio.GetFuncionarios(pageNumber, pageSize);
+            return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
+        }
+
         //public IActionResult Index()
         //{
-        //    List<Pessoa> funcionario = _funcionarioRepositorio.GetFuncionario();
+        //    List<Funcionario> funcionario = _funcionarioRepositorio.GetFuncionarios();
         //    return Json(funcionario);
         //}
-
-        public IActionResult Index()
-        {
-            List<Funcionario> funcionario = _funcionarioRepositorio.GetFuncionarios();
-            return Json(funcionario);
-        }
 
         [HttpPost]
         public IActionResult Create([FromBody] Funcionario funcionario)

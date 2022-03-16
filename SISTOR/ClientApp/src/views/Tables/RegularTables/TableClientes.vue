@@ -41,13 +41,13 @@
             </base-input>
           </b-col>
           <b-col lg="1">
-            <base-button  class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="buscaCliente">
-            <span class="btn-inner--text">Buscar</span>
-          </base-button>
-        </b-col>
-      
-      </b-row>
-    </div>
+            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="buscaCliente">
+              <span class="btn-inner--text">Buscar</span>
+            </base-button>
+          </b-col>
+
+        </b-row>
+      </div>
 
       <el-table class="table-responsive table"
                 header-row-class-name="thead-light"
@@ -93,7 +93,7 @@
       </el-table>
 
       <b-card-footer class="py-4 d-flex justify-content-end">
-        <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
+        <base-pagination v-model="currentPage" :per-page="10" :total="qntdRegistros" @change="change"></base-pagination>
       </b-card-footer>
 
       <!--Modal Ajuda-->
@@ -105,7 +105,7 @@
           <br />
           <br />
           Ao lado do botão de inclusão, temos o botão "Filtrar" que ao clicado abre uma caixa de pesquisa onde pode-se buscar por diferentes opções, como nome, e-mail, nome fantasia,
-          cpf, rg e outros. 
+          cpf, rg e outros.
           <br />
           <br />
           Um pouco mais abaixo temos uma listagem de todos os clientes já inclusos no sistema, caso esteja em branco, isso se da por não haver nenhum cliente incluso até o momento.
@@ -122,7 +122,23 @@
           E por último temos o botão de exclusão, representado pelo ícone da lata de lixo. Onde após clicado, abrirá uma tela de confirmação de exclusão, onde terá a opção de confirmar
           ou não a exclusão do cliente.
         </p>
+
+        <template #modal-footer>
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="cancelarHelp">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarHelp">
+
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+        </template>
+
       </b-modal>
+      
 
       <!--Modal inclusão-->
       <b-modal id="modal-1" title="Incluir Cliente" size="xl" @show="resetModal"
@@ -135,7 +151,7 @@
 
             <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
 
-            <h5 class="redHeading mb-4">* Indica item obrigatório</h5>
+            <h5 class="redHeading mb-4">* Indica item obrigatório (todos os campos obrigatórios devem ser preenchidos)</h5>
 
             <div class="">
               <b-form-group>
@@ -367,6 +383,20 @@
           </b-form-group>
 
         </form>
+
+        <template #modal-footer>
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOk">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarInclusao">
+
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+        </template>
 
       </b-modal>
 
@@ -381,7 +411,7 @@
 
             <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
 
-            <h5 class="redHeading mb-4">* Indica item obrigatório</h5>
+            <h5 class="redHeading mb-4">* Indica item obrigatório (todos os campos obrigatórios devem ser preenchidos)</h5>
 
             <div class="">
               <b-form-group>
@@ -548,7 +578,7 @@
               <b-row>
 
                 <b-col lg="6">
-                  
+
                   <b-form-group label="CEP*"
                                 label-for="cep-input"
                                 invalid-feedback="CEP é obrigatório"
@@ -614,6 +644,20 @@
           </b-form-group>
 
         </form>
+
+        <template #modal-footer>
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOKupdate">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarUpdate">
+
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+        </template>
 
       </b-modal>
 
@@ -635,19 +679,6 @@
 
               </b-form-group>
 
-              <!--<b-col lg="6">
-
-            <b-form-group label="Tipo Pessoa"
-                          label-for="pessoatipo-input"
-                          :state="tipopessoaState">
-              <b-form-input id="pessoatipo-input"
-                            placeholder="Tipo de pessoa"
-                            v-model="Cliente.Pessoa.tipoPessoa"
-                            :state="tipopessoaState"
-                            ></b-form-input>
-            </b-form-group>
-
-          </b-col>-->
 
               <b-row>
 
@@ -890,6 +921,20 @@
 
         </form>
 
+        <template #modal-footer>
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOKdetail">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarDetail">
+
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+        </template>
+
       </b-modal>
       <!--Modal detail-->
 
@@ -937,6 +982,7 @@
         disable: false,
         showFiltrar: false,
         filtro: { nome: '' },
+        qntdRegistros: 0,
         Cliente: {
           Pessoa: {
             Nome: "",
@@ -1109,15 +1155,53 @@
           this.$bvModal.hide('modal-3')
         })
       },
+      cancelarInclusao() {
+        this.resetModal()
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-1')
+        })
+      },
+      cancelarUpdate() {
+        this.resetModal()
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-2')
+        })
+      },
+      cancelarDetail() {
+        this.resetModal()
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-3')
+        })
+      },
+      cancelarHelp() {
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-scrollable')
+        })
+      },
 
-      getClientes() {
+      //getClientes() {
+      //  axios.get("https://localhost:44376/Cliente/Index", {
+      //  }).then(response => {
+      //    console.log(response.data)
+      //    this.clientes = response.data
+      //  })
+      //    .catch(function (error) {
+      //      alert(error);
+      //    });
+      //},
+
+      getClientes(pageN, pageS) {
         axios.get("https://localhost:44376/Cliente/Index", {
+          params: { "pageNumber": pageN, "pageSize": pageS }
         }).then(response => {
           console.log(response.data)
-          this.clientes = response.data
+          this.clientes = response.data.lst;
+          this.qntdRegistros = response.data.qntdRegistros;
+          console.log('carrega clientes', this.clientes)
+          console.log('qutnd', this.qntdRegistros)
         })
           .catch(function (error) {
-            alert(error);
+            alert("Falha ao Carregar Clientes");
           });
       },
 
@@ -1141,12 +1225,12 @@
       buscaCliente() {
         var busca = this.filtro.nome
         axios.get("https://localhost:44376/Cliente/buscaCliente", {
-          params: { "busca": busca }
+          params: { "busca": busca  }
         }).then(response => {
           if (busca != "") {
             this.clientes = response.data.cliente
           } else {
-            this.getClientes()
+            this.getClientes(1, 10)
           }
           
           
@@ -1161,13 +1245,13 @@
         axios.post("https://localhost:44376/Cliente/Create", {
           Pessoa: this.Cliente.Pessoa
         }).then(response => {
-          if (response.data.sucess = true) {
+          if (response.data.sucess == true) {
             console.log(response.data)
             //alert(response.data.description)
             //window.location.href = "#/funcionarios"
             this.showAlert()
             this.$bvModal.hide("modal-1")
-            this.getClientes()
+            this.getClientes(1, 10)
           }
           else {
             alert(response.data.description)
@@ -1213,7 +1297,7 @@
           console.log(response.data)
           /*alert(response.data.description)*/
           this.showAlert()
-          this.getClientes()
+          this.getClientes(1, 10)
         }
         else {
           alert(response.data.description)
@@ -1227,14 +1311,15 @@
       updateCliente() {
         axios.post("https://localhost:44376/Cliente/Update", {
           Pessoa: this.Cliente.Pessoa,
+          IdPessoa: this.Cliente.IdPessoa,
           id: this.Cliente.id
         }).then(response => {
-          if (response.data.sucess = true) {
+          if (response.data.sucess == true) {
             console.log(response.data)
             //alert(response.data.description)
             this.showAlert()
             this.$bvModal.hide("modal-2")
-            this.getClientes()
+            this.getClientes(1, 10)
           }
           else {
             alert(response.data.description)
@@ -1243,12 +1328,15 @@
           .catch(function (error) {
             alert(error);
           });
-      }
-      
+      },
+      change(val) {
+        console.log("teste")
+        this.getClientes(val, 10);
+      },
     },
 
     mounted() {
-      this.getClientes();
+      this.getClientes(1,10);
     }
   }
 </script>

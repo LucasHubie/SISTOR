@@ -16,8 +16,14 @@ namespace SISTOR.Interfaces
 
         //int GetFuncionarioId(int? id);
         List<Pessoa> GetFuncionario();
-
         List<Funcionario> GetFuncionarios();
         List<Funcionario> buscaFuncionario(string busca);
+        retornoFuncionarios GetFuncionarios(int pageNumber, int pageSize);
+        public class retornoFuncionarios
+        {
+            public List<Funcionario> lst;
+
+            public int qntdRegistros;
+        }
     }
 }

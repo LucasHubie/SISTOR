@@ -1,5 +1,14 @@
 <template>
   <div>
+
+    <b-alert :show="dismissCountDown"
+             dismissible
+             variant="warning"
+             @dismissed="dismissCountDown=0"
+             @dismiss-count-down="countDownChanged">
+      Confirmado com sucesso! <!--{{ dismissCountDown }}-->
+    </b-alert>
+
     <!-- Header -->
     <div class="header bg-gradient-success py-7 py-lg-8 pt-lg-9">
       <b-container>
@@ -47,7 +56,7 @@
                               v-model="model.Senha">
                   </base-input>
 
-        
+
                   <div class="text-center">
                     <base-button type="primary" native-type="submit" class="my-4" v:onClick="onSubmit">Login</base-button>
                   </div>
@@ -60,7 +69,7 @@
               <!--<router-link to="/dashboard" class="text-light"><small>Esqueceu sua Senha?</small></router-link>-->
             </b-col>
             <b-col cols="6">
-              <router-link to="/register" class="text-light float-right" ><small>Cadastre-se</small></router-link>
+              <router-link to="/register" class="text-light float-right"><small>Cadastre-se</small></router-link>
             </b-col>
           </b-row>
         </b-col>
@@ -75,6 +84,8 @@
   export default {
     data() {
       return {
+        dismissSecs: 5,
+        dismissCountDown: 0,
         model: {
           Nome: '',
           Login: '',
@@ -84,12 +95,19 @@
       };
     },
     methods: {
+      countDownChanged(dismissCountDown) {
+        this.dismissCountDown = dismissCountDown
+      },
+      showAlert() {
+        this.dismissCountDown = this.dismissSecs
+      },
       onSubmit() {
         axios.get("https://localhost:44376/Usuario/Login", {
           params: this.model
         }).then(response => {
           if (response.data.sucess == true) {
             console.log(response.data)
+            this.showAlert()
             window.location.href = "#/dashboard"
             //alert(response.data.description)
           }

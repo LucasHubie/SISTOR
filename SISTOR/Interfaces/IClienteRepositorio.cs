@@ -26,7 +26,14 @@ namespace SISTOR.Interfaces
         Pessoa GetPessoa(int? id);
         List<Cliente> buscaCliente(string busca);
 
+        retornoClientes GetClientes(int pageNumber, int pageSize);
 
+        public class retornoClientes
+        {
+            public List<Cliente> lst;
+
+            public int qntdRegistros;
+        }
 
     }
 }
