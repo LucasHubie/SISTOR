@@ -122,6 +122,7 @@
             <b-col lg="6" v-if="selected == 'F'">
               <base-input type="text"
                           label="CPF"
+                          v-mask="'###.###.###-##'"
                           placeholder="000.000.000-00"
                           v-model="cliente.pessoa.cpf">
               </base-input>
@@ -192,6 +193,20 @@
                           placeholder="Telefone Celular"
                           v-model="cliente.pessoa.celular">
               </base-input>
+            </b-col>
+            <b-col lg="6">
+
+              <b-form-group label="Cidade"
+                            label-for="cidade-input"
+                            invalid-feedback="Cidade é obrigatória"
+                            :state="cidadeState">
+                <b-form-input id="cidade-input"
+                              placeholder="Cidade"
+                              v-model="cliente.pessoa.cidade"
+                              :state="cidadeState"
+                              required></b-form-input>
+              </b-form-group>
+
             </b-col>
           </b-row>
           <b-row v-if="showNovoCliente">
@@ -491,6 +506,7 @@
 <script>
   import axios from 'axios'
   import { Table, TableColumn, DropdownMenu, DropdownItem, Dropdown } from 'element-ui'
+
   export default {
     name: 'table-orcamentos',
     components: {
