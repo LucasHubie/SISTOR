@@ -102,11 +102,15 @@
         this.dismissCountDown = this.dismissSecs
       },
       onSubmit() {
+
         axios.get("https://localhost:44376/Usuario/Login", {
           params: this.model
         }).then(response => {
           if (response.data.sucess == true) {
-            console.log(response.data)
+            const token = response.data.token
+            localStorage.setItem('user-token', token)
+           // console.log(localStorage);
+            alert('teste');
             this.showAlert()
             window.location.href = "#/dashboard"
             //alert(response.data.description)

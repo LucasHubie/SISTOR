@@ -15,7 +15,10 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "demo" */ '../views/Dashboard.vue')
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Dashboard.vue'),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: '/icons',
@@ -25,7 +28,10 @@ const routes = [
       {
         path: '/clientes',
         name: 'Clientes',
-        component: () => import(/* webpackChunkName: "demo" */ '../views/Clientes.vue')
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Clientes.vue'),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: '/profile',
@@ -40,22 +46,34 @@ const routes = [
       {
         path: '/orcamentos',
         name: 'Orçamentos',
-        component: () => import(/* webpackChunkName: "demo" */ '../views/Orcamentos.vue')
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Orcamentos.vue'),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: '/ordensServico',
         name: 'Ordem Serviço',
-        component: () => import(/* webpackChunkName: "demo" */ '../views/OrdemServico.vue')
+        component: () => import(/* webpackChunkName: "demo" */ '../views/OrdemServico.vue'),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: '/funcionarios',
         name: 'Funcionários',
-        component: () => import(/* webpackChunkName: "demo" */ '../views/Funcionarios.vue')
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Funcionarios.vue'),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: '/produtos',
         name: 'Produtos',
-        component: () => import(/* webpackChunkName: "demo" */ '../views/Produtos.vue')
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Produtos.vue'),
+        meta: {
+          requiresAuth: true
+        }
       },
     ]
   },
@@ -78,5 +96,7 @@ const routes = [
     ]
   }
 ];
+
+
 
 export default routes;

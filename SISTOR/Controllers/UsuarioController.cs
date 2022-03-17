@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shop.Services;
 using SISTOR.Configuration;
 using SISTOR.Interfaces;
 using SISTOR.Models;
@@ -69,9 +70,10 @@ namespace SISTOR.Controllers
                 user.Senha = Md5Hash.CalculaHash(user.Senha);
                 if (v.Senha == user.Senha)
                 {
+                    var token = TokenService.GenerateToken(user);
                     sucess = true;
                     description = "Login realizado com sucesso";
-                    return Json(new { sucess = sucess, description = description });
+                    return Json(new { sucess = sucess, description = description, token = token });
                 }
                 else
                 {
@@ -84,7 +86,7 @@ namespace SISTOR.Controllers
             {
                 sucess = false;
                 description = "Login inválido";
-                return Json(new { sucess = sucess, description = description });
+                return Json(new { sucess = sucess, description = description});
             }
             
         }
