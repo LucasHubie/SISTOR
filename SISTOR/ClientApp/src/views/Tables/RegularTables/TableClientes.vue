@@ -11,7 +11,7 @@
 
     <b-card style="box-shadow: 3px 0px 5px 3px #0000007d;" no-body>
       <b-card-header class="border-0">
-        <h3 class="mb-0 float-left">Clientes</h3>
+        <h3 class="mb-0 float-left">clientes</h3>
 
         <base-button v-b-modal.modal-scrollable type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="">
           <b-icon icon="question-circle-fill" aria-label="Help"></b-icon>
@@ -41,7 +41,7 @@
             </base-input>
           </b-col>
           <b-col lg="1">
-            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="buscaCliente">
+            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="buscacliente">
               <span class="btn-inner--text">Buscar</span>
             </base-button>
           </b-col>
@@ -83,9 +83,9 @@
                          prop="">
           <template v-slot="{row}">
 
-            <base-button v-on:click="getClienteById(row.id, 'Visualizar')" v-b-modal.modal-3 size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon></base-button>
-            <base-button v-on:click="getClienteById(row.id, 'Alterar')" v-b-modal.modal-2 size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
-            <base-button v-on:click="deleteClienteConfirmed(row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
+            <base-button v-on:click="getclienteById(row.id, 'Visualizar')" v-b-modal.modal-3 size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon></base-button>
+            <base-button v-on:click="getclienteById(row.id, 'Alterar')" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
+            <base-button v-on:click="deleteclienteConfirmed(row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
 
           </template>
         </el-table-column>
@@ -99,7 +99,7 @@
       <!--Modal Ajuda-->
       <b-button v-b-modal.modal-scrollable></b-button>
 
-      <b-modal id="modal-scrollable" scrollable title="Tela de Clientes">
+      <b-modal id="modal-scrollable" scrollable title="Tela de clientes">
         <p class="my-4" v-for="i in 1" :key="i">
           Para inclusão de um novo cliente basta clicar sobre o botão "Adicionar" e preencher todos os campos com os dados sobre o mesmo.
           <br />
@@ -141,7 +141,7 @@
       
 
       <!--Modal inclusão-->
-      <b-modal id="modal-1" title="Incluir Cliente" size="xl" @show="resetModal"
+      <b-modal id="modal-1" title="Incluir cliente" size="xl" 
                @hidden="resetModal"
                @ok="handleOk">
 
@@ -149,14 +149,14 @@
 
           <b-form-group>
 
-            <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
+            <h6 class="heading-small text-muted mb-4">Informações do cliente</h6>
 
             <h5 class="redHeading mb-4">* Indica item obrigatório (todos os campos obrigatórios devem ser preenchidos)</h5>
 
             <div class="">
               <b-form-group>
-                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
-                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
+                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">pessoa Fisica</b-form-radio>
+                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">pessoa Júridica</b-form-radio>
               </b-form-group>
               <b-row>
 
@@ -168,7 +168,7 @@
                                 :state="nameState">
                     <b-form-input id="name-input"
                                   placeholder="Nome"
-                                  v-model="Cliente.Pessoa.nome"
+                                  v-model="cliente.pessoa.nome"
                                   :state="nameState"
                                   required></b-form-input>
                   </b-form-group>
@@ -182,7 +182,7 @@
                                 :state="nameState">
                     <b-form-input id="name-input"
                                   placeholder="Nome Fantasia"
-                                  v-model="Cliente.Pessoa.nomeFantasia"
+                                  v-model="cliente.pessoa.nomeFantasia"
                                   :state="nameState"
                                   required></b-form-input>
                   </b-form-group>
@@ -197,7 +197,8 @@
                                 :state="cpfState">
                     <b-form-input id="cpf-input"
                                   placeholder="000.000.000-00"
-                                  v-model="Cliente.Pessoa.cpf"
+                                  v-mask="'###.###.###-##'"
+                                  v-model="cliente.pessoa.cpf"
                                   :state="cpfState"
                                   required></b-form-input>
                   </b-form-group>
@@ -212,7 +213,7 @@
                                 :state="cnpjState">
                     <b-form-input id="cnpj-input"
                                   placeholder="000.000.000-00"
-                                  v-model="Cliente.Pessoa.cnpj"
+                                  v-model="cliente.pessoa.cnpj"
                                   :state="cnpjState"
                                   required></b-form-input>
                   </b-form-group>
@@ -230,7 +231,7 @@
                                 :state="rgState">
                     <b-form-input id="rg-input"
                                   placeholder="RG"
-                                  v-model="Cliente.Pessoa.rg"
+                                  v-model="cliente.pessoa.rg"
                                   :state="rgState"
                                   required></b-form-input>
                   </b-form-group>
@@ -245,7 +246,7 @@
                                 :state="razaosocialState">
                     <b-form-input id="razaosocial-input"
                                   placeholder="Razão Social"
-                                  v-model="Cliente.Pessoa.razaoSocial"
+                                  v-model="cliente.pessoa.razaoSocial"
                                   :state="razaosocialState"
                                   required></b-form-input>
                   </b-form-group>
@@ -260,7 +261,7 @@
                                 :state="emailState">
                     <b-form-input id="email-input"
                                   placeholder="E-mail"
-                                  v-model="Cliente.Pessoa.email"
+                                  v-model="cliente.pessoa.email"
                                   :state="emailState"
                                   required></b-form-input>
                   </b-form-group>
@@ -273,14 +274,14 @@
                   <base-input type="text"
                               label="Telefone"
                               placeholder="Telefone"
-                              v-model="Cliente.Pessoa.telefone">
+                              v-model="cliente.pessoa.telefone">
                   </base-input>
                 </b-col>
                 <b-col lg="6">
                   <base-input type="text"
                               label="Celular"
                               placeholder="Celular"
-                              v-model="Cliente.Pessoa.celular">
+                              v-model="cliente.pessoa.celular">
                   </base-input>
                 </b-col>
               </b-row>
@@ -293,7 +294,7 @@
                                 :state="cidadeState">
                     <b-form-input id="cidade-input"
                                   placeholder="Cidade"
-                                  v-model="Cliente.Pessoa.cidade"
+                                  v-model="cliente.pessoa.cidade"
                                   :state="cidadeState"
                                   required></b-form-input>
                   </b-form-group>
@@ -305,7 +306,7 @@
                                 invalid-feedback="UF é obrigatório"
                                 :state="ufState">
 
-                    <b-form-select v-model="Cliente.Pessoa.uf"
+                    <b-form-select v-model="cliente.pessoa.uf"
                                    :state="ufState"
                                    required
                                    :options="options">
@@ -324,7 +325,7 @@
                                 :state="cepState">
                     <b-form-input id="cep-input"
                                   placeholder="CEP"
-                                  v-model="Cliente.Pessoa.cep"
+                                  v-model="cliente.pessoa.cep"
                                   :state="cepState"
                                   required></b-form-input>
                   </b-form-group>
@@ -342,7 +343,7 @@
                                 :state="enderecoState">
                     <b-form-input id="endereco-input"
                                   placeholder="Endereço"
-                                  v-model="Cliente.Pessoa.endereco"
+                                  v-model="cliente.pessoa.endereco"
                                   :state="enderecoState"
                                   required></b-form-input>
                   </b-form-group>
@@ -353,7 +354,7 @@
                   <base-input type="text"
                               label="Número"
                               placeholder="Número"
-                              v-model="Cliente.Pessoa.numero">
+                              v-model="cliente.pessoa.numero">
                   </base-input>
                 </b-col>
 
@@ -363,14 +364,14 @@
                   <base-input type="text"
                               label="Referência"
                               placeholder="Referência"
-                              v-model="Cliente.Pessoa.referencia">
+                              v-model="cliente.pessoa.referencia">
                   </base-input>
                 </b-col>
                 <b-col lg="6">
                   <base-input type="text"
                               label="Complemento"
                               placeholder="Complemento"
-                              v-model="Cliente.Pessoa.complemento">
+                              v-model="cliente.pessoa.complemento">
                   </base-input>
                 </b-col>
               </b-row>
@@ -387,7 +388,7 @@
         <template #modal-footer>
           <b-row>
             <b-col lg="12">
-              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOk">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
                 <span class="btn-inner--text">Confirmar</span>
               </base-button>
               <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarInclusao">
@@ -400,269 +401,8 @@
 
       </b-modal>
 
-      <!--Modal update-->
-      <b-modal id="modal-2" title="Atualizar Cliente" size="xl" @show="resetModal"
-               @hidden="resetModal"
-               @ok="handleOKupdate">
-
-        <form ref="form" @submit.stop.prevent="handleSubmitUpdate">
-
-          <b-form-group>
-
-            <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
-
-            <h5 class="redHeading mb-4">* Indica item obrigatório (todos os campos obrigatórios devem ser preenchidos)</h5>
-
-            <div class="">
-              <b-form-group>
-                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
-                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
-
-              </b-form-group>
-              <b-row>
-
-                <b-col lg="6" v-if="selected == 'F'">
-
-                  <b-form-group label="Nome*"
-                                label-for="name-input"
-                                invalid-feedback="Nome é obrigatório"
-                                :state="nameState">
-                    <b-form-input id="name-input"
-                                  placeholder="Nome"
-                                  v-model="Cliente.Pessoa.nome"
-                                  :state="nameState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-                <b-col lg="6" v-if="selected == 'J'">
-
-                  <b-form-group label="Nome Fantasia*"
-                                label-for="name-input"
-                                invalid-feedback="Nome Fantasia é obrigatório"
-                                :state="nameState">
-                    <b-form-input id="name-input"
-                                  placeholder="Nome Fantasia"
-                                  v-model="Cliente.Pessoa.nomeFantasia"
-                                  :state="nameState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-                <b-col lg="6" v-if="selected == 'F'">
-
-                  <b-form-group label="CPF*"
-                                label-for="cpf-input"
-                                invalid-feedback="CPF é obrigatório"
-                                :state="cpfState">
-                    <b-form-input id="cpf-input"
-                                  placeholder="000.000.000-00"
-                                  v-model="Cliente.Pessoa.cpf"
-                                  :state="cpfState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-                <b-col lg="6" v-if="selected == 'J'">
-
-                  <b-form-group label="CNPJ*"
-                                label-for="cnpj-input"
-                                invalid-feedback="CNPJ é obrigatório"
-                                :state="cnpjState">
-                    <b-form-input id="cnpj-input"
-                                  placeholder="000.000.000-00"
-                                  v-model="Cliente.Pessoa.cnpj"
-                                  :state="cnpjState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-              </b-row>
-              <b-row>
-
-                <b-col lg="6" v-if="selected == 'F'">
-
-                  <b-form-group label="RG*"
-                                label-for="rg-input"
-                                invalid-feedback="RG é obrigatório"
-                                :state="rgState">
-                    <b-form-input id="rg-input"
-                                  placeholder="RG"
-                                  v-model="Cliente.Pessoa.rg"
-                                  :state="rgState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-                <b-col lg="6" v-if="selected == 'J'">
-
-                  <b-form-group label="Razão Social*"
-                                label-for="razaosocial-input"
-                                invalid-feedback="Razão Social é obrigatório"
-                                :state="razaosocialState">
-                    <b-form-input id="razaosocial-input"
-                                  placeholder="Razão Social"
-                                  v-model="Cliente.Pessoa.razaoSocial"
-                                  :state="razaosocialState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-                <b-col lg="6">
-
-                  <b-form-group label="E-mail*"
-                                label-for="email-input"
-                                invalid-feedback="E-mail é obrigatório"
-                                :state="emailState">
-                    <b-form-input id="email-input"
-                                  placeholder="E-mail"
-                                  v-model="Cliente.Pessoa.email"
-                                  :state="emailState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-              </b-row>
-              <b-row>
-                <b-col lg="6">
-                  <base-input type="text"
-                              label="Telefone"
-                              placeholder="Telefone"
-                              v-model="Cliente.Pessoa.telefone">
-                  </base-input>
-                </b-col>
-                <b-col lg="6">
-                  <base-input type="text"
-                              label="Celular"
-                              placeholder="Celular"
-                              v-model="Cliente.Pessoa.celular">
-                  </base-input>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col lg="6">
-
-                  <b-form-group label="Cidade*"
-                                label-for="cidade-input"
-                                invalid-feedback="Cidade é obrigatória"
-                                :state="cidadeState">
-                    <b-form-input id="cidade-input"
-                                  placeholder="Cidade"
-                                  v-model="Cliente.Pessoa.cidade"
-                                  :state="cidadeState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-                <b-col lg="3">
-                  <b-form-group label="UF*"
-                                label-for="uf-input"
-                                invalid-feedback="UF é obrigatório"
-                                :state="ufState">
-
-                    <b-form-select v-model="Cliente.Pessoa.uf"
-                                   :state="ufState"
-                                   required
-                                   :options="options">
-
-                    </b-form-select>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-
-                <b-col lg="6">
-
-                  <b-form-group label="CEP*"
-                                label-for="cep-input"
-                                invalid-feedback="CEP é obrigatório"
-                                :state="cepState">
-                    <b-form-input id="cep-input"
-                                  placeholder="CEP"
-                                  v-model="Cliente.Pessoa.cep"
-                                  :state="cepState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-              </b-row>
-              <b-row>
-
-                <b-col lg="6">
-
-                  <b-form-group label="Endereco*"
-                                label-for="endereco-input"
-                                invalid-feedback="Endereço é obrigatório"
-                                :state="enderecoState">
-                    <b-form-input id="endereco-input"
-                                  placeholder="Endereço"
-                                  v-model="Cliente.Pessoa.endereco"
-                                  :state="enderecoState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-                <b-col lg="4">
-                  <base-input type="text"
-                              label="Número"
-                              placeholder="Número"
-                              v-model="Cliente.Pessoa.numero">
-                  </base-input>
-                </b-col>
-
-              </b-row>
-              <b-row>
-                <b-col lg="6">
-                  <base-input type="text"
-                              label="Referência"
-                              placeholder="Referência"
-                              v-model="Cliente.Pessoa.referencia">
-                  </base-input>
-                </b-col>
-                <b-col lg="6">
-                  <base-input type="text"
-                              label="Complemento"
-                              placeholder="Complemento"
-                              v-model="Cliente.Pessoa.complemento">
-                  </base-input>
-                </b-col>
-              </b-row>
-              <hr class="my-4">
-
-
-            </div>
-
-
-          </b-form-group>
-
-        </form>
-
-        <template #modal-footer>
-          <b-row>
-            <b-col lg="12">
-              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOKupdate">
-                <span class="btn-inner--text">Confirmar</span>
-              </base-button>
-              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarUpdate">
-
-                <span class="btn-inner--text">Cancelar</span>
-              </base-button>
-            </b-col>
-          </b-row>
-        </template>
-
-      </b-modal>
-
       <!--Modal detail-->
-      <b-modal id="modal-3" title="Detalhes do Cliente" size="xl" @show="resetModal"
+      <b-modal id="modal-3" title="Detalhes do cliente" size="xl" @show="resetModal"
                @hidden="resetModal"
                @ok="handleOKdetail">
 
@@ -670,12 +410,12 @@
 
           <b-form-group>
 
-            <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
+            <h6 class="heading-small text-muted mb-4">Informações do cliente</h6>
 
             <div class="">
               <b-form-group>
-                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
-                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
+                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">pessoa Fisica</b-form-radio>
+                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">pessoa Júridica</b-form-radio>
 
               </b-form-group>
 
@@ -689,7 +429,7 @@
                                 :state="nameState">
                     <b-form-input id="name-input"
                                   placeholder="Nome"
-                                  v-model="Cliente.Pessoa.nome"
+                                  v-model="cliente.pessoa.nome"
                                   :state="nameState"
                                   :disabled="disable"
                                   required></b-form-input>
@@ -704,7 +444,7 @@
                                 :state="nameState">
                     <b-form-input id="name-input"
                                   placeholder="Nome Fantasia"
-                                  v-model="Cliente.Pessoa.nomeFantasia"
+                                  v-model="cliente.pessoa.nomeFantasia"
                                   :state="nameState"
                                   :disabled="disable"
                                   required></b-form-input>
@@ -720,7 +460,7 @@
                                 :state="cpfState">
                     <b-form-input id="cpf-input"
                                   placeholder="000.000.000-00"
-                                  v-model="Cliente.Pessoa.cpf"
+                                  v-model="cliente.pessoa.cpf"
                                   :state="cpfState"
                                   :disabled="disable"
                                   required></b-form-input>
@@ -736,7 +476,7 @@
                                 :state="cnpjState">
                     <b-form-input id="cnpj-input"
                                   placeholder="000.000.000-00"
-                                  v-model="Cliente.Pessoa.cnpj"
+                                  v-model="cliente.pessoa.cnpj"
                                   :state="cnpjState"
                                   :disabled="disable"
                                   required></b-form-input>
@@ -755,7 +495,7 @@
                                 :state="rgState">
                     <b-form-input id="rg-input"
                                   placeholder="RG"
-                                  v-model="Cliente.Pessoa.rg"
+                                  v-model="cliente.pessoa.rg"
                                   :state="rgState"
                                   :disabled="disable"
                                   required></b-form-input>
@@ -771,7 +511,7 @@
                                 :state="razaosocialState">
                     <b-form-input id="razaosocial-input"
                                   placeholder="Razão Social"
-                                  v-model="Cliente.Pessoa.razaoSocial"
+                                  v-model="cliente.pessoa.razaoSocial"
                                   :state="razaosocialState"
                                   :disabled="disable"
                                   required></b-form-input>
@@ -787,7 +527,7 @@
                                 :state="emailState">
                     <b-form-input id="email-input"
                                   placeholder="E-mail"
-                                  v-model="Cliente.Pessoa.email"
+                                  v-model="cliente.pessoa.email"
                                   :state="emailState"
                                   :disabled="disable"
                                   required></b-form-input>
@@ -802,7 +542,7 @@
                               label="Telefone"
                               placeholder="Telefone"
                               :disabled="disable"
-                              v-model="Cliente.Pessoa.telefone">
+                              v-model="cliente.pessoa.telefone">
                   </base-input>
                 </b-col>
                 <b-col lg="6">
@@ -810,7 +550,7 @@
                               label="Celular"
                               placeholder="Celular"
                               :disabled="disable"
-                              v-model="Cliente.Pessoa.celular">
+                              v-model="cliente.pessoa.celular">
                   </base-input>
                 </b-col>
               </b-row>
@@ -823,7 +563,7 @@
                                 :state="cidadeState">
                     <b-form-input id="cidade-input"
                                   placeholder="Cidade"
-                                  v-model="Cliente.Pessoa.cidade"
+                                  v-model="cliente.pessoa.cidade"
                                   :state="cidadeState"
                                   :disabled="disable"
                                   required></b-form-input>
@@ -836,7 +576,7 @@
                                 invalid-feedback="UF é obrigatório"
                                 :state="ufState">
 
-                    <b-form-input v-model="Cliente.Pessoa.uf"
+                    <b-form-input v-model="cliente.pessoa.uf"
                                   :state="ufState"
                                   :disabled="disable"
                                   required
@@ -856,7 +596,7 @@
                                 :state="cepState">
                     <b-form-input id="cep-input"
                                   placeholder="CEP"
-                                  v-model="Cliente.Pessoa.cep"
+                                  v-model="cliente.pessoa.cep"
                                   :state="cepState"
                                   :disabled="disable"
                                   required></b-form-input>
@@ -875,7 +615,7 @@
                                 :state="enderecoState">
                     <b-form-input id="endereco-input"
                                   placeholder="Endereço"
-                                  v-model="Cliente.Pessoa.endereco"
+                                  v-model="cliente.pessoa.endereco"
                                   :state="enderecoState"
                                   :disabled="disable"
                                   required></b-form-input>
@@ -888,7 +628,7 @@
                               label="Número"
                               placeholder="Número"
                               :disabled="disable"
-                              v-model="Cliente.Pessoa.numero">
+                              v-model="cliente.pessoa.numero">
                   </base-input>
                 </b-col>
 
@@ -899,7 +639,7 @@
                               label="Referência"
                               placeholder="Referência"
                               :disabled="disable"
-                              v-model="Cliente.Pessoa.referencia">
+                              v-model="cliente.pessoa.referencia">
                   </base-input>
                 </b-col>
                 <b-col lg="6">
@@ -907,7 +647,7 @@
                               label="Complemento"
                               placeholder="Complemento"
                               :disabled="disable"
-                              v-model="Cliente.Pessoa.complemento">
+                              v-model="cliente.pessoa.complemento">
                   </base-input>
                 </b-col>
               </b-row>
@@ -939,11 +679,7 @@
       <!--Modal detail-->
 
     </b-card>
-
-
-
   </div>
- 
 
 </template>
 
@@ -983,25 +719,26 @@
         showFiltrar: false,
         filtro: { nome: '' },
         qntdRegistros: 0,
-        Cliente: {
-          Pessoa: {
-            Nome: "",
-            RG: "",
-            CPF: "",
-            CNPJ: "",
-            RazaoSocial: "",
-            NomeFantasia: "",
+        tpOperacao: "Incluir",
+        cliente: {
+          pessoa: {
+            nome: "",
+            rg: "",
+            cpf: "",
+            cnpj: "",
+            razaoSocial: "",
+            nomeFantasia: "",
             telefone: "",
             celular: "",
-            Cidade: "",
-            Email: "",
-            CEP: "",
+            cidade: "",
+            email: "",
+            cep: "",
             numero: 0,
-            Complemento: "",
-            Referencia: "",
-            Endereco: "",
-            TipoPessoa: 0,
-            UF: "",
+            complemento: "",
+            referencia: "",
+            endereco: "",
+            tipoPessoa: 0,
+            uf: "",
           }
         },
         orcamento: {
@@ -1044,23 +781,23 @@
     methods: {
 
       resetModal() {
-        this.Cliente.Pessoa.id = 0
-        this.Cliente.Pessoa.nome = ''
-        this.Cliente.Pessoa.cpf = ''
-        this.Cliente.Pessoa.celular = ''
-        this.Cliente.Pessoa.cep = ''
-        this.Cliente.Pessoa.cnpj = ''
-        this.Cliente.Pessoa.complemento = ''
-        this.Cliente.Pessoa.email = ''
-        this.Cliente.Pessoa.endereco = ''
-        this.Cliente.Pessoa.nomeFantasia = ''
-        this.Cliente.Pessoa.razaoSocial = ''
-        this.Cliente.Pessoa.numero = 0
-        this.Cliente.Pessoa.uf = ''
-        this.Cliente.Pessoa.referencia = ''
-        this.Cliente.Pessoa.rg = ''
-        this.Cliente.Pessoa.telefone = ''
-        this.Cliente.Pessoa.cidade = ''
+        this.cliente.pessoa.id = 0
+        this.cliente.pessoa.nome = ''
+        this.cliente.pessoa.cpf = ''
+        this.cliente.pessoa.celular = ''
+        this.cliente.pessoa.cep = ''
+        this.cliente.pessoa.cnpj = ''
+        this.cliente.pessoa.complemento = ''
+        this.cliente.pessoa.email = ''
+        this.cliente.pessoa.endereco = ''
+        this.cliente.pessoa.nomeFantasia = ''
+        this.cliente.pessoa.razaoSocial = ''
+        this.cliente.pessoa.numero = 0
+        this.cliente.pessoa.uf = ''
+        this.cliente.pessoa.referencia = ''
+        this.cliente.pessoa.rg = ''
+        this.cliente.pessoa.telefone = ''
+        this.cliente.pessoa.cidade = ''
         this.nameState = null
         this.cidadeState = null
         this.emailState = null
@@ -1071,7 +808,7 @@
         this.enderecoState = null
         this.cnpjState = null
         this.razaosocialState = null
-
+        this.tpOperacao = 'Incluir'
       },
 
       countDownChanged(dismissCountDown) {
@@ -1099,9 +836,9 @@
       
       tipoPessoa() {
         if (this.selected == 'F') {
-          this.Cliente.Pessoa.TipoPessoa = 1
+          this.cliente.pessoa.tipoPessoa = 1
         } if (this.selected == 'J') {
-          this.Cliente.Pessoa.TipoPessoa = 2
+          this.cliente.pessoa.tipoPessoa = 2
         }
       },
       handleOk(bvModalEvt) {
@@ -1112,14 +849,7 @@
         // Trigger submit handler
         this.handleSubmit()
       },
-      handleOKupdate(bvModalEvt) {
-        // Prevent modal from closing
-        bvModalEvt.preventDefault()
-        // chama função tipoPessoa
-        this.tipoPessoa()
-        // Trigger submit handler
-        this.handleSubmitUpdate()
-      },
+     
       handleOKdetail(bvModalEvt) {
         // Prevent modal from closing
         bvModalEvt.preventDefault()
@@ -1138,18 +868,7 @@
           this.$bvModal.hide('modal-1')
         })
       },
-      handleSubmitUpdate() {
-        // Exit when the form isn't valid
-        if (!this.checkFormValidity()) {
-          return
-        }
-        // chama função post update cliente
-        this.updateCliente();
-        // Hide the modal manually
-        this.$nextTick(() => {
-          this.$bvModal.hide('modal-2')
-        })
-      },
+      
       handleSubmitDetail() {
         this.$nextTick(() => {
           this.$bvModal.hide('modal-3')
@@ -1161,12 +880,7 @@
           this.$bvModal.hide('modal-1')
         })
       },
-      cancelarUpdate() {
-        this.resetModal()
-        this.$nextTick(() => {
-          this.$bvModal.hide('modal-2')
-        })
-      },
+      
       cancelarDetail() {
         this.resetModal()
         this.$nextTick(() => {
@@ -1179,8 +893,8 @@
         })
       },
 
-      //getClientes() {
-      //  axios.get("https://localhost:44376/Cliente/Index", {
+      //getclientes() {
+      //  axios.get("https://localhost:44376/cliente/Index", {
       //  }).then(response => {
       //    console.log(response.data)
       //    this.clientes = response.data
@@ -1190,8 +904,8 @@
       //    });
       //},
 
-      getClientes(pageN, pageS) {
-        axios.get("https://localhost:44376/Cliente/Index", {
+      getclientes(pageN, pageS) {
+        axios.get("https://localhost:44376/cliente/Index", {
           params: { "pageNumber": pageN, "pageSize": pageS }
         }).then(response => {
           console.log(response.data)
@@ -1201,36 +915,42 @@
           console.log('qutnd', this.qntdRegistros)
         })
           .catch(function (error) {
-            alert("Falha ao Carregar Clientes");
+            alert("Falha ao Carregar clientes");
           });
       },
 
-      getClienteById(id, tpOperacao) {
+      getclienteById(id, tpOperacao) {
         if (tpOperacao == "Visualizar") {
           this.disable = true
         }
-        axios.get("https://localhost:44376/Cliente/GetClienteById", {
+        axios.get("https://localhost:44376/cliente/GetclienteById", {
           params: { "id": id }
         }).then(response => {
           console.log(response.data)
-          this.Cliente = response.data.cliente
-          this.Cliente.Pessoa = response.data.cliente.pessoa
-          console.log(this.Cliente)
+          this.cliente = response.data.cliente
+          this.cliente.pessoa = response.data.cliente.pessoa
+          console.log(this.cliente)
+
+          if (tpOperacao == "Alterar") {
+            this.$bvModal.show("modal-1");
+            this.tpOperacao = tpOperacao
+          }
+
         })
           .catch(function (error) {
             alert(error);
           });
       },
 
-      buscaCliente() {
+      buscacliente() {
         var busca = this.filtro.nome
-        axios.get("https://localhost:44376/Cliente/buscaCliente", {
+        axios.get("https://localhost:44376/cliente/buscacliente", {
           params: { "busca": busca  }
         }).then(response => {
           if (busca != "") {
             this.clientes = response.data.cliente
           } else {
-            this.getClientes(1, 10)
+            this.getclientes(1, 10)
           }
           
           
@@ -1241,17 +961,18 @@
       },
 
       sendForm() {
-       
-        axios.post("https://localhost:44376/Cliente/Create", {
-          Pessoa: this.Cliente.Pessoa
-        }).then(response => {
+        var url = "https://localhost:44376/cliente/Create"
+        if (this.tpOperacao == "Alterar") {
+          url = "https://localhost:44376/cliente/Update";
+        }
+        axios.post(url, this.cliente).then(response => {
           if (response.data.sucess == true) {
             console.log(response.data)
             //alert(response.data.description)
             //window.location.href = "#/funcionarios"
             this.showAlert()
             this.$bvModal.hide("modal-1")
-            this.getClientes(1, 10)
+            this.getclientes(1, 10)
           }
           else {
             alert(response.data.description)
@@ -1263,7 +984,7 @@
         // this will be called only after form is valid. You can do api call here to login
       },
 
-      deleteClienteConfirmed(id) {
+      deleteclienteConfirmed(id) {
         this.$bvModal.msgBoxConfirm('Por favor confirme a exclusão do cliente', {
           title: 'Deseja excluir este cliente?',
           size: 'sm',
@@ -1279,7 +1000,7 @@
             this.boxTwo = value
             console.log(value)
             if (this.boxTwo == true) {
-              this.deleteCliente(id)
+              this.deletecliente(id)
             } else {
               this.cancelTitle
             }
@@ -1289,15 +1010,15 @@
           })
       },
 
-      deleteCliente(id) {
-      axios.get("https://localhost:44376/Cliente/Excluir", {
+      deletecliente(id) {
+      axios.get("https://localhost:44376/cliente/Excluir", {
         params: { "id": id }
       }).then(response => {
         if (response.data.sucess = true) {
           console.log(response.data)
           /*alert(response.data.description)*/
           this.showAlert()
-          this.getClientes(1, 10)
+          this.getclientes(1, 10)
         }
         else {
           alert(response.data.description)
@@ -1308,35 +1029,15 @@
         });
     },
 
-      updateCliente() {
-        axios.post("https://localhost:44376/Cliente/Update", {
-          Pessoa: this.Cliente.Pessoa,
-          IdPessoa: this.Cliente.IdPessoa,
-          id: this.Cliente.id
-        }).then(response => {
-          if (response.data.sucess == true) {
-            console.log(response.data)
-            //alert(response.data.description)
-            this.showAlert()
-            this.$bvModal.hide("modal-2")
-            this.getClientes(1, 10)
-          }
-          else {
-            alert(response.data.description)
-          }
-        })
-          .catch(function (error) {
-            alert(error);
-          });
-      },
+      
       change(val) {
         console.log("teste")
-        this.getClientes(val, 10);
+        this.getclientes(val, 10);
       },
     },
 
     mounted() {
-      this.getClientes(1,10);
+      this.getclientes(1,10);
     }
   }
 </script>

@@ -48,6 +48,7 @@ namespace SISTOR
             services.AddTransient<IFuncionarioRepositorio, FuncionarioRepositorio>();
             services.AddTransient<IClienteRepositorio, ClienteRepositorio>();
             services.AddTransient<IOrcamentoRepositorio, OrcamentoRepositorio>();
+            services.AddTransient<IProdutoRepositorio, ProdutoRepositorio>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

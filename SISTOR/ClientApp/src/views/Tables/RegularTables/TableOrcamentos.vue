@@ -123,6 +123,7 @@
               <base-input type="text"
                           label="CPF"
                           placeholder="000.000.000-00"
+                          v-mask="'###.###.###-##'"
                           v-model="cliente.pessoa.cpf">
               </base-input>
             </b-col>
@@ -594,8 +595,9 @@
           });
       },
 
-      getFuncionarios() {
+      getFuncionarios(pageN, pageS) {
         axios.get("https://localhost:44376/Funcionario/Index", {
+          params: { "pageNumber": pageN, "pageSize": pageS }
         }).then(response => {
 
           console.log('func', response.data);
@@ -745,7 +747,7 @@
     },
     mounted() {
       this.getOrcamentos(1,10);
-      this.getFuncionarios();
+      this.getFuncionarios(1, 10);
     },
     watch: {
       currentPage: function (novo, velho) {
