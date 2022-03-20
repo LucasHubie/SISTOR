@@ -14,6 +14,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Shop;
 
 namespace SISTOR
 {
@@ -48,7 +52,6 @@ namespace SISTOR
             services.AddTransient<IFuncionarioRepositorio, FuncionarioRepositorio>();
             services.AddTransient<IClienteRepositorio, ClienteRepositorio>();
             services.AddTransient<IOrcamentoRepositorio, OrcamentoRepositorio>();
-            services.AddTransient<IProdutoRepositorio, ProdutoRepositorio>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,6 +79,7 @@ namespace SISTOR
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
