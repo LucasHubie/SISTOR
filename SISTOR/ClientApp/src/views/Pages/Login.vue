@@ -27,7 +27,12 @@
               </div>
             </b-card-header>
             <b-card-body class="px-lg-5 py-lg-5">
-              <b-alert :show="dismissCountDown" dismissible @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged" :variant="variant">{{txtAlert}}
+              <b-alert :show="dismissCountDown" dismissible @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged" :variant="variant">
+                <p>{{txtAlert}}</p>
+                <b-progress :variant="variant"
+                            :max="dismissSecs"
+                            :value="dismissCountDown"
+                            height="2px"></b-progress>
               </b-alert>
               <validation-observer v-slot="{handleSubmit}" ref="formValidator">
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
