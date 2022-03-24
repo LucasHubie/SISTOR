@@ -85,7 +85,7 @@
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="#/login">
+                           v-on:click="logout">
                             <i class="ni ni-button-power"></i> Sair
                         </a>
                     </li>
@@ -120,6 +120,12 @@
       };
     },
     methods: {
+      logout() {
+        console.log(localStorage)
+        localStorage.clear();
+        console.log(localStorage)
+        window.location.href = "#/login"
+      },
       closeSidebar() {
         this.$sidebar.displaySidebar(false)
       },
