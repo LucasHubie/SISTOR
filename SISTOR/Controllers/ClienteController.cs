@@ -45,8 +45,10 @@ namespace SISTOR.Controllers
         {
             bool sucess = true;
             var description = "";
+            cliente.Id = 0;
+            cliente.IdPessoa = 0;
 
-           try { 
+            try { 
                 _clienteRepositorio.CriarCliente(cliente);
                 sucess = true;
                 description = "Cliente criado com sucesso!";

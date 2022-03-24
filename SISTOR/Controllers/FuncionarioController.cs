@@ -38,7 +38,8 @@ namespace SISTOR.Controllers
         {
             bool sucess = true;
             var description = "";
-
+            funcionario.Id = 0;
+            funcionario.IdPessoa = 0;
             try
             {
                 _funcionarioRepositorio.CriarFuncionario(funcionario);

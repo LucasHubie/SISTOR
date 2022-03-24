@@ -18,6 +18,8 @@ import Vue from 'vue';
 import DashboardPlugin from './plugins/dashboard-plugin';
 import App from './App.vue';
 
+import VueMask from 'v-mask';
+Vue.use(VueMask);
 // router setup
 import router from './routes/router';
 // plugin setup

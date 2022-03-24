@@ -3,7 +3,12 @@ import Router from 'vue-router';
 import DashboardLayout from '../views/Starter/SampleLayout.vue';
 import Starter from '../views/Starter/SamplePage.vue';
 
+import VueMask from 'v-mask';
+
 Vue.use(Router);
+
+Vue.use(VueMask);
+
 
 export default new Router({
   routes: [
