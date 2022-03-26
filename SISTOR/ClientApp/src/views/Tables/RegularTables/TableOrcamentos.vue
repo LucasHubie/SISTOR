@@ -9,28 +9,28 @@
           <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Filtrar</span>
         </base-button>
-        <base-button v-b-modal.modal-1 v-on:click="tpOperacao = 'Adicionar'; cliente = { pessoa: {}}" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
+        <base-button v-b-modal.modal-1 v-on:click="tpOperacao = 'Adicionar'; cliente = { pessoa: {}}; clientes = []" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
           <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Adicionar</span>
         </base-button>
         <!--<base-button v-on:click="funcDesenv()" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
-        <b-icon icon="card-list" font-scale="1"></b-icon>
-        <span class="btn-inner--text">Gerar Relatórios</span>
-      </base-button>-->
+      <b-icon icon="card-list" font-scale="1"></b-icon>
+      <span class="btn-inner--text">Gerar Relatórios</span>
+    </base-button>-->
 
       </b-card-header>
       <div v-if="showFiltrar" class="modal-body">
         <b-row>
           <b-col lg="3">
             <base-input type="text"
-                        label="Nome"
+                        label="Tag Identificação/Cliente"
                         placeholder="Nome"
                         v-model="filtro.nome">
             </base-input>
           </b-col>
           <b-col lg="1" v-if="selected == 'F'">
-            <base-button type="success" class="float-right" style=" margin: 0; position: absolute; top: 50%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="sendForm()">
-              <span class="btn-inner--text">Buscar</span>
+            <base-button type="success" class="float-right" style=" margin: 0; position: absolute; top: 50%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="getOrcamentos(1,10)">
+              <span class="btn-inner--text">Filtrar</span>
             </base-button>
           </b-col>
 
@@ -40,7 +40,7 @@
                 header-row-class-name="thead-light"
                 :data="orcamentos">
         <el-table-column label="Tag Identificação"
-                         min-width="310px"
+                         min-width="150px"
                          prop="tagidentificacao">
           <template v-slot="{row}">
             <b-media no-body class="align-items-center">
@@ -52,7 +52,7 @@
         </el-table-column>
         <el-table-column label="Cliente"
                          prop="cliente.pessoa.nome"
-                         min-width="140px">
+                         min-width="200px">
         </el-table-column>
 
         <el-table-column label="Status"
@@ -80,13 +80,15 @@
             <base-button v-on:click="deleteOrcamento('Excluir', row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
           </template>
         </el-table-column>
-
+        <template slot="empty">
+          Sem Registros
+        </template>
       </el-table>
 
       <b-card-footer class="py-4 d-flex justify-content-end">
         <base-pagination v-model="currentPage" :per-page="10" :total="qntdRegistros" @change="change"></base-pagination>
       </b-card-footer>
-      <b-modal id="modal-1" title="Orçamento" size="xl">
+      <b-modal id="modal-1" :title="tpOperacao + 'Orçamento'" size="xl">
         <b-form @submit.prevent="updateProfile">
           <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
           <div class="">
@@ -108,21 +110,21 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col lg="6" v-if="selected == 'F'">
+              <b-col lg="4" v-if="selected == 'F'">
                 <base-input type="text"
                             label="Nome"
                             placeholder="Nome"
                             v-model="cliente.pessoa.nome">
                 </base-input>
               </b-col>
-              <b-col lg="6" v-if="selected == 'J'">
+              <b-col lg="3" v-if="selected == 'J'">
                 <base-input type="text"
                             label="Nome Fantasia"
                             placeholder="Nome Fantasia"
                             v-model="cliente.pessoa.nome">
                 </base-input>
               </b-col>
-              <b-col lg="6" v-if="selected == 'F'">
+              <b-col lg="3" v-if="selected == 'F'">
                 <base-input type="text"
                             label="CPF"
                             placeholder="000.000.000-00"
@@ -130,9 +132,10 @@
                             v-model="cliente.pessoa.cpf">
                 </base-input>
               </b-col>
-              <b-col lg="6" v-if="selected == 'J'">
+              <b-col lg="3" v-if="selected == 'J'">
                 <base-input type="text"
                             label="CNPJ"
+                            v-mask="'##.###.###/####-##'"
                             placeholder="00.000.000/0000-00"
                             v-model="cliente.pessoa.cnpj">
                 </base-input>
@@ -146,6 +149,25 @@
                 </small>
               </b-col>
             </b-row>
+            <b-row>
+              <div v-if="clientes.length > 0" class="container">
+                <h4>Selecione o cliente abaixo</h4>
+                <table class="table table-striped table-bordered">
+                  <tbody>
+                    <tr v-for="clienteloop in clientes" style=" background-color: white;">
+                      <td style="vertical-align: middle; ">{{clienteloop.pessoa.nome}}</td>
+                      <td style="vertical-align: middle; ">{{cpf(clienteloop.pessoa.cpf)}}</td>
+                      <td>
+                        <base-button size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v-on:click="cliente = clienteloop; clientes = []">
+                          <span class="btn-inner--text">Selecionar</span>
+                        </base-button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </b-row>
             <b-row v-if="!showBtBuscar">
               <b-col lg="6">
                 <small>
@@ -153,91 +175,10 @@
                 </small>
               </b-col>
               <b-col lg="6">
-                <base-button size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v-on:click="showNovoCliente = !showNovoCliente; msgBuscando = ''">
+                <base-button size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v-on:click="showModalNovoCliente">
                   <b-icon icon="person-plus-fill" font-scale="1"></b-icon>
                   <span class="btn-inner--text">Novo Cliente</span>
                 </base-button>
-              </b-col>
-            </b-row>
-            <b-row v-if="showNovoCliente">
-              <b-col lg="6" v-if="selected == 'F'">
-                <base-input type="text"
-                            label="RG"
-                            placeholder="RG"
-                            v-model="cliente.pessoa.rg">
-                </base-input>
-              </b-col>
-              <b-col lg="6" v-if="selected == 'J'">
-                <base-input type="text"
-                            label="Razão Social"
-                            placeholder="Razão Social"
-                            v-model="cliente.pessoa.razaoSocial">
-                </base-input>
-              </b-col>
-              <b-col lg="6">
-                <base-input type="text"
-                            label="E-mail"
-                            placeholder="E-mail"
-                            v-model="cliente.pessoa.email">
-                </base-input>
-              </b-col>
-            </b-row>
-            <b-row v-if="showNovoCliente">
-              <b-col lg="6">
-                <base-input type="text"
-                            label="Telefone"
-                            placeholder="Telefone"
-                            v-model="cliente.pessoa.telefone">
-                </base-input>
-              </b-col>
-              <b-col lg="6">
-                <base-input type="text"
-                            label="Telefone Celular"
-                            placeholder="Telefone Celular"
-                            v-model="cliente.pessoa.celular">
-                </base-input>
-              </b-col>
-            </b-row>
-            <b-row v-if="showNovoCliente">
-              <b-col lg="12">
-                <base-input type="text"
-                            label="Endereço"
-                            placeholder="Endereço"
-                            v-model="cliente.pessoa.endereco">
-                </base-input>
-              </b-col>
-            </b-row>
-            <b-row v-if="showNovoCliente">
-              <b-col lg="6">
-                <base-input type="text"
-                            label="CEP"
-                            placeholder="CEP"
-                            v-model="cliente.pessoa.cep">
-                </base-input>
-              </b-col>
-              <b-col lg="6">
-                <base-input type="text"
-                            label="Número"
-                            placeholder="Número"
-                            v-model="cliente.pessoa.numero">
-                </base-input>
-              </b-col>
-
-            </b-row>
-            <b-row v-if="showNovoCliente">
-              <b-col lg="6">
-                <base-input type="text"
-                            label="Referência"
-                            placeholder="Referência"
-                            v-model="cliente.pessoa.referencia">
-                </base-input>
-              </b-col>
-              <b-col lg="6">
-                <base-input type="text"
-                            label="Complemento"
-                            placeholder="Complemento"
-                            v-model="cliente.pessoa.complemento">
-                </base-input>
               </b-col>
             </b-row>
           </div>
@@ -395,8 +336,7 @@
           <b-row>
             <b-col lg="12">
               <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
-                <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
-                <span class="btn-inner--text">{{tpOperacao}}</span>
+                <span class="btn-inner--text">Confirmar</span>
               </base-button>
               <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
                 <span class="btn-inner--text">Cancelar</span>
@@ -404,6 +344,158 @@
             </b-col>
           </b-row>
         </template>
+      </b-modal>
+      <b-modal id="modal-multi-2" title="Incluir Cliente" size="lg">
+        <b-form @submit.prevent="updateProfile">
+          <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
+          <div class="">
+            <b-form-group>
+              <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
+              <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
+            </b-form-group>
+            <b-row>
+              <b-col lg="4" v-if="selected == 'F'">
+                <base-input type="text"
+                            label="Nome"
+                            placeholder="Nome"
+                            v-model="cliente.pessoa.nome">
+                </base-input>
+              </b-col>
+              <b-col lg="3" v-if="selected == 'J'">
+                <base-input type="text"
+                            label="Nome Fantasia"
+                            placeholder="Nome Fantasia"
+                            v-model="cliente.pessoa.nome">
+                </base-input>
+              </b-col>
+              <b-col lg="3" v-if="selected == 'F'">
+                <base-input type="text"
+                            label="CPF"
+                            placeholder="000.000.000-00"
+                            v-mask="'###.###.###-##'"
+                            v-model="cliente.pessoa.cpf">
+                </base-input>
+              </b-col>
+              <b-col lg="3" v-if="selected == 'J'">
+                <base-input type="text"
+                            label="CNPJ"
+                            v-mask="'##.###.###/####-##'"
+                            placeholder="00.000.000/0000-00"
+                            v-model="cliente.pessoa.cnpj">
+                </base-input>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6" v-if="selected == 'F'">
+                <base-input type="text"
+                            label="RG"
+                            placeholder="RG"
+                            v-model="cliente.pessoa.rg">
+                </base-input>
+              </b-col>
+              <b-col lg="6" v-if="selected == 'J'">
+                <base-input type="text"
+                            label="Razão Social"
+                            placeholder="Razão Social"
+                            v-model="cliente.pessoa.razaoSocial">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="E-mail"
+                            placeholder="E-mail"
+                            v-model="cliente.pessoa.email">
+                </base-input>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Telefone"
+                            placeholder="Telefone"
+                            v-model="cliente.pessoa.telefone">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Telefone Celular"
+                            placeholder="Telefone Celular"
+                            v-model="cliente.pessoa.celular">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+
+                <b-form-group label="Cidade*"
+                              label-for="cidade-input"
+                              invalid-feedback="Cidade é obrigatória">
+                  <b-form-input id="cidade-input"
+                                placeholder="Cidade"
+                                v-model="cliente.pessoa.cidade"
+                                required></b-form-input>
+                </b-form-group>
+
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="12">
+                <base-input type="text"
+                            label="Endereço"
+                            placeholder="Endereço"
+                            v-model="cliente.pessoa.endereco">
+                </base-input>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="CEP"
+                            placeholder="CEP"
+                            v-model="cliente.pessoa.cep">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Número"
+                            placeholder="Número"
+                            v-model="cliente.pessoa.numero">
+                </base-input>
+              </b-col>
+
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Referência"
+                            placeholder="Referência"
+                            v-model="cliente.pessoa.referencia">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Complemento"
+                            placeholder="Complemento"
+                            v-model="cliente.pessoa.complemento">
+                </base-input>
+              </b-col>
+            </b-row>
+          </div>
+          <b-alert :show="dismissCountDown" dismissible @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged" :variant="variant">
+            {{txtAlert}}
+          </b-alert>
+        </b-form>
+        <template #modal-footer="{ cancel }">
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendFormCliente()">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+        </template>
+
       </b-modal>
       <b-modal id="modal-2" title="Ordem Serviço" size="xl">
         <b-form @submit.prevent="updateProfile">
@@ -476,7 +568,7 @@
 
         </b-form>
         <template #modal-footer>
-          <b-row v-if="showNovoCliente">
+          <b-row  >
             <b-col lg="12">
               <base-button type="success" class="float-right" style="margin-right: 10px;">
                 <span class="btn-inner--text">Confirmar</span>
@@ -514,10 +606,11 @@
         showFiltrar: false,
         filtro: {nome: ''},
         orcamentos: [],
+        clientes: [],
         options: [
           { value: 1, text: 'Aprovado' },
           { value: 2, text: 'Negado' },
-          { value: 3, text: 'Aguardando' },
+          { value: 3, text: 'Aguardando Aprovação' },
           { value: 4, text: 'Encerrado' },
           { value: 5, text: 'Cancelado' },
         ],
@@ -598,16 +691,16 @@
         }
         return retorno;
       },
+
+
       getOrcamentos(pageN, pageS) {
         let $this = this;
+        var busca = this.filtro.nome
         axios.get("https://localhost:44376/Orcamento/GetOrcamentos", {
-          params: { "pageNumber": pageN, "pageSize": pageS }
+          params: { "busca": busca, "pageNumber": pageN, "pageSize": pageS }
         }).then(response => {
-          console.log(response.data)
           this.orcamentos = response.data.lst;
           this.qntdRegistros = response.data.qntdRegistros;
-          console.log('carrega orcamentos', this.orcamentos)
-          console.log('qutnd', this.qntdRegistros)
         })
           .catch(function (error) {
             $this.showAlert("Falha ao Carregar Orcamentos", "danger");
@@ -639,10 +732,15 @@
           params: this.cliente.pessoa
         }).then(response => {
           if (response.data.sucess) {
+            console.log(response.data.cliente)
             this.showBtBuscar = true;
-            this.cliente = response.data.cliente;
-            this.msgBuscando = response.data.description
+            this.clientes = response.data.cliente;
+            this.msgBuscando = "";
             this.showNovoCliente = false;
+            if (this.clientes.length == 0) {
+              this.msgBuscando = "Cliente não encontrado";
+              this.showBtBuscar = false;
+            }
           }
           else {
             this.cliente.id = 0;
@@ -720,6 +818,12 @@
         this.produto = {};
         this.showNovoProduto = false;
       },
+      showModalNovoCliente() {
+       // this.showNovoCliente = !showNovoCliente;
+        this.msgBuscando = '';
+        this.cliente = { pessoa: {} };
+        this.$bvModal.show("modal-multi-2");
+      },
       sendFormOS() {
         let $this = this;
         axios.post("https://localhost:44376/Orcamento/CriaOrdemServico", this.ordemServico).then(response => {
@@ -767,9 +871,42 @@
           });
         // this will be called only after form is valid. You can do api call here to login
       },
+      sendFormCliente() {
+        console.log(this.cliente);
+        let $this = this;
+        var url = "https://localhost:44376/Cliente/Create";
+        if (this.selected == 'J') {
+          this.cliente.pessoa.tipoPessoa = 2;
+        }
+        else {
+          this.cliente.pessoa.tipoPessoa = 1;
+        }
+        axios.post(url, this.cliente).then(response => {
+          if (response.data.sucess == true) {
+            this.cliente = response.data.cliente;
+            $this.showAlert(response.data.description, "success");
+            this.$bvModal.hide("modal-multi-2")
+          }
+          else {
+            $this.showAlert(response.data.description, "danger");
+          }
+        })
+          .catch(function (error) {
+            $this.showAlert("Criar Cliente", "danger");
+          });
+        // this will be called only after form is valid. You can do api call here to login
+      },
       change(val) {
         this.getOrcamentos(val, 10);
-      }
+      },
+       cpf(v){
+    v=v.replace(/\D/g,"")                    //Remove tudo o que não é dígito
+    v=v.replace(/(\d{3})(\d)/,"$1.$2")       //Coloca um ponto entre o terceiro e o quarto dígitos
+    v=v.replace(/(\d{3})(\d)/,"$1.$2")       //Coloca um ponto entre o terceiro e o quarto dígitos
+                                             //de novo (para o segundo bloco de números)
+    v=v.replace(/(\d{3})(\d{1,2})$/,"$1-$2") //Coloca um hífen entre o terceiro e o quarto dígitos
+    return v
+}
     },
     mounted() {
       this.getOrcamentos(1,10);

@@ -31,9 +31,17 @@ namespace SISTOR.Controllers
             return Json(orc);
         }
 
-        public IActionResult GetOrcamentos(int pageNumber, int pageSize)
+        public IActionResult GetOrcamentos(string busca,int pageNumber, int pageSize)
         {
-            retornoOrcamentos retorno = _orcamentoRepositorio.GetOrcamentos(pageNumber, pageSize);
+            retornoOrcamentos retorno = new retornoOrcamentos();
+            if (!String.IsNullOrEmpty(busca))
+            {
+                retorno = _orcamentoRepositorio.buscaOrcamento(busca ,pageNumber, pageSize);
+            }
+            else
+            {
+                retorno = _orcamentoRepositorio.GetOrcamentos(pageNumber, pageSize);
+            }
             return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
         }
 
@@ -42,7 +50,36 @@ namespace SISTOR.Controllers
             List<OrdemServico> orc = _orcamentoRepositorio.GetOrdensServico();
             return Json(orc);
         }
-        
+
+        public IActionResult buscaOrcamento(string busca, int pageNumber, int pageSize)
+        {
+            bool sucess = true;
+            var description = "";
+
+            try
+            {
+                retornoOrcamentos retorno = _orcamentoRepositorio.buscaOrcamento(busca, pageNumber, pageSize);
+                if (retorno != null)
+                {
+                    sucess = true;
+                    description = "Orçamento encontrado com sucesso!";
+                    return Json(new { sucess = sucess, description = description, orcamentos = retorno.lst, qntdRegistros = retorno.qntdRegistros });
+                }
+                else
+                {
+                    sucess = false;
+                    description = "Orçamento não encontrado";
+                    return Json(new { sucess = sucess, description = description });
+                }
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Orçamento não encontrado";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
 
         public IActionResult GetOrcamentoById(int id)
         {

@@ -19,11 +19,24 @@ namespace SISTOR.Repository
         {
             _context = context;
         }
+        public static string SemFormatacao(string Codigo)
+        {
+            return Codigo.Replace(".", string.Empty).Replace("-", string.Empty).Replace("/", string.Empty);
+        }
 
         public Cliente CriarCliente(Cliente cliente)
         {
             try
             {
+                if (!String.IsNullOrEmpty(cliente.Pessoa.CPF))
+                {
+                    cliente.Pessoa.CPF = SemFormatacao(cliente.Pessoa.CPF);
+                }
+                if (!String.IsNullOrEmpty(cliente.Pessoa.CNPJ))
+                {
+                    cliente.Pessoa.CNPJ = SemFormatacao(cliente.Pessoa.CNPJ);
+                }
+         
                 //cliente.Pessoa.CPF = Md5Hash.CalculaHash(cliente.Pessoa.CPF);
                 //cliente.Pessoa.RG = Md5Hash.CalculaHash(cliente.Pessoa.RG);
                 Cliente cpfDuplicado = new Cliente();
@@ -32,15 +45,15 @@ namespace SISTOR.Repository
                 cpfDuplicado = GetClienteByCPF(cliente.Pessoa.CPF);
                 rgDuplicado = GetClienteByRG(cliente.Pessoa.RG);
                 cnpjDuplicado = GetClienteByCNPJ(cliente.Pessoa.CNPJ);
-                if (cpfDuplicado != null && cpfDuplicado.Pessoa.CPF != "" && cpfDuplicado.Pessoa.CPF == cliente.Pessoa.CPF)
+                if (cpfDuplicado != null && !String.IsNullOrEmpty(cpfDuplicado.Pessoa.CPF) && cpfDuplicado.Pessoa.CPF == cliente.Pessoa.CPF)
                 {
                     throw new Exception("Falha ao criar novo Cliente! CPF já cadastrado!");
                 }
-                else if (rgDuplicado != null && rgDuplicado.Pessoa.RG != "" && rgDuplicado.Pessoa.RG == cliente.Pessoa.RG)
+                else if (rgDuplicado != null && !String.IsNullOrEmpty(rgDuplicado.Pessoa.RG) && rgDuplicado.Pessoa.RG == cliente.Pessoa.RG)
                 {
                     throw new Exception("Falha ao criar novo Cliente! RG já cadastrado!");
                 } 
-                else if (cnpjDuplicado != null && cnpjDuplicado.Pessoa.CNPJ != "" && cnpjDuplicado.Pessoa.CNPJ == cliente.Pessoa.CNPJ)
+                else if (cnpjDuplicado != null && !String.IsNullOrEmpty(cnpjDuplicado.Pessoa.CNPJ) && cnpjDuplicado.Pessoa.CNPJ == cliente.Pessoa.CNPJ)
                 {
                     throw new Exception("Falha ao criar novo Cliente! CNPJ já cadastrado!");
                 }
@@ -196,9 +209,9 @@ namespace SISTOR.Repository
             return _context.Cliente.Include(x => x.Pessoa).AsNoTracking().Where(b => b.Pessoa.CNPJ == cnpj).FirstOrDefault();
         }
 
-        public Cliente GetClienteByNome(string nome)
+        public List<Cliente> GetClienteByNome(string nome)
         {
-            return _context.Cliente.Where(x => x.Pessoa.Nome.Contains(nome)).Include(prop => prop.Pessoa).FirstOrDefault();
+            return _context.Cliente.Where(x => x.Pessoa.Nome.Contains(nome)).Include(prop => prop.Pessoa).ToList();
         }
 
         public List<Cliente> buscaCliente(string busca)
