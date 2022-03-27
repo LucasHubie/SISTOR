@@ -19,9 +19,17 @@ namespace SISTOR.Controllers
             _context = context;
             _produtoRepositorio = produtoRepositorio;
         }
-        public IActionResult Index(int pageNumber, int pageSize)
+        public IActionResult Index(string busca,int pageNumber, int pageSize)
         {
-            retornoProdutos retorno = _produtoRepositorio.GetProdutos(pageNumber, pageSize);
+            retornoProdutos retorno = new retornoProdutos();
+            if (!String.IsNullOrEmpty(busca))
+            {
+                retorno = _produtoRepositorio.BuscaProduto(busca, pageNumber, pageSize);
+            }
+            else
+            {
+                retorno = _produtoRepositorio.GetProdutos(pageNumber, pageSize);
+            }
             return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
         }
 
