@@ -156,6 +156,17 @@ namespace SISTOR.Repository
             return _context.Produto.Where(x => x.Descricao.Contains(busca) || x.Codigo.ToString().Contains(busca)).ToList();
         }
 
+        public retornoProdutos BuscaProduto(string busca, int pageNumber, int pageSize)
+        {
+            retornoProdutos objretorno = new retornoProdutos();
+            var count = _context.Produto.Where(x => x.Descricao.Contains(busca) || x.Codigo.ToString().Contains(busca)).Count();
+            var lst = _context.Produto.Where(x => x.Descricao.Contains(busca) || x.Codigo.ToString().Contains(busca)).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            objretorno.qntdRegistros = count;
+            objretorno.lst = lst;
+            return objretorno;
+        }
+
+
         public Produto GetProdutoById(int id)
         {
             return _context.Produto.Where(p => p.Id == id).FirstOrDefault();
