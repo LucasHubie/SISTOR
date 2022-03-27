@@ -125,9 +125,14 @@ namespace SISTOR.Repository
         }
 
 
-        public List<OrdemServico> GetOrdensServico()
+        public List<Itens> GetItensOrcamento()
         {
-            return _context.OrdemServico.Include("Cliente.Pessoa").Include("Funcionario.Pessoa").Include("Orcamento").ToList();
+            return _context.Itens.Include("Produto").ToList();
+        }
+
+        public List<Itens> GetItensOrcamentoById(int id)
+        {
+            return _context.Itens.Include("Produto").Where(x => x.IdOrcamento == id).ToList();
         }
 
         public OrcamentoVM GetOrcamentoById(int id)

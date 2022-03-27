@@ -213,5 +213,11 @@ namespace SISTOR.Controllers
             }
         }
 
+        public IActionResult GetCliente()
+        {
+            List<Cliente> cliente = _clienteRepositorio.GetClientes();
+            return Json(cliente);
+        }
+
     }
 }

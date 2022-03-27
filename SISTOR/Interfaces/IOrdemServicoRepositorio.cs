@@ -8,6 +8,7 @@ namespace SISTOR.Interfaces
 {
     public interface IOrdemServicoRepositorio
     {
+        List<OrdemServico> GetOrdemServico();
         OrdemServico GetOrdemServioById(int id);
     }
 }

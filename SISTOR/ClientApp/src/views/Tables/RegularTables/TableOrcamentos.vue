@@ -154,7 +154,7 @@
                 <h4>Selecione o cliente abaixo</h4>
                 <table class="table table-striped table-bordered">
                   <tbody>
-                    <tr v-for="clienteloop in clientes" style=" background-color: white;">
+                    <tr v-for="clienteloop in clientes" :key="clienteloop.id" style=" background-color: white;">
                       <td style="vertical-align: middle; ">{{clienteloop.pessoa.nome}}</td>
                       <td style="vertical-align: middle; ">{{cpf(clienteloop.pessoa.cpf)}}</td>
                       <td>

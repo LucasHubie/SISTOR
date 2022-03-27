@@ -45,10 +45,16 @@ namespace SISTOR.Controllers
             return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
         }
 
-        public IActionResult GridOS()
+        public IActionResult GetItensOrcamento()
         {
-            List<OrdemServico> orc = _orcamentoRepositorio.GetOrdensServico();
-            return Json(orc);
+            List<Itens> itens = _orcamentoRepositorio.GetItensOrcamento();
+            return Json(itens);
+        }
+
+        public IActionResult GetItensOrcamentoById(int id)
+        {
+            List<Itens> itens = _orcamentoRepositorio.GetItensOrcamentoById(id);
+            return Json(itens);
         }
 
         public IActionResult buscaOrcamento(string busca, int pageNumber, int pageSize)

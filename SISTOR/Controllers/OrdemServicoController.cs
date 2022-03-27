@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SISTOR.Configuration;
 using SISTOR.Interfaces;
+using SISTOR.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,12 @@ namespace SISTOR.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult GetOrdemServico()
+        {
+            List<OrdemServico> os = _ordemServicoRepositorio.GetOrdemServico();
+            return Json(os);
         }
 
         public IActionResult GetOrdemServicoById(int id)

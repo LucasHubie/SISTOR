@@ -32,6 +32,17 @@
             </b-media>
           </template>
         </el-table-column>
+        <!--<el-table-column label="Produtos"
+                         min-width="90px"
+                         prop="name">
+          <template v-slot="{row}">
+            <b-media no-body class="align-items-center">
+              <b-media-body>
+                <span class="font-weight-600 name mb-0 text-sm">{{row.itensOrcamento.produto.descricao}}</span>
+              </b-media-body>
+            </b-media>
+          </template>
+        </el-table-column>-->
         <el-table-column label="Funcionário"
                          prop="funcionario.pessoa.nome"
                          min-width="130px">
@@ -87,23 +98,129 @@
                 </label>
                 <b-form-select v-model="ordemServico.idFuncionario" :options="funcionarios"></b-form-select>
               </b-col>
-            </b-row>
-            <b-row>
               <b-col lg="6">
                 <label>
-                  Produtos
+                  Cliente
                 </label>
-                <b-form-select v-model="ordemServico.idProduto" :options="produtos"></b-form-select>
-              </b-col>
-              <b-col lg="6">
-                <base-input type="number"
-                            label="Valor do produto"
-                            placeholder="Valor do produto"
-                            :disabled="disable"
-                            v-model="produto.valor">
-                </base-input>
+                <b-form-select v-model="ordemServico.idCliente" :options="clientes"></b-form-select>
               </b-col>
             </b-row>
+
+            <hr class="my-4">
+            <!--<b-col lg="6">
+    <label>
+      Produtos
+    </label>
+    <b-form-select v-model="ordemServico.idProduto" :options="produtos"></b-form-select>
+  </b-col>
+  <b-col lg="6">
+    <base-input type="number"
+                label="Valor do produto"
+                placeholder="Valor do produto"
+                :disabled="disable"
+                v-model="produto.valor">
+    </base-input>
+  </b-col>-->
+            <h6 class="heading-small text-muted mb-4">Produtos</h6>
+
+            <div class="">
+              <!--<b-row>
+                <b-col lg="12">
+                  <base-button size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px; margin-bottom: 10px;" v-on:click="showNovoProduto = !showNovoProduto">
+                    <b-icon icon="clipboard-plus" font-scale="1"></b-icon>
+                    <span class="btn-inner--text">Adicionar Produto</span>
+                  </base-button>
+                </b-col>
+              </b-row>
+              <b-row v-if="showNovoProduto">
+                <b-col lg="6">
+                  <base-input type="text"
+                              label="Descrição"
+                              placeholder="Descrição"
+                              v-model="produto.descricao">
+                  </base-input>
+                </b-col>
+                <b-col lg="3">
+                  <base-input type="number"
+                              label="Quantidade"
+                              placeholder="Quantidade"
+                              v-model="produto.quantidade">
+                  </base-input>
+                </b-col>
+                <b-col lg="3">
+                  <base-input type="number"
+                              label="Valor"
+                              placeholder="Valor"
+                              v-model="produto.valor">
+                  </base-input>
+                </b-col>
+              </b-row>
+              <b-row v-if="showNovoProduto">
+                <b-col lg="12">
+                  <base-button size="sm" type="success" class="float-right" style="margin-right: 10px;" v-on:click="addProduto">
+                    <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
+                    <span class="btn-inner--text">Incluir</span>
+                  </base-button>
+                  <base-button size="sm" type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="showNovoProduto = !showNovoProduto">
+                    <span class="btn-inner--text">Cancelar</span>
+                  </base-button>
+                </b-col>
+              </b-row>-->
+              <b-row>
+                <el-table class="table-responsive table"
+                          header-row-class-name="thead-light"
+                          :data="lstprodutos">
+                  <el-table-column label="Descrição"
+                                   min-width="310px"
+                                   prop="name">
+                    <template v-slot="{row}">
+                      <b-media no-body class="align-items-center">
+                        <b-media-body>
+                          <span class="font-weight-600 name mb-0 text-sm">{{row.descricao}}</span>
+                        </b-media-body>
+                      </b-media>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Qntd"
+                                   min-width="70px"
+                                   prop="name">
+                    <template v-slot="{row}">
+                      <b-media no-body class="align-items-center">
+                        <b-media-body>
+                          <span class="font-weight-600 name mb-0 text-sm">{{row.quantidade}}</span>
+                        </b-media-body>
+                      </b-media>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Valor Unitario"
+                                   min-width="100px"
+                                   prop="name">
+                    <template v-slot="{row}">
+                      <b-media no-body class="align-items-center">
+                        <b-media-body>
+                          <span class="font-weight-600 name mb-0 text-sm">R${{row.valorItem}}</span>
+                        </b-media-body>
+                      </b-media>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Valor Total"
+                                   min-width="100px"
+                                   prop="name">
+                    <template v-slot="{row}">
+                      <b-media no-body class="align-items-center">
+                        <b-media-body>
+                          <span class="font-weight-600 name mb-0 text-sm">R${{row.valorItem * row.quantidade }}</span>
+                        </b-media-body>
+                      </b-media>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </b-row>
+
+            </div>
+
+            <hr class="my-4">
+
             <b-row>
               <b-col lg="6">
                 <base-input type="number"
@@ -161,13 +278,19 @@
                 </label>
                 <b-form-select v-model="ordemServico.idFuncionario" :options="funcionarios" :disabled="disable"></b-form-select>
               </b-col>
+              <b-col lg="6">
+                <label>
+                  Cliente
+                </label>
+                <b-form-select v-model="ordemServico.idCliente" :options="clientes" :disabled="disable"></b-form-select>
+              </b-col>
             </b-row>
             <b-row>
               <b-col lg="6">
                 <label>
                   Produtos
                 </label>
-                <b-form-select v-model="ordemServico.idProduto" :options="produtos" :disabled="disable"></b-form-select>
+                <b-form-select v-model="ordemServico.idProduto" :options="itensOrcamento" :disabled="disable"></b-form-select>
               </b-col>
               <b-col lg="6">
                 <base-input type="number"
@@ -230,6 +353,7 @@
     data() {
       return {
         ordensServico: [],
+        itensOrcamento: [],
         products,
         currentPage: 1,
         selected: 'F',
@@ -244,15 +368,21 @@
           valorTotal: 0,
           situacao: '',
           idFuncionario: 0,
-          idProduto: 0
+          idProduto: 0,
+          idCliente: 0
         },
         funcionarios: [],
         produtos: [],
+        clientes: [],
+        lstprodutos: [],
         orcamento: {
           descricao: 'Motor WEG'
         },
         produto: {
           valor: 0
+        },
+        itemOrcamento: {
+
         },
         showNovoCliente: false,
         showNovoProduto: false
@@ -268,12 +398,13 @@
         this.ordemServico.situacao = ''
         this.ordemServico.idFuncionario = 0
         this.ordemServico.idProduto = 0
+        this.ordemServico.idCliente = 0
         this.produto.valor = 0
         this.tpOperacao = 'Incluir'
         this.disable = true
       },
-      getOrdem() {
-        axios.get("https://localhost:44376/Orcamento/GridOS", {
+      getOrdemServico() {
+        axios.get("https://localhost:44376/OrdemServico/GetOrdemServico", {
         }).then(response => {
           console.log(response.data)
           this.ordensServico = response.data
@@ -283,8 +414,32 @@
           });
       },
 
+      GetItensOrcamento() {
+        axios.get("https://localhost:44376/Orcamento/GetItensOrcamento", {
+        }).then(response => {
+          console.log(response.data)
+          this.itensOrcamento = response.data
+        })
+          .catch(function (error) {
+            alert(error);
+          });
+      },
+
+      GetItensOrcamentoById(id) {
+        axios.get("https://localhost:44376/Orcamento/GetItensOrcamentoById", {
+          params: { "id": id }
+        }).then(response => {
+          console.log(response.data)
+          this.itensOrcamento = response.data
+        })
+          .catch(function (error) {
+            alert(error);
+          });
+      },
+
       GetOrdemServicoById(id, tpOperacao) {
         if (tpOperacao == "Visualizar") {
+          this.GetItensOrcamentoById(id)
           this.disable = true
         }
         axios.get("https://localhost:44376/OrdemServico/GetOrdemServicoById", {
@@ -304,6 +459,8 @@
             alert(error);
           });
       },
+
+
 
       getFuncionarios() {
         axios.get("https://localhost:44376/Funcionario/GetFuncionario", {
@@ -329,7 +486,7 @@
             var opt = { value: response.data[i].id, text: response.data[i].descricao };
             this.produtos.push(opt);
           }
-          console.log('lstfunc', this.produtos);
+          console.log('lstprodutos', this.produtos);
 
         })
           .catch(function (error) {
@@ -337,14 +494,30 @@
           });
       },
 
-      
+      getClientes() {
+        axios.get("https://localhost:44376/Cliente/GetCliente", {
+        }).then(response => {
+          console.log('func', response.data);
+          for (var i = 0; i < response.data.length; i++) {
+            var opt = { value: response.data[i].id, text: response.data[i].pessoa.nome + response.data[i].pessoa.nomeFantasia };
+            this.clientes.push(opt);
+          }
+          console.log('lstclientes', this.clientes);
+
+        })
+          .catch(function (error) {
+            alert("Falha ao Carregar Clientes");
+          });
+      },
 
     }
     , mounted()
     {
-      this.getOrdem();
+      this.getOrdemServico();
       this.getFuncionarios();
       this.getProdutos();
+      this.GetItensOrcamento();
+      this.getClientes();
     }
   }
 </script>

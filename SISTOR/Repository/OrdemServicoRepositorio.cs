@@ -1,4 +1,5 @@
-﻿using SISTOR.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using SISTOR.Configuration;
 using SISTOR.Interfaces;
 using SISTOR.Models;
 using System;
@@ -15,6 +16,10 @@ namespace SISTOR.Repository
         public OrdemServicoRepositorio(AppDbContext context)
         {
             _context = context;
+        }
+        public List<OrdemServico> GetOrdemServico()
+        {
+            return _context.OrdemServico.Include("Cliente.Pessoa").Include("Funcionario.Pessoa").Include("Orcamento").ToList();
         }
 
         public OrdemServico GetOrdemServioById(int id)
