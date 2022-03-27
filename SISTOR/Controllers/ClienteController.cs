@@ -49,10 +49,10 @@ namespace SISTOR.Controllers
             cliente.IdPessoa = 0;
 
             try { 
-                _clienteRepositorio.CriarCliente(cliente);
+                var obj = _clienteRepositorio.CriarCliente(cliente);
                 sucess = true;
                 description = "Cliente criado com sucesso!";
-                return Json(new { sucess = sucess, description = description });
+                return Json(new { sucess = sucess, description = description, cliente = obj });
             }
             catch(Exception ex)
             {
@@ -161,7 +161,7 @@ namespace SISTOR.Controllers
 
             try
             {
-                Cliente obj = new Cliente();
+                List<Cliente> obj = new List<Cliente>();
                 obj = _clienteRepositorio.GetClienteByNome(nome);
                 if (obj != null) { 
                 sucess = true;

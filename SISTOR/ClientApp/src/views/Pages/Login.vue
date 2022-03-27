@@ -1,14 +1,6 @@
 <template>
   <div>
 
-    <b-alert :show="dismissCountDown"
-             dismissible
-             variant="warning"
-             @dismissed="dismissCountDown=0"
-             @dismiss-count-down="countDownChanged">
-      Confirmado com sucesso! <!--{{ dismissCountDown }}-->
-    </b-alert>
-
     <!-- Header -->
     <div class="header bg-gradient-success py-7 py-lg-8 pt-lg-9">
       <b-container>
@@ -35,6 +27,13 @@
               </div>
             </b-card-header>
             <b-card-body class="px-lg-5 py-lg-5">
+              <b-alert :show="dismissCountDown" dismissible @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged" :variant="variant">
+                <p>{{txtAlert}}</p>
+                <b-progress :variant="variant"
+                            :max="dismissSecs"
+                            :value="dismissCountDown"
+                            height="2px"></b-progress>
+              </b-alert>
               <validation-observer v-slot="{handleSubmit}" ref="formValidator">
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
                   <base-input alternative
@@ -86,6 +85,9 @@
       return {
         dismissSecs: 5,
         dismissCountDown: 0,
+        showModal: false,
+        variant: "info",
+        txtAlert: "",
         model: {
           Nome: '',
           Login: '',
@@ -95,14 +97,20 @@
       };
     },
     methods: {
+      showAlert(message, variant) {
+        // success
+        // danger
+        // warning
+       // this.showModal = true,
+        this.dismissCountDown = this.dismissSecs
+          this.variant = variant
+        this.txtAlert = message
+      },
       countDownChanged(dismissCountDown) {
         this.dismissCountDown = dismissCountDown
       },
-      showAlert() {
-        this.dismissCountDown = this.dismissSecs
-      },
       onSubmit() {
-
+        let $this = this;
         axios.get("https://localhost:44376/Usuario/Login", {
           params: this.model
         }).then(response => {
@@ -110,19 +118,19 @@
             const token = response.data.token
             localStorage.setItem('user-token', token)
            // console.log(localStorage);
-            alert('teste');
-            this.showAlert()
+           // alert('teste');
+            $this.showAlert("Login Realizado com Sucesso", "success")
             window.location.href = "#/dashboard"
             //alert(response.data.description)
           }
           else {
-            alert(response.data.description);
+            $this.showAlert(response.data.description, "warning")
           }
           
           //alert("login", response.data)
         })
           .catch(function (error) {
-            alert(error);
+            $this.showAlert("Erro na conexão", "danger")
           });
         // this will be called only after form is valid. You can do api call here to login
       }

@@ -194,6 +194,17 @@ namespace SISTOR.Repository
          
         }
 
+        public retornoOrcamentos buscaOrcamento(string busca, int pageNumber, int pageSize)
+        {
+            retornoOrcamentos objretorno = new retornoOrcamentos();
+            var count = _context.Orcamento.Where(x => x.Cliente.Pessoa.Nome.Contains(busca) || x.TagIdentificacao.Contains(busca)).Include(prop => prop.Cliente.Pessoa).Count();
+            var lst = _context.Orcamento.Where(x => x.Cliente.Pessoa.Nome.Contains(busca) || x.TagIdentificacao.Contains(busca)).Include(prop => prop.Cliente.Pessoa).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            objretorno.qntdRegistros = count;
+            objretorno.lst = lst;
+            return objretorno;
+        }
+
+
         public Itens getItensOrcamentoByProduto(int produto)
         {
             return _context.Itens.Include("Produto").Where(r => r.IdProduto == produto).FirstOrDefault();

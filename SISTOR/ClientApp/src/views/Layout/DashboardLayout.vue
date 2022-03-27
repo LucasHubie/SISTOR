@@ -55,7 +55,7 @@
                href=""
                >
               <i class="ni ni-spaceship"></i>
-              <b-nav-text class="p-0">Sair</b-nav-text>
+              <b-nav-text class="p-0">Sir</b-nav-text>
           </b-nav-item>
 
         </b-nav>
