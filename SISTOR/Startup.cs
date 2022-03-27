@@ -52,6 +52,28 @@ namespace SISTOR
             services.AddTransient<IFuncionarioRepositorio, FuncionarioRepositorio>();
             services.AddTransient<IClienteRepositorio, ClienteRepositorio>();
             services.AddTransient<IOrcamentoRepositorio, OrcamentoRepositorio>();
+            services.AddTransient<IProdutoRepositorio, ProdutoRepositorio>();
+            services.AddTransient<IOrdemServicoRepositorio, OrdemServicoRepositorio>();
+
+            var key = Encoding.ASCII.GetBytes(Settings.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

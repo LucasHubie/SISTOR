@@ -42,7 +42,7 @@
           </b-col>
           <b-col lg="1">
             <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="buscacliente">
-              <span class="btn-inner--text">Buscar</span>
+              <span class="btn-inner--text">Filtrar</span>
             </base-button>
           </b-col>
 
@@ -127,12 +127,9 @@
           <b-row>
             <b-col lg="12">
               <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="cancelarHelp">
-                <span class="btn-inner--text">Confirmar</span>
+                <span class="btn-inner--text">Fechar</span>
               </base-button>
-              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarHelp">
-
-                <span class="btn-inner--text">Cancelar</span>
-              </base-button>
+              
             </b-col>
           </b-row>
         </template>
@@ -665,12 +662,9 @@
           <b-row>
             <b-col lg="12">
               <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOKdetail">
-                <span class="btn-inner--text">Confirmar</span>
+                <span class="btn-inner--text">Fechar</span>
               </base-button>
-              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarDetail">
-
-                <span class="btn-inner--text">Cancelar</span>
-              </base-button>
+              
             </b-col>
           </b-row>
         </template>
@@ -985,8 +979,9 @@
       },
 
       deleteclienteConfirmed(id) {
-        this.$bvModal.msgBoxConfirm('Por favor confirme a exclusão do cliente', {
-          title: 'Deseja excluir este cliente?',
+        const found = this.clientes.find(element => element.id === id);
+        this.$bvModal.msgBoxConfirm('Por favor confirme a exclusão do cliente ' + found.pessoa.nome, {
+          title: 'Deseja excluir este cliente ' + found.pessoa.nome + '?',
           size: 'sm',
           buttonSize: 'sm',
           okVariant: 'danger',

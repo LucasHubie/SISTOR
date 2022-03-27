@@ -1,71 +1,218 @@
 <template>
-  <b-card style="box-shadow: 3px 0px 5px 3px #0000007d;" no-body>
-    <b-card-header class="border-0">
-      <h3 class="mb-0 float-left">Ordens de Serviço</h3>
-      <base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
-        <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
-        <span class="btn-inner--text">Filtrar</span>
-      </base-button>
-      <base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
-        <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
-        <span class="btn-inner--text">Adicionar</span>
-      </base-button>
-      <base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
-        <b-icon icon="card-list" font-scale="1"></b-icon>
-        <span class="btn-inner--text">Gerar Relatórios</span>
-      </base-button>
+  <div>
+    <b-card style="box-shadow: 3px 0px 5px 3px #0000007d;" no-body>
+      <b-card-header class="border-0">
+        <h3 class="mb-0 float-left">Ordens de Serviço</h3>
+        <base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
+          <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
+          <span class="btn-inner--text">Filtrar</span>
+        </base-button>
+        <base-button v-on:click="resetModal" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
+          <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
+          <span v-b-modal.modal-1 class="btn-inner--text">Adicionar</span>
+        </base-button>
+        <!--<base-button type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
+      <b-icon icon="card-list" font-scale="1"></b-icon>
+      <span class="btn-inner--text">Gerar Relatórios</span>
+    </base-button>-->
 
-    </b-card-header>
+      </b-card-header>
 
-    <el-table class="table-responsive table"
-              header-row-class-name="thead-light"
-              :data="ordensServico">
-      <el-table-column label="Tag ID"
-                       min-width="155px"
-                       prop="name">
-        <template v-slot="{row}">
-          <b-media no-body class="align-items-center">
-            <b-media-body>
-              <span class="font-weight-600 name mb-0 text-sm">{{row.orcamento.tagIdentificacao}}</span>
-            </b-media-body>
-          </b-media>
+      <el-table class="table-responsive table"
+                header-row-class-name="thead-light"
+                :data="ordensServico">
+        <el-table-column label="Tag Identificação"
+                         min-width="90px"
+                         prop="name">
+          <template v-slot="{row}">
+            <b-media no-body class="align-items-center">
+              <b-media-body>
+                <span class="font-weight-600 name mb-0 text-sm">{{row.orcamento.tagIdentificacao}}</span>
+              </b-media-body>
+            </b-media>
+          </template>
+        </el-table-column>
+        <el-table-column label="Funcionário"
+                         prop="funcionario.pessoa.nome"
+                         min-width="130px">
+        </el-table-column>
+        <el-table-column label="Cliente"
+                         prop="cliente.pessoa.nome"
+                         min-width="100px">
+        </el-table-column>
+
+        <el-table-column label="Ações"
+                         min-width="170px"
+                         prop="">
+          <template v-slot="{row}">
+            <el-dropdown trigger="click" class="dropdown">
+              <base-button size="sm" type="default" style="background-color: rgb(58 99 167); margin-right: .5rem;"><b-icon icon="three-dots" font-scale="1"></b-icon></base-button>
+              <el-dropdown-menu class="dropdown-menu dropdown-menu-arrow show" slot="dropdown">
+                <b-dropdown-item v-on:click="showModalOS(row.id, row.cliente.id, row.tagIdentificacao)">Fechar Ordem de Serviço</b-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <base-button v-on:click="GetOrdemServicoById(row.id, 'Visualizar')" v-b-modal.modal-2 size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon> </base-button>
+            <base-button v-on:click="GetOrdemServicoById(row.id, 'Alterar')" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
+            <base-button size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
+
+          </template>
+        </el-table-column>
+
+      </el-table>
+
+      <b-card-footer class="py-4 d-flex justify-content-end">
+        <base-pagination :per-page="10" :total="qntdRegistros"></base-pagination>
+      </b-card-footer>
+
+      <!--modal inclusao e edição-->
+      <b-modal id="modal-1" title="Ordem de serviço" size="lg">
+        <b-form @submit.prevent="handleSubmit">
+          <h6 class="heading-small text-muted mb-4">Informações da Ordem de Serviço</h6>
+          <div class="">
+            <b-form-group>
+
+            </b-form-group>
+            <b-row>
+              <div class="">
+                <b-form-group label="Observações da  Ordem de Serviço" label-class="form-control-label" class="mb-0" label-for="about-form-textaria">
+                  <!--  <label class="form-control-label">About Me</label> -->
+                  <b-form-textarea rows="4" v-model="ordemServico.observacoes" id="about-form-textaria" placeholder="Descrição da Ordem de Serviço"></b-form-textarea>
+                </b-form-group>
+              </div>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <label>
+                  Funcionário
+                </label>
+                <b-form-select v-model="ordemServico.idFuncionario" :options="funcionarios"></b-form-select>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <label>
+                  Produtos
+                </label>
+                <b-form-select v-model="ordemServico.idProduto" :options="produtos"></b-form-select>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="number"
+                            label="Valor do produto"
+                            placeholder="Valor do produto"
+                            :disabled="disable"
+                            v-model="produto.valor">
+                </base-input>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <base-input type="number"
+                            label="Valor da mão de obra"
+                            placeholder="Valor da mão de obra"
+                            v-model="ordemServico.maoDeObra">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="number"
+                            label="Valor Total"
+                            placeholder="Valor "
+                            v-model="ordemServico.valorTotal">
+                </base-input>
+              </b-col>
+            </b-row>
+            <hr class="my-4">
+          </div>
+        </b-form>
+        <template #modal-footer="{ ok, cancel, hide }">
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;">
+                <span class="btn-inner--text" v-on:click="sendForm()">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
+
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
         </template>
-      </el-table-column>
-      <el-table-column label="Funcionário"
-                       prop="funcionario.pessoa.nome"
-                       min-width="130px">
-      </el-table-column>
-      <el-table-column label="Cliente"
-                       prop="cliente.pessoa.nome"
-                       min-width="100px">
-      </el-table-column>
+      </b-modal>
 
-      <el-table-column label="Ações"
-                       min-width="170px"
-                       prop="">
-        <template v-slot="{row}">
-          <el-dropdown trigger="click" class="dropdown">
-            <base-button size="sm" type="default" style="background-color: rgb(58 99 167); margin-right: .5rem;"><b-icon icon="three-dots" font-scale="1"></b-icon></base-button>
-            <el-dropdown-menu class="dropdown-menu dropdown-menu-arrow show" slot="dropdown">
-              <b-dropdown-item>Gerar Ordem de Serviço</b-dropdown-item>
-              <b-dropdown-item>Alterar Situação</b-dropdown-item>
+      <!--modal details-->
+      <b-modal id="modal-2" title="Ordem de serviço" size="lg">
+        <b-form @submit.prevent="handleSubmit">
+          <h6 class="heading-small text-muted mb-4">Informações da Ordem de Serviço</h6>
+          <div class="">
+            <b-form-group>
 
-            </el-dropdown-menu>
-          </el-dropdown>
-          <base-button v-b-modal.modal-1 size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon> </base-button>
-          <base-button size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
-          <base-button size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
-
+            </b-form-group>
+            <b-row>
+              <div class="">
+                <b-form-group label="Observações da  Ordem de Serviço" label-class="form-control-label" class="mb-0" label-for="about-form-textaria">
+                  <!--  <label class="form-control-label">About Me</label> -->
+                  <b-form-textarea rows="4" v-model="ordemServico.observacoes" id="about-form-textaria" placeholder="Descrição da Ordem de Serviço" :disabled="disable"></b-form-textarea>
+                </b-form-group>
+              </div>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <label>
+                  Funcionário
+                </label>
+                <b-form-select v-model="ordemServico.idFuncionario" :options="funcionarios" :disabled="disable"></b-form-select>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <label>
+                  Produtos
+                </label>
+                <b-form-select v-model="ordemServico.idProduto" :options="produtos" :disabled="disable"></b-form-select>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="number"
+                            label="Valor do produto"
+                            placeholder="Valor do produto"
+                            :disabled="disable"
+                            v-model="produto.valor">
+                </base-input>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <base-input type="number"
+                            label="Valor da mão de obra"
+                            placeholder="Valor da mão de obra"
+                            :disabled="disable"
+                            v-model="ordemServico.maoDeObra">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="number"
+                            label="Valor Total"
+                            placeholder="Valor "
+                            :disabled="disable"
+                            v-model="ordemServico.valorTotal">
+                </base-input>
+              </b-col>
+            </b-row>
+            <hr class="my-4">
+          </div>
+        </b-form>
+        <template #modal-footer="{ ok, cancel, hide }">
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;">
+                <span class="btn-inner--text" v-on:click="cancel()">Fechar</span>
+              </base-button>
+            </b-col>
+          </b-row>
         </template>
-      </el-table-column>
+      </b-modal>
 
-    </el-table>
-
-    <b-card-footer class="py-4 d-flex justify-content-end">
-      <base-pagination :per-page="10" :total="50"></base-pagination>
-    </b-card-footer>
-  </b-card>
- 
+    </b-card>
+    
+  </div>
 </template>
 <script>
   import axios from 'axios'
@@ -86,21 +233,45 @@
         products,
         currentPage: 1,
         selected: 'F',
-        user: {
-          username: ''
+        qntdRegistros: 0,
+        disable: false,
+        tpOperacao: 'Incluir',
+        ordemServico: {
+          dataInclusao: '',
+          horasTrabalhadas: '',
+          observacoes: '',
+          maoDeObra: 0,
+          valorTotal: 0,
+          situacao: '',
+          idFuncionario: 0,
+          idProduto: 0
         },
+        funcionarios: [],
+        produtos: [],
         orcamento: {
           descricao: 'Motor WEG'
         },
         produto: {
-        
+          valor: 0
         },
         showNovoCliente: false,
         showNovoProduto: false
       }
     },
     methods: {
-      
+
+      resetModal() {
+        this.ordemServico.observacoes = ''
+        this.ordemServico.maoDeObra = 0
+        this.ordemServico.dataInclusao = ''
+        this.ordemServico.valorTotal = 0
+        this.ordemServico.situacao = ''
+        this.ordemServico.idFuncionario = 0
+        this.ordemServico.idProduto = 0
+        this.produto.valor = 0
+        this.tpOperacao = 'Incluir'
+        this.disable = true
+      },
       getOrdem() {
         axios.get("https://localhost:44376/Orcamento/GridOS", {
         }).then(response => {
@@ -110,10 +281,71 @@
           .catch(function (error) {
             alert(error);
           });
-      }
+      },
+
+      GetOrdemServicoById(id, tpOperacao) {
+        if (tpOperacao == "Visualizar") {
+          this.disable = true
+        }
+        axios.get("https://localhost:44376/OrdemServico/GetOrdemServicoById", {
+          params: { "id": id }
+        }).then(response => {
+          console.log(response.data)
+          this.ordemServico = response.data.ordemServico
+          console.log(this.ordemServico)
+
+          if (tpOperacao == "Alterar") {
+            this.$bvModal.show("modal-1");
+            this.tpOperacao = tpOperacao
+            this.disable = true
+          }
+        })
+          .catch(function (error) {
+            alert(error);
+          });
+      },
+
+      getFuncionarios() {
+        axios.get("https://localhost:44376/Funcionario/GetFuncionario", {
+        }).then(response => {
+          console.log('func', response.data);
+          for (var i = 0; i < response.data.length; i++) {
+            var opt = { value: response.data[i].id, text: response.data[i].pessoa.nome };
+            this.funcionarios.push(opt);
+          }
+          console.log('lstfunc', this.funcionarios);
+
+        })
+          .catch(function (error) {
+            alert("Falha ao Carregar Funcionarios");
+          });
+      },
+
+      getProdutos() {
+        axios.get("https://localhost:44376/Produto/GetProduto", {
+        }).then(response => {
+          console.log('func', response.data);
+          for (var i = 0; i < response.data.length; i++) {
+            var opt = { value: response.data[i].id, text: response.data[i].descricao };
+            this.produtos.push(opt);
+          }
+          console.log('lstfunc', this.produtos);
+
+        })
+          .catch(function (error) {
+            alert("Falha ao Carregar Funcionarios");
+          });
+      },
+
+      
 
     }
-    , mounted() { this.getOrdem(); }
+    , mounted()
+    {
+      this.getOrdem();
+      this.getFuncionarios();
+      this.getProdutos();
+    }
   }
 </script>
 

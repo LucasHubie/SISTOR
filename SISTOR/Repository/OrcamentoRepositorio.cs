@@ -193,5 +193,10 @@ namespace SISTOR.Repository
             }
          
         }
+
+        public Itens getItensOrcamentoByProduto(int produto)
+        {
+            return _context.Itens.Include("Produto").Where(r => r.IdProduto == produto).FirstOrDefault();
+        }
     }
 }

@@ -24,6 +24,7 @@ namespace SISTOR.Interfaces
         
 
         public OrcamentoVM GetOrcamentoById(int id);
+        public Itens getItensOrcamentoByProduto(int produto);
 
         public class retornoOrcamentos
         {
