@@ -26,16 +26,38 @@ namespace SISTOR.Controllers
         //public IActionResult Index()
         //{
         //    List<Cliente> cliente = _clienteRepositorio.GetClientes();
-            
+
         //    return Json(cliente);
         //}
 
-        public IActionResult Index(int pageNumber, int pageSize)
+        public IActionResult Index(string busca, int pageNumber, int pageSize)
         {
             //List<Cliente> cliente = _clienteRepositorio.GetClientes();
+            retornoClientes retorno = new retornoClientes();
+            if (!String.IsNullOrEmpty(busca))
+            {
+                retorno = _clienteRepositorio.buscaCliente(busca, pageNumber, pageSize);
+            }
+            else
+            {
+                retorno = _clienteRepositorio.GetClientes(pageNumber, pageSize);
+            }
+            return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
+        }
 
 
-            retornoClientes retorno = _clienteRepositorio.GetClientes(pageNumber, pageSize);
+        public IActionResult BuscarCliente(string busca, int pageNumber, int pageSize)
+        {
+            //List<Cliente> cliente = _clienteRepositorio.GetClientes();
+            retornoClientes retorno = new retornoClientes();
+            if (!String.IsNullOrEmpty(busca))
+            {
+                retorno = _clienteRepositorio.buscaClienteReduzido(busca, pageNumber, pageSize);
+            }
+            else
+            {
+                retorno = _clienteRepositorio.GetClientes(pageNumber, pageSize);
+            }
             return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
         }
 

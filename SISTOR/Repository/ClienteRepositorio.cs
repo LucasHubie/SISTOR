@@ -222,7 +222,35 @@ namespace SISTOR.Repository
                 .Include(prop => prop.Pessoa).ToList();
         }
 
-       
+        public retornoClientes buscaCliente(string busca, int pageNumber, int pageSize)
+        {
+
+            retornoClientes objretorno = new retornoClientes();
+            var count = _context.Cliente.Where(x => x.Pessoa.Nome.Contains(busca) || x.Pessoa.NomeFantasia.Contains(busca) || x.Pessoa.Email.Contains(busca) || x.Pessoa.CPF.Contains(busca) || x.Pessoa.RG.Contains(busca) || x.Pessoa.CNPJ.Contains(busca) || x.Pessoa.RazaoSocial.Contains(busca))
+                .Include(prop => prop.Pessoa).Count();
+            var lst = _context.Cliente.Where(x => x.Pessoa.Nome.Contains(busca) || x.Pessoa.NomeFantasia.Contains(busca) || x.Pessoa.Email.Contains(busca) || x.Pessoa.CPF.Contains(busca)
+            || x.Pessoa.RG.Contains(busca) || x.Pessoa.CNPJ.Contains(busca) || x.Pessoa.RazaoSocial.Contains(busca))
+                .Include(prop => prop.Pessoa).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            objretorno.qntdRegistros = count;
+            objretorno.lst = lst;
+            return objretorno;
+
+        }
+        public retornoClientes buscaClienteReduzido(string busca, int pageNumber, int pageSize)
+        {
+
+            retornoClientes objretorno = new retornoClientes();
+            var count = _context.Cliente.Where(x => x.Pessoa.Nome.Contains(busca) || x.Pessoa.NomeFantasia.Contains(busca)  || x.Pessoa.CPF.Contains(busca) || x.Pessoa.CNPJ.Contains(busca))
+                .Include(prop => prop.Pessoa).Count();
+            var lst = _context.Cliente.Where(x => x.Pessoa.Nome.Contains(busca) || x.Pessoa.NomeFantasia.Contains(busca) || x.Pessoa.CPF.Contains(busca) || x.Pessoa.CNPJ.Contains(busca))
+                .Include(prop => prop.Pessoa).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            objretorno.qntdRegistros = count;
+            objretorno.lst = lst;
+            return objretorno;
+
+        }
+        
+
 
     }
 }

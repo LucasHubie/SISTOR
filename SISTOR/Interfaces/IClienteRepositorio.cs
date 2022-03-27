@@ -24,8 +24,13 @@ namespace SISTOR.Interfaces
 
         void Delete(int id);
         Pessoa GetPessoa(int? id);
-        List<Cliente> buscaCliente(string busca);
+        retornoClientes buscaCliente(string busca, int pageNumber, int pageSize);
 
+        retornoClientes buscaClienteReduzido(string busca, int pageNumber, int pageSize);
+
+        
+
+        List<Cliente> buscaCliente(string busca);
         retornoClientes GetClientes(int pageNumber, int pageSize);
 
         public class retornoClientes
