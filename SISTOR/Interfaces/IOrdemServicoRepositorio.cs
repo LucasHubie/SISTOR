@@ -15,8 +15,8 @@ namespace SISTOR.Interfaces
         int GetOrdemFechada();
 
         OrdemServico CriarOrdemServico(OrdemServicoVM OrdemServico);
-        OrdemServico UpdateOrdemServico(OrdemServicoVM OrdemServico);
-        public void Delete(int id);
+        OrdemServico EditarOrdemServico(OrdemServicoVM OrdemServico);
+        public void ExcluirOrdemServico(int id);
 
         public class retornoOrdemservico
         {

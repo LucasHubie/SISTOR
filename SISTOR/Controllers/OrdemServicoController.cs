@@ -52,7 +52,7 @@ namespace SISTOR.Controllers
             var description = "";
             try
             {
-                _ordemServicoRepositorio.UpdateOrdemServico(obj);
+                _ordemServicoRepositorio.EditarOrdemServico(obj);
                 sucess = true;
                 description = "Ordem de Servico alterado com sucesso!";
                 return Json(new { sucess = sucess, description = description });
@@ -71,7 +71,7 @@ namespace SISTOR.Controllers
             var description = "";
             try
             {
-                _ordemServicoRepositorio.Delete(id);
+                _ordemServicoRepositorio.ExcluirOrdemServico(id);
                 sucess = true;
                 description = "OrdemServico excluido com sucesso!";
                 return Json(new { sucess = sucess, description = description });

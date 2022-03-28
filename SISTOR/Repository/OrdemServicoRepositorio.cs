@@ -83,7 +83,7 @@ namespace SISTOR.Repository
             return obj.ordemservico;
         }
 
-        public OrdemServico UpdateOrdemServico(OrdemServicoVM obj)
+        public OrdemServico EditarOrdemServico(OrdemServicoVM obj)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace SISTOR.Repository
             return obj.ordemservico;
         }
 
-        public void Delete(int id)
+        public void ExcluirOrdemServico(int id)
         {
             try
             {
