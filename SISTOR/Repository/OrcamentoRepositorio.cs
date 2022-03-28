@@ -34,33 +34,37 @@ namespace SISTOR.Repository
             {
                 //  obj.cliente.Pessoa.CPF = Md5Hash.CalculaHash(obj.cliente.Pessoa.CPF);
                 // obj.cliente.Pessoa.RG = Md5Hash.CalculaHash(obj.cliente.Pessoa.RG);
-                if (obj.cliente.Id != 0)
+                Orcamento orc = new Orcamento();
+                orc = GetOrcamentoByTag(obj.orcamento.TagIdentificacao);
+                if (orc != null && orc.TagIdentificacao == obj.orcamento.TagIdentificacao)
                 {
-                    obj.orcamento.IdCliente = obj.cliente.Id;
+                    throw new Exception("Falha ao criar novo Orcamento! Tag de identificação já existe!");
                 }
                 else
                 {
-                    obj.orcamento.Cliente = obj.cliente;
-                }
+                    if (obj.cliente.Id != 0)
+                    {
+                        obj.orcamento.IdCliente = obj.cliente.Id;
+                    }
+                    else
+                    {
+                        obj.orcamento.Cliente = obj.cliente;
+                    }
 
-                obj.orcamento.DataInclusao = DateTime.Now;
-                _context.Add(obj.orcamento);
-                foreach (var itemloop in obj.lstprodutos)
-                {
-                    //Produto objProd = new Produto();
-                    //objProd.Descricao = itemloop.Descricao;
-                    //objProd.Valor = itemloop.ValorItem;
-                    //objProd.TipoMedida = (Models.Enums.TipoMedida) 2;
-                    //objProd.Codigo = 1;
-                    //_context.Add(objProd);
-                    Itens objItem = new Itens();
-                    objItem.IdProduto = itemloop.idProduto;
-                    objItem.Orcamento = obj.orcamento;
-                    objItem.Quantidade = itemloop.Quantidade;
-                    objItem.ValorItem = itemloop.ValorItem;
-                    _context.Add(objItem);
+                    obj.orcamento.DataInclusao = DateTime.Now;
+                    _context.Add(obj.orcamento);
+                    foreach (var itemloop in obj.lstprodutos)
+                    {
+                        Itens objItem = new Itens();
+                        objItem.IdProduto = itemloop.idProduto;
+                        objItem.Orcamento = obj.orcamento;
+                        objItem.Quantidade = itemloop.Quantidade;
+                        objItem.ValorItem = itemloop.ValorItem;
+                        _context.Add(objItem);
+                    }
+                    _context.SaveChanges();
                 }
-                _context.SaveChanges();
+                
             }
 
             catch (Exception ex)
@@ -70,44 +74,54 @@ namespace SISTOR.Repository
                     var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
                     throw new Exception(msg, ex);
                 }
-                throw new Exception("Falha ao criar novo Orcamento", ex);
+                throw;
             }
             return obj.orcamento;
         }
 
-        public Orcamento UpdateOrcamento(OrcamentoVM obj)
+        public Orcamento EditarOrcamento(OrcamentoVM obj)
         {
             try
             {
-                if (!String.IsNullOrEmpty(obj.orcamento.Cliente.Pessoa.CPF))
+                Orcamento orc = new Orcamento();
+                orc = GetOrcamentoByTag(obj.orcamento.TagIdentificacao);
+                if(orc != null && orc.Id != obj.orcamento.Id && orc.TagIdentificacao == obj.orcamento.TagIdentificacao)
                 {
-                    obj.orcamento.Cliente.Pessoa.CPF = SemFormatacao(obj.orcamento.Cliente.Pessoa.CPF);
+                    throw new Exception("Falha ao alterar Orcamento! Tag de identificação já existe!");
                 }
-                if (!String.IsNullOrEmpty(obj.cliente.Pessoa.CNPJ))
+                else
                 {
-                    obj.orcamento.Cliente.Pessoa.CNPJ = SemFormatacao(obj.orcamento.Cliente.Pessoa.CNPJ);
+                    if (!String.IsNullOrEmpty(obj.orcamento.Cliente.Pessoa.CPF))
+                    {
+                        obj.orcamento.Cliente.Pessoa.CPF = SemFormatacao(obj.orcamento.Cliente.Pessoa.CPF);
+                    }
+                    if (!String.IsNullOrEmpty(obj.cliente.Pessoa.CNPJ))
+                    {
+                        obj.orcamento.Cliente.Pessoa.CNPJ = SemFormatacao(obj.orcamento.Cliente.Pessoa.CNPJ);
+                    }
+                    obj.orcamento.IdCliente = obj.cliente.Id;
+                    obj.orcamento.Cliente = obj.cliente;
+
+                    _context.Update(obj.orcamento);
+
+                    var lst = _context.Itens.Include("Produto").Where(x => x.IdOrcamento == obj.orcamento.Id).ToList();
+
+                    foreach (var itemloop in obj.lstprodutos.Where(x => lst.Where(a => a.IdProduto == x.idProduto).Count() == 0))
+                    {
+                        Itens objItem = new Itens();
+                        objItem.IdProduto = itemloop.idProduto;
+                        objItem.Orcamento = obj.orcamento;
+                        objItem.Quantidade = itemloop.Quantidade;
+                        objItem.ValorItem = itemloop.ValorItem;
+                        _context.Add(objItem);
+                    }
+                    foreach (var itemloop in lst.Where(x => obj.lstprodutos.Where(a => a.idProduto == x.IdProduto).Count() == 0))
+                    {
+                        _context.Remove(itemloop);
+                    }
+                    _context.SaveChanges();
                 }
-                obj.orcamento.IdCliente = obj.cliente.Id;
-                obj.orcamento.Cliente = obj.cliente;
-
-                _context.Update(obj.orcamento);
-
-                var lst = _context.Itens.Include("Produto").Where(x => x.IdOrcamento == obj.orcamento.Id).ToList();
                 
-                foreach (var itemloop in obj.lstprodutos.Where(x => lst.Where(a => a.IdProduto == x.idProduto).Count() == 0))
-                {
-                    Itens objItem = new Itens();
-                    objItem.IdProduto = itemloop.idProduto;
-                    objItem.Orcamento = obj.orcamento;
-                    objItem.Quantidade = itemloop.Quantidade;
-                    objItem.ValorItem = itemloop.ValorItem;
-                    _context.Add(objItem);
-                }
-                foreach (var itemloop in lst.Where(x => obj.lstprodutos.Where(a => a.idProduto == x.IdProduto).Count() == 0))
-                {
-                    _context.Remove(itemloop);
-                }
-                _context.SaveChanges();
             }
 
             catch (Exception ex)
@@ -117,7 +131,7 @@ namespace SISTOR.Repository
                     var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
                     throw new Exception(msg, ex);
                 }
-                throw new Exception("Falha ao alterar Orcamento", ex);
+                throw;
             }
             return obj.orcamento;
         }
@@ -181,7 +195,7 @@ namespace SISTOR.Repository
 
         }
 
-        public void Delete(int id)
+        public void ExcluirOrcamento(int id)
         {
             try
             {
@@ -223,7 +237,7 @@ namespace SISTOR.Repository
          
         }
 
-        public retornoOrcamentos buscaOrcamento(string busca, int pageNumber, int pageSize)
+        public retornoOrcamentos BuscarOrcamento(string busca, int pageNumber, int pageSize)
         {
             retornoOrcamentos objretorno = new retornoOrcamentos();
             var count = _context.Orcamento.Where(x => x.Cliente.Pessoa.Nome.Contains(busca) || x.TagIdentificacao.Contains(busca)).Include(prop => prop.Cliente.Pessoa).Count();
@@ -233,10 +247,14 @@ namespace SISTOR.Repository
             return objretorno;
         }
 
-
         public Itens getItensOrcamentoByProduto(int produto)
         {
             return _context.Itens.Include("Produto").Where(r => r.IdProduto == produto).FirstOrDefault();
+        }
+
+        public Orcamento GetOrcamentoByTag(string tag)
+        {
+            return _context.Orcamento.Where(x => x.TagIdentificacao == tag).AsNoTracking().FirstOrDefault();
         }
     }
 }

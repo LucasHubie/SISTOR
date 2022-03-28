@@ -10,15 +10,15 @@ namespace SISTOR.Interfaces
     public interface IOrcamentoRepositorio
     {
         Orcamento CriarOrcamento(OrcamentoVM orcamento);
-        Orcamento UpdateOrcamento(OrcamentoVM orcamento);
+        Orcamento EditarOrcamento(OrcamentoVM orcamento);
 
         public List<Itens> GetItensOrcamentoById(int id);
        public void  CriarOrdemServico(OrdemServico os);
-        public void Delete(int id);
+        public void ExcluirOrcamento(int id);
 
         public List<Orcamento> GetOrcamentos();
 
-        retornoOrcamentos buscaOrcamento(string busca, int pageNumber, int pageSize);
+        retornoOrcamentos BuscarOrcamento(string busca, int pageNumber, int pageSize);
 
         public retornoOrcamentos GetOrcamentos(int pageNumber, int pageSize);
 
@@ -27,6 +27,7 @@ namespace SISTOR.Interfaces
         List<Itens> GetItensOrcamento();
         int GetOrcamentoAprovado();
         int GetOrcamentoAguardando();
+        Orcamento GetOrcamentoByTag(string tag);
         public class retornoOrcamentos
         {
             public List<Orcamento> lst;
