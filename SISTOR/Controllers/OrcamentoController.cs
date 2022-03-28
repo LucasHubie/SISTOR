@@ -36,7 +36,7 @@ namespace SISTOR.Controllers
             retornoOrcamentos retorno = new retornoOrcamentos();
             if (!String.IsNullOrEmpty(busca))
             {
-                retorno = _orcamentoRepositorio.buscaOrcamento(busca ,pageNumber, pageSize);
+                retorno = _orcamentoRepositorio.BuscarOrcamento(busca ,pageNumber, pageSize);
             }
             else
             {
@@ -57,14 +57,14 @@ namespace SISTOR.Controllers
             return Json(itens);
         }
 
-        public IActionResult buscaOrcamento(string busca, int pageNumber, int pageSize)
+        public IActionResult BuscarOrcamento(string busca, int pageNumber, int pageSize)
         {
             bool sucess = true;
             var description = "";
 
             try
             {
-                retornoOrcamentos retorno = _orcamentoRepositorio.buscaOrcamento(busca, pageNumber, pageSize);
+                retornoOrcamentos retorno = _orcamentoRepositorio.BuscarOrcamento(busca, pageNumber, pageSize);
                 if (retorno != null)
                 {
                     sucess = true;
@@ -119,7 +119,7 @@ namespace SISTOR.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]OrcamentoVM obj)
+        public IActionResult CriarOrcamento([FromBody]OrcamentoVM obj)
         {
             bool sucess = true;
             var description = "";
@@ -140,13 +140,13 @@ namespace SISTOR.Controllers
         }
 
         [HttpPost]
-        public IActionResult Editar([FromBody] OrcamentoVM obj)
+        public IActionResult EditarOrcamento([FromBody] OrcamentoVM obj)
         {
             bool sucess = true;
             var description = "";
             try
             {
-                _orcamentoRepositorio.UpdateOrcamento(obj);
+                _orcamentoRepositorio.EditarOrcamento(obj);
                 sucess = true;
                 description = "Orcamento alterado com sucesso!";
                 return Json(new { sucess = sucess, description = description });
@@ -159,13 +159,13 @@ namespace SISTOR.Controllers
             }
         }
 
-        public IActionResult Excluir(int id)
+        public IActionResult ExcluirOrcamento(int id)
         {
             bool sucess = true;
             var description = "";
             try
             {
-                _orcamentoRepositorio.Delete(id);
+                _orcamentoRepositorio.ExcluirOrcamento(id);
                 sucess = true;
                 description = "Orcamento excluido com sucesso!";
                 return Json(new { sucess = sucess, description = description });

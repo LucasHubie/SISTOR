@@ -6,6 +6,9 @@
     <b-card style="box-shadow: 3px 0px 5px 3px #0000007d;" no-body>
       <b-card-header class="border-0">
         <h3 class="mb-0 float-left">Orçamentos</h3>
+        <base-button v-b-modal.modal-scrollable type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="">
+          <b-icon icon="question-circle-fill" aria-label="Help"></b-icon>
+        </base-button>
         <base-button v-on:click="showFiltrar = !showFiltrar" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
           <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Filtrar</span>
@@ -15,9 +18,9 @@
           <span class="btn-inner--text">Adicionar</span>
         </base-button>
         <!--<base-button v-on:click="funcDesenv()" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
-          <b-icon icon="card-list" font-scale="1"></b-icon>
-          <span class="btn-inner--text">Gerar Relatórios</span>
-        </base-button>-->
+      <b-icon icon="card-list" font-scale="1"></b-icon>
+      <span class="btn-inner--text">Gerar Relatórios</span>
+    </base-button>-->
 
       </b-card-header>
       <div v-if="showFiltrar" class="modal-body">
@@ -65,6 +68,17 @@
             </badge>
           </template>
         </el-table-column>
+        <el-table-column label="Data de inclusão"
+                         min-width="150px"
+                         prop="datainclusao">
+          <template v-slot="{row}">
+            <b-media no-body class="align-items-center">
+              <b-media-body>
+                <span class="font-weight-600 name mb-0 text-sm">{{dataAtualFormatada(row.dataInclusao)}}</span>
+              </b-media-body>
+            </b-media>
+          </template>
+        </el-table-column>
         <el-table-column label="Ações"
                          min-width="170px"
                          prop="">
@@ -73,7 +87,7 @@
               <base-button size="sm" type="default" style="background-color: rgb(58 99 167); margin-right: .5rem;"><b-icon icon="three-dots" font-scale="1"></b-icon></base-button>
               <el-dropdown-menu class="dropdown-menu dropdown-menu-arrow show" slot="dropdown">
                 <b-dropdown-item v-on:click="showModalOS(row.id, row.cliente.id, row.tagIdentificacao)">Gerar Ordem de Serviço</b-dropdown-item>
-                <b-dropdown-item v-on:click="funcDesenv()">Alterar Situação</b-dropdown-item>
+                <b-dropdown-item v-on:click="showModalSituacao(row.id)">Alterar Situação</b-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <base-button v-on:click="showModal('Visualizar', row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon> </base-button>
@@ -89,15 +103,57 @@
       <b-card-footer class="py-4 d-flex justify-content-end">
         <base-pagination v-model="currentPage" :per-page="10" :total="qntdRegistros" @change="change"></base-pagination>
       </b-card-footer>
+
+      <!--Modal Ajuda-->
+      <b-button v-b-modal.modal-scrollable></b-button>
+
+      <b-modal id="modal-scrollable" scrollable title="Tela de Orçamentos">
+        <p class="my-4" v-for="i in 1" :key="i">
+          Para inclusão de um novo orçamento basta clicar sobre o botão "Adicionar" e preencher todos os campos com os dados sobre o mesmo.
+          <br />
+          <br />
+          Ao lado do botão de inclusão, temos o botão "Filtrar" que ao clicado abre uma caixa de pesquisa onde pode-se buscar por cliente e pela tag de identificação.
+          <br />
+          <br />
+          Um pouco mais abaixo temos uma listagem de todos os orçamentos já inclusos no sistema, caso esteja em branco, isso se da por não haver nenhum oçamento incluso até o momento.
+          <br />
+          <br />
+          Dentro dessa listagem sobre cada orçamento, temos 4 opções em cada um deles. Começando da esquerda para a direita, temos o botão de opções do orçamento, representado pelo
+          ícone dos três pontos, que quando clicado mostrará duas opções disponíveis para o orçamento, sendo a primeira gerar uma ordem de serviço a partir deste orçamento,
+          e a segunda opção é alterar a situação do orçamento.
+          <br />
+          <br />
+          Na sequência temos o botão do meio que se refere ao botão de alteração do orçamento, representado pelo ícone de lápis. Então clicando sobre ele, será carregado todos os dados
+          do orçamento para alteração.
+          <br />
+          <br />
+          E por último temos o botão de exclusão, representado pelo ícone da lata de lixo. Onde após clicado, abrirá uma tela de confirmação de exclusão, onde terá a opção de confirmar
+          ou não a exclusão do orçamento.
+        </p>
+
+        <template #modal-footer>
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="cancelarHelp">
+                <span class="btn-inner--text">Fechar</span>
+              </base-button>
+
+            </b-col>
+          </b-row>
+        </template>
+
+      </b-modal>
+
       <b-modal id="modal-1" :title="tpOperacao + ' Orçamento'" size="xl">
         <validation-observer v-slot="{handleSubmit}" ref="formValidatorOrcamento">
           <b-form id="formOrcamento" @submit.prevent="handleSubmit(sendForm)">
             <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
+            <h5 class="redHeading mb-4">* Indica item obrigatório (todos os campos obrigatórios devem ser preenchidos)</h5>
             <div class="">
               <b-row>
                 <b-col lg="6" v-if="showBuscarCliente && tpOperacao != 'Visualizar'">
                   <small>
-                    Informe o Nome/CPF/CPNJ para encontrar o cliente
+                    Informe o Nome/CPF/CPNJ para encontrar o cliente*
                   </small>
                 </b-col>
                 <b-col lg="12" v-if="!showBuscarCliente ">
@@ -110,7 +166,9 @@
                 <b-col lg="4">
                   <base-input type="text"
                               placeholder="Nome/CPF/CPNJ"
-                              v-model="nomeclientebusca">
+                              name="Cliente"
+                              v-model="nomeclientebusca"
+                              required>
                   </base-input>
                 </b-col>
               </b-row>
@@ -145,7 +203,7 @@
                                 name="Nome Fantasia"
                                 disabled
                                 placeholder="Nome Fantasia"
-                                v-model="cliente.pessoa.nome"
+                                v-model="cliente.pessoa.nomeFantasia"
                                 required>
                     </base-input>
                   </b-col>
@@ -176,6 +234,7 @@
                     <tbody>
                       <tr v-for="clienteloop in clientes" style=" background-color: white;" :key="clienteloop.id">
                         <td style="vertical-align: middle; ">{{clienteloop.pessoa.nome}}</td>
+                        <td v-if="clienteloop.pessoa.tipoPessoa == 2" style="vertical-align: middle; ">{{clienteloop.pessoa.nomeFantasia}}</td>
                         <td style="vertical-align: middle; ">
                           <div v-if="clienteloop.pessoa.tipoPessoa == 1">   {{cpf(clienteloop.pessoa.cpf)}}</div>
                           <div v-if="clienteloop.pessoa.tipoPessoa == 2"> {{cnpj(clienteloop.pessoa.cnpj)}}</div>
@@ -210,7 +269,7 @@
             <b-row>
               <b-col lg="3">
                 <base-input type="text"
-                            label="Tag Identificação"
+                            label="Tag Identificação*"
                             placeholder="Tag Identificação"
                             name="Tag Identificação"
                             v-model="orcamento.tagIdentificacao"
@@ -222,11 +281,11 @@
             <b-row>
               <b-col lg="9">
                 <base-input type="text"
-                            label="Descrição do Orçamento"
+                            label="Descrição do Orçamento*"
                             placeholder="Descrição"
                             name="Descrição"
                             v-model="orcamento.descricao"
-                              :disabled="disabledall"
+                            :disabled="disabledall"
                             required>
                 </base-input>
               </b-col>
@@ -239,13 +298,13 @@
 
             <div class="">
               <!--<b-row>
-      <b-col lg="12">
-        <base-button size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px; margin-bottom: 10px;" v-on:click="showNovoProduto = !showNovoProduto">
-          <b-icon icon="clipboard-plus" font-scale="1"></b-icon>
-          <span class="btn-inner--text">Adicionar Produto</span>
-        </base-button>
-      </b-col>
-    </b-row>-->
+            <b-col lg="12">
+              <base-button size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px; margin-bottom: 10px;" v-on:click="showNovoProduto = !showNovoProduto">
+                <b-icon icon="clipboard-plus" font-scale="1"></b-icon>
+                <span class="btn-inner--text">Adicionar Produto</span>
+              </base-button>
+            </b-col>
+          </b-row>-->
               <b-row v-if="tpOperacao != 'Visualizar'">
                 <b-col lg="3">
                   <base-input type="text"
@@ -325,11 +384,11 @@
             <b-row>
               <b-col lg="3">
                 <base-input type="number"
-                            label="Valor Mão de Obra"
+                            label="Valor Mão de Obra*"
                             placeholder="Valor Mão de Obra"
                             name="Valor Mão de Obra"
                             v-model="orcamento.maoDeObra"
-                              :disabled="disabledall"
+                            :disabled="disabledall"
                             required>
                 </base-input>
               </b-col>
@@ -337,7 +396,7 @@
                 <label>
                   Situação
                 </label>
-                <b-form-select   :disabled="disabledall" v-model="orcamento.situacao" name="Situação" value="3" :options="options" style="color: black;" required></b-form-select>
+                <b-form-select :disabled="disabledall" v-model="orcamento.situacao" name="Situação" value="3" :options="options" style="color: black;" required></b-form-select>
               </b-col>
             </b-row>
             <b-row>
@@ -591,30 +650,16 @@
           </b-row>
         </template>
       </b-modal>
-      <b-modal id="modal-3" title="Orçamento - Situação" size="xl">
+      <b-modal id="modal-3" title="Orçamento - Situação" size="sm">
         <b-form @submit.prevent="updateProfile">
-          <h6 class="heading-small text-muted mb-4">Alterar</h6>
+          <h6 class="heading-small text-muted mb-4">Alterar situação </h6>
           <div class="">
             <b-row>
-              <b-col lg="6">
-                <base-input type="text"
-                            label="Nome"
-                            placeholder="Nome"
-                            v-model="orcamento.desc">
-                </base-input>
-              </b-col>
-              <b-col lg="6">
-                <base-input type="text"
-                            label="Situação"
-                            placeholder="Funcionário"
-                            v-model="orcamento.func">
-                  <select class="form-control">
-                    <option>Aprovado</option>
-                    <option>Finalizado</option>
-                    <option>Cancelado</option>
-                    <option>Em Andamento</option>
-                  </select>
-                </base-input>
+              <b-col lg="12">
+                <label>
+                  Situação
+                </label>
+                <b-form-select v-model="orcamento.situacao" name="Situação" value="3" :options="optionsall" style="color: black;" required></b-form-select>
               </b-col>
             </b-row>
           </div>
@@ -623,11 +668,10 @@
         <template #modal-footer>
           <b-row>
             <b-col lg="12">
-              <base-button type="success" class="float-right" style="margin-right: 10px;">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendFormSituacao()">
                 <span class="btn-inner--text">Confirmar</span>
               </base-button>
-              <base-button type="secondary" class="float-right" style="margin-right: 10px;">
-
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancelaSituacao()">
                 <span class="btn-inner--text">Cancelar</span>
               </base-button>
             </b-col>
@@ -703,7 +747,8 @@
           descricao: "",
           maodeobra: 0,
           valortotal: 0,
-          situacao: 0
+          situacao: 0,
+          dataInclusao: ""
         },
         produto: {
 
@@ -731,6 +776,15 @@
       countDownChanged(dismissCountDown) {
         this.dismissCountDown = dismissCountDown
       },
+      dataAtualFormatada(data){
+        var dataF = new Date(data);
+        var dataFormatada = dataF.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+        console.log(dataFormatada)
+        return dataFormatada;
+      },
+      cancelaSituacao() {
+        this.$bvModal.hide('modal-3')
+      },
       getTextoSituacao: function (situacao) {
         console.log(situacao);
         var retorno = "";
@@ -753,7 +807,11 @@
         }
         return retorno;
       },
-
+      cancelarHelp() {
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-scrollable')
+        })
+      },
 
       getOrcamentos(pageN, pageS) {
         let $this = this;
@@ -810,7 +868,7 @@
       },
       deleteOrcamento(id) {
         let $this = this;
-        axios.get("https://localhost:44376/Orcamento/Excluir", {
+        axios.get("https://localhost:44376/Orcamento/ExcluirOrcamento", {
           params: { "id": id }
         }).then(response => {
           if (response.data.sucess == true) {
@@ -827,6 +885,7 @@
           });
       },
       showModalOS(id, idcliente, tag) {
+        this.ordemServico = {}
         this.buscaproduto = ''
         let $this = this;
         console.log(id, idcliente);
@@ -834,6 +893,22 @@
         this.ordemServico.idCliente = idcliente;
         this.ordemServico.nome = tag;
         this.$bvModal.show("modal-2");
+      },
+      showModalSituacao(id) {
+        axios.get("https://localhost:44376/Orcamento/GetOrcamentoById", {
+          params: { "id": id }
+        }).then(response => {
+          if (response.data.obj.lstprodutos == null) {
+            this.lstprodutos = [];
+          }
+          else {
+            this.lstprodutos = response.data.obj.lstprodutos;
+          }
+          this.orcamento = response.data.obj.orcamento;
+          this.cliente = response.data.obj.orcamento.cliente;
+        }),
+        //this.orcamento.id = id
+        this.$bvModal.show("modal-3");
       },
       showModal(tipo, id) {
         let $this = this;
@@ -939,6 +1014,22 @@
           });
         // this will be called only after form is valid. You can do api call here to login
       },
+      sendFormSituacao() {
+        let $this = this;
+        axios.post("https://localhost:44376/Orcamento/EditarOrcamento", { orcamento: this.orcamento, cliente: this.cliente, lstprodutos: this.lstprodutos }).then(response => {
+          if (response.data.sucess == true) {
+            $this.showAlert(response.data.description, "success");
+            this.$bvModal.hide("modal-3")
+            this.getOrcamentos(1, 10);
+          }
+          else {
+            $this.showAlert(response.data.description, "danger");
+          }
+        })
+          .catch(function (error) {
+            $this.showAlert("Falha ao atualizar Ordem de Serviço", "danger");
+          });
+      },
       async sendForm() {
         let $this = this;
         const isValid = await this.$refs.formValidatorOrcamento.validate();
@@ -950,9 +1041,9 @@
         }
         if (isValid) {
        
-          var url = "https://localhost:44376/Orcamento/Create";
+          var url = "https://localhost:44376/Orcamento/CriarOrcamento";
           if (this.tpOperacao == "Editar") {
-            url = "https://localhost:44376/Orcamento/Editar";
+            url = "https://localhost:44376/Orcamento/EditarOrcamento";
           }
           if (this.selected == 'J') {
             this.cliente.pessoa.tipoPessoa = 2;
