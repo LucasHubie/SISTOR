@@ -31,7 +31,6 @@ namespace SISTOR.Controllers
         //}
 
         public IActionResult Index(string busca, int pageNumber, int pageSize)
-        public IActionResult Index(int pageNumber, int pageSize)
         {
             //List<Cliente> cliente = _clienteRepositorio.GetClientes();
             retornoClientes retorno = new retornoClientes();
@@ -59,7 +58,7 @@ namespace SISTOR.Controllers
             {
                 retorno = _clienteRepositorio.GetClientes(pageNumber, pageSize);
             }
-            retornoClientes retorno = _clienteRepositorio.GetClientes(pageNumber, pageSize);
+            //retornoClientes retorno = _clienteRepositorio.GetClientes(pageNumber, pageSize);
             return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
         }
 
@@ -206,35 +205,6 @@ namespace SISTOR.Controllers
             }
         }
 
-        public IActionResult BuscarCliente(string busca)
-        {
-            bool sucess = true;
-            var description = "";
-
-            try
-            {
-                List<Cliente> obj = new List<Cliente>();
-                obj = _clienteRepositorio.BuscarCliente(busca);
-                if (obj != null)
-                {
-                    sucess = true;
-                    description = "Cliente encontrado com sucesso!";
-                    return Json(new { sucess = sucess, description = description, cliente = obj });
-                }
-                else
-                {
-                    sucess = false;
-                    description = "Cliente não encontrado";
-                    return Json(new { sucess = sucess, description = description });
-                }
-            }
-            catch (Exception ex)
-            {
-                sucess = false;
-                description = "Cliente não encontrado";
-                return Json(new { sucess = sucess, description = ex.Message });
-            }
-        }
 
         public IActionResult GetCliente()
         {

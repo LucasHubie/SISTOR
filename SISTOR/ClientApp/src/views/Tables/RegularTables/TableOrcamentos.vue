@@ -10,7 +10,7 @@
           <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Filtrar</span>
         </base-button>
-        <base-button v-b-modal.modal-1 v-on:click="tpOperacao = 'Adicionar'; orcamento = { situacao: 3}, cliente = { pessoa: {}}; clientes = []; buscaproduto=''; lstprodutos = []; nomeclientebusca = ''; showBuscarCliente = true" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
+        <base-button v-b-modal.modal-1 v-on:click="tpOperacao = 'Adicionar'; orcamento = { situacao: 3}, cliente = { pessoa: {}}; clientes = []; buscaproduto=''; lstprodutos = []; nomeclientebusca = ''; showBuscarCliente = true, disabledall = false" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
           <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Adicionar</span>
         </base-button>
@@ -76,9 +76,9 @@
                 <b-dropdown-item v-on:click="funcDesenv()">Alterar Situação</b-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <base-button v-on:click="funcDesenv()" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon> </base-button>
+            <base-button v-on:click="showModal('Visualizar', row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="eye-fill" font-scale="1"></b-icon> </base-button>
             <base-button v-on:click="showModal('Editar', row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="pencil-fill" font-scale="1"></b-icon></base-button>
-            <base-button v-on:click="deleteOrcamento('Excluir', row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
+            <base-button v-on:click="deleteOrcamentoConfirmed(row.id)" size="sm" type="default" style="background-color: rgb(58 99 167) "><b-icon icon="trash-fill" font-scale="1"></b-icon></base-button>
           </template>
         </el-table-column>
         <template slot="empty">
@@ -91,22 +91,22 @@
       </b-card-footer>
       <b-modal id="modal-1" :title="tpOperacao + ' Orçamento'" size="xl">
         <validation-observer v-slot="{handleSubmit}" ref="formValidatorOrcamento">
-          <b-form @submit.prevent="handleSubmit(sendForm)">
+          <b-form id="formOrcamento" @submit.prevent="handleSubmit(sendForm)">
             <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
             <div class="">
               <b-row>
-                <b-col lg="6" v-if="showBuscarCliente">
+                <b-col lg="6" v-if="showBuscarCliente && tpOperacao != 'Visualizar'">
                   <small>
                     Informe o Nome/CPF/CPNJ para encontrar o cliente
                   </small>
                 </b-col>
-                <b-col lg="12" v-if="!showBuscarCliente">
+                <b-col lg="12" v-if="!showBuscarCliente ">
                   <base-button v-on:click="showBuscarCliente = true; cliente = { pessoa: {}};nomeclientebusca = ''" size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
                     <span class="btn-inner--text">Trocar Cliente</span>
                   </base-button>
                 </b-col>
               </b-row>
-              <b-row v-if="showBuscarCliente">
+              <b-row v-if="showBuscarCliente  && tpOperacao != 'Visualizar'">
                 <b-col lg="4">
                   <base-input type="text"
                               placeholder="Nome/CPF/CPNJ"
@@ -114,7 +114,7 @@
                   </base-input>
                 </b-col>
               </b-row>
-              <div v-if="!showBuscarCliente">
+              <div v-if="!showBuscarCliente || tpOperacao == 'Visualizar'">
                 <b-row v-if="cliente.pessoa.tipoPessoa == 1">
                   <b-col lg="4">
                     <base-input type="text"
@@ -214,6 +214,7 @@
                             placeholder="Tag Identificação"
                             name="Tag Identificação"
                             v-model="orcamento.tagIdentificacao"
+                            :disabled="disabledall"
                             required>
                 </base-input>
               </b-col>
@@ -225,6 +226,7 @@
                             placeholder="Descrição"
                             name="Descrição"
                             v-model="orcamento.descricao"
+                              :disabled="disabledall"
                             required>
                 </base-input>
               </b-col>
@@ -244,7 +246,7 @@
         </base-button>
       </b-col>
     </b-row>-->
-              <b-row v-if="true">
+              <b-row v-if="tpOperacao != 'Visualizar'">
                 <b-col lg="3">
                   <base-input type="text"
                               label="Informe o Código/Descrição"
@@ -291,7 +293,6 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th>Código</th>
                         <th>Descrição</th>
                         <th>Valor Unitário</th>
                         <th>Qntd</th>
@@ -301,13 +302,12 @@
                     </thead>
                     <tbody>
                       <tr v-for="(produtoloop, index) in lstprodutos" style=" background-color: white;" :key="produtoloop.id">
-                        <td style="vertical-align: middle; " class="tdpading05">{{produtoloop.codigo}}</td>
                         <td style="vertical-align: middle; " class="tdpading05">{{produtoloop.descricao}}</td>
                         <td style="vertical-align: middle; " class="tdpading05">R$ {{produtoloop.valorItem}}</td>
                         <td style="vertical-align: middle; " class="tdpading05">{{produtoloop.quantidade}}</td>
                         <td style="vertical-align: middle; " class="tdpading05">R$ {{produtoloop.valorItem * produtoloop.quantidade}}</td>
                         <td style="width:10%" class="tdpading05">
-                          <base-button size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v-on:click="removeProduto(index)">
+                          <base-button v-if="tpOperacao != 'Visualizar'" size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v-on:click="removeProduto(index)">
                             <span class="btn-inner--text">Remover</span>
                           </base-button>
                         </td>
@@ -329,6 +329,7 @@
                             placeholder="Valor Mão de Obra"
                             name="Valor Mão de Obra"
                             v-model="orcamento.maoDeObra"
+                              :disabled="disabledall"
                             required>
                 </base-input>
               </b-col>
@@ -336,7 +337,7 @@
                 <label>
                   Situação
                 </label>
-                <b-form-select v-model="orcamento.situacao" name="Situação" value="3" :options="options" style="color: black;" required></b-form-select>
+                <b-form-select   :disabled="disabledall" v-model="orcamento.situacao" name="Situação" value="3" :options="options" style="color: black;" required></b-form-select>
               </b-col>
             </b-row>
             <b-row>
@@ -349,18 +350,25 @@
             </b-alert>
           </b-form>
         </validation-observer>
-            <template #modal-footer="{ cancel }">
-              <b-row>
-                <b-col lg="12">
-                  <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
-                    <span class="btn-inner--text">Confirmar</span>
-                  </base-button>
-                  <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
-                    <span class="btn-inner--text">Cancelar</span>
-                  </base-button>
-                </b-col>
-              </b-row>
-            </template>
+        <template #modal-footer="{ cancel }">
+          <b-row v-if="tpOperacao != 'Visualizar'">
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+          <b-row v-else>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" @click="cancel()">
+                <span class="btn-inner--text">Fechar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+        </template>
       </b-modal>
       <b-modal id="modal-multi-2" title="Incluir Cliente" size="lg">
         <validation-observer v-slot="{handleSubmit}" ref="formValidator">
@@ -570,14 +578,13 @@
             </div>
           </b-row>
         </b-form>
-        <template #modal-footer>
+        <template #modal-footer="{ cancel }">
           <b-row>
             <b-col lg="12">
               <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendFormOS()">
                 <span class="btn-inner--text">Confirmar</span>
               </base-button>
-              <base-button type="secondary" class="float-right" style="margin-right: 10px;">
-
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
                 <span class="btn-inner--text">Cancelar</span>
               </base-button>
             </b-col>
@@ -644,6 +651,7 @@
     },
     data() {
       return {
+        disabledall: false,
         nomeclientebusca: '',
         buscaproduto: '',
         dismissSecs: 5,
@@ -766,10 +774,8 @@
         axios.get("https://localhost:44376/Funcionario/Index", {
           params: { "pageNumber": pageN, "pageSize": pageS }
         }).then(response => {
-
-          console.log('func', response.data);
-          for (var i = 0; i < response.data.length; i++) {
-            var opt = { value: response.data[i].id, text: response.data[i].pessoa.nome };
+          for (var i = 0; i < response.data.lst.length; i++) {
+            var opt = { value: response.data.lst[i].id, text: response.data.lst[i].pessoa.nome };
             this.funcionarios.push(opt);
           }
           console.log('lstfunc', this.funcionarios);
@@ -802,12 +808,12 @@
         let $this = this;
         $this.showAlert("Função em Desenvolvimento", "info");
       },
-      deleteOrcamento(tipo, id) {
+      deleteOrcamento(id) {
         let $this = this;
         axios.get("https://localhost:44376/Orcamento/Excluir", {
           params: { "id": id }
         }).then(response => {
-          if (response.data.sucess = true) {
+          if (response.data.sucess == true) {
             console.log(response.data)
             $this.showAlert(response.data.description, "success");
             this.getOrcamentos(1, 10)
@@ -836,11 +842,14 @@
         }).then(response => {
           console.log(response.data);
           if (response.data.sucess) {
-
             this.orcamento = response.data.obj.orcamento;
             this.cliente = response.data.obj.orcamento.cliente;
-            this.lstprodutos = response.data.obj.lstprodutos;
-
+            if (response.data.obj.lstprodutos == null) {
+              this.lstprodutos = [];
+            }
+            else {
+              this.lstprodutos = response.data.obj.lstprodutos;
+            }
             if (response.data.obj.orcamento.cliente.pessoa.tipoPessoa == 2) {
               this.selected = 'J';
             }
@@ -849,16 +858,52 @@
             }
             this.$bvModal.show("modal-1");
             this.tpOperacao = tipo;
+            if (this.tpOperacao == "Visualizar") {
+              this.disabledall = true;
+            }
+            if (this.tpOperacao == "Editar") {
+              this.clientes = [];
+              this.buscaproduto = '';
+              this.nomeclientebusca = '';
+              this.showBuscarCliente = false;
+              this.disabledall = false;
+            }
           }
           else {
             $this.showAlert("Falha ao procurar Orcamento", "danger");
           }
-        })
-          .catch(function (error) {
+        }).catch(function (error) {
             $this.showAlert("Falha ao procurar Orcamento", "danger");
           });
       },
+      deleteOrcamentoConfirmed(id) {
+        const found = this.orcamentos.find(element => element.id === id);
+        this.$bvModal.msgBoxConfirm('Por favor confirme a exclusão do orçamento ' + found.tagIdentificacao, {
+          title: 'Deseja excluir este orçamento ' + found.tagIdentificacao + '?',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'Sim',
+          cancelTitle: 'Não',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+          .then(value => {
+            this.boxTwo = value
+           // console.log(value)
+            if (this.boxTwo == true) {
+              this.deleteOrcamento(id)
+            } else {
+              this.cancelTitle
+            }
+          })
+          .catch(err => {
+            // An error occurred
+          })
+      },
       addProduto(produto) {
+        produto.idProduto = produto.id;
         produto.quantidade = produto.qntd;
         produto.qntd = null;
         produto.valorItem = produto.valor;
@@ -940,7 +985,7 @@
         if (isValid) {
 
           let $this = this;
-          var url = "https://localhost:44376/Cliente/Create";
+          var url = "https://localhost:44376/Cliente/CriarCliente";
           if (this.selected == 'J') {
             this.cliente.pessoa.tipoPessoa = 2;
           }

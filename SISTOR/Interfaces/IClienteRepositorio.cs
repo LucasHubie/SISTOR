@@ -29,8 +29,6 @@ namespace SISTOR.Interfaces
         retornoClientes buscaClienteReduzido(string busca, int pageNumber, int pageSize);
 
         
-
-        List<Cliente> buscaCliente(string busca);
         List<Cliente> BuscarCliente(string busca);
         retornoClientes GetClientes(int pageNumber, int pageSize);
         int GetTotalCliente();

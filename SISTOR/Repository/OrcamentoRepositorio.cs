@@ -22,6 +22,11 @@ namespace SISTOR.Repository
             _context = context;
         }
 
+        public static string SemFormatacao(string Codigo)
+        {
+            return Codigo.Replace(".", string.Empty).Replace("-", string.Empty).Replace("/", string.Empty);
+        }
+
 
         public Orcamento CriarOrcamento(OrcamentoVM obj)
         {
@@ -42,14 +47,14 @@ namespace SISTOR.Repository
                 _context.Add(obj.orcamento);
                 foreach (var itemloop in obj.lstprodutos)
                 {
-                    Produto objProd = new Produto();
-                    objProd.Descricao = itemloop.Descricao;
-                    objProd.Valor = itemloop.ValorItem;
-                    objProd.TipoMedida = (Models.Enums.TipoMedida) 2;
-                    objProd.Codigo = 1;
-                    _context.Add(objProd);
+                    //Produto objProd = new Produto();
+                    //objProd.Descricao = itemloop.Descricao;
+                    //objProd.Valor = itemloop.ValorItem;
+                    //objProd.TipoMedida = (Models.Enums.TipoMedida) 2;
+                    //objProd.Codigo = 1;
+                    //_context.Add(objProd);
                     Itens objItem = new Itens();
-                    objItem.Produto = objProd;
+                    objItem.IdProduto = itemloop.idProduto;
                     objItem.Orcamento = obj.orcamento;
                     objItem.Quantidade = itemloop.Quantidade;
                     objItem.ValorItem = itemloop.ValorItem;
@@ -74,26 +79,34 @@ namespace SISTOR.Repository
         {
             try
             {
+                if (!String.IsNullOrEmpty(obj.orcamento.Cliente.Pessoa.CPF))
+                {
+                    obj.orcamento.Cliente.Pessoa.CPF = SemFormatacao(obj.orcamento.Cliente.Pessoa.CPF);
+                }
+                if (!String.IsNullOrEmpty(obj.cliente.Pessoa.CNPJ))
+                {
+                    obj.orcamento.Cliente.Pessoa.CNPJ = SemFormatacao(obj.orcamento.Cliente.Pessoa.CNPJ);
+                }
+                obj.orcamento.IdCliente = obj.cliente.Id;
+                obj.orcamento.Cliente = obj.cliente;
 
                 _context.Update(obj.orcamento);
-               /* foreach (var itemloop in obj.lstprodutos)
+
+                var lst = _context.Itens.Include("Produto").Where(x => x.IdOrcamento == obj.orcamento.Id).ToList();
+                
+                foreach (var itemloop in obj.lstprodutos.Where(x => lst.Where(a => a.IdProduto == x.idProduto).Count() == 0))
                 {
-                    if(itemloop.idItem == 0)
-                    {
-                        Produto objProd = new Produto();
-                        objProd.Descricao = itemloop.Descricao;
-                        objProd.Valor = itemloop.ValorItem;
-                        objProd.TipoMedida = (Models.Enums.TipoMedida)2;
-                        objProd.Codigo = 1;
-                        _context.Add(objProd);
-                        Itens objItem = new Itens();
-                        objItem.Produto = objProd;
-                        objItem.Orcamento = obj.orcamento;
-                        objItem.Quantidade = itemloop.Quantidade;
-                        objItem.ValorItem = itemloop.ValorItem;
-                        _context.Add(objItem);
-                    }  
-                }*/
+                    Itens objItem = new Itens();
+                    objItem.IdProduto = itemloop.idProduto;
+                    objItem.Orcamento = obj.orcamento;
+                    objItem.Quantidade = itemloop.Quantidade;
+                    objItem.ValorItem = itemloop.ValorItem;
+                    _context.Add(objItem);
+                }
+                foreach (var itemloop in lst.Where(x => obj.lstprodutos.Where(a => a.idProduto == x.IdProduto).Count() == 0))
+                {
+                    _context.Remove(itemloop);
+                }
                 _context.SaveChanges();
             }
 
@@ -158,6 +171,7 @@ namespace SISTOR.Repository
             {
                 ItensVM objitens = new ItensVM();
                 objitens.idItem = itemloop.Id;
+                objitens.idProduto = itemloop.Produto.Id;
                 objitens.Descricao = itemloop.Produto.Descricao;
                 objitens.ValorItem = itemloop.Produto.Valor;
                 objitens.Quantidade = itemloop.Quantidade;
