@@ -39,7 +39,7 @@
             </base-input>
           </b-col>
           <b-col lg="1">
-            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="buscaCliente">
+            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="BuscarFuncionario">
               <span class="btn-inner--text">Filtrar</span>
             </base-button>
           </b-col>
@@ -809,9 +809,9 @@
           });
       },
 
-      buscaCliente() {
+      BuscarFuncionario() {
         var busca = this.filtro.nome
-        axios.get("https://localhost:44376/Funcionario/buscaFuncionario", {
+        axios.get("https://localhost:44376/Funcionario/BuscarFuncionario", {
           params: { "busca": busca }
         }).then(response => {
           if (busca != "") {
@@ -826,9 +826,9 @@
       },
 
       sendForm() {
-        var url = "https://localhost:44376/Funcionario/Create"
+        var url = "https://localhost:44376/Funcionario/CriarFuncionario"
         if (this.tpOperacao == "Alterar") {
-          url = "https://localhost:44376/Funcionario/Update";
+          url = "https://localhost:44376/Funcionario/EditarFuncionario";
         }
         axios.post(url, this.funcionario).then(response => {
           if (response.data.sucess == true) {
@@ -877,7 +877,7 @@
       },
 
       deleteFuncionario(id) {
-        axios.get("https://localhost:44376/Funcionario/Excluir", {
+        axios.get("https://localhost:44376/Funcionario/ExcluirFuncionario", {
           params: { "id": id }
         }).then(response => {
           if (response.data.sucess == true) {
@@ -896,7 +896,7 @@
       },
 
       updateFuncionario() {
-        axios.post("https://localhost:44376/Funcionario/Update", {
+        axios.post("https://localhost:44376/Funcionario/EditarFuncionario", {
           Pessoa: this.Funcionario.Pessoa,
           id: this.Funcionario.id
         }).then(response => {

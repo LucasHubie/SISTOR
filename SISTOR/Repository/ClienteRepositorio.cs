@@ -84,7 +84,7 @@ namespace SISTOR.Repository
             return cliente;
         }
 
-        public Cliente AtualizarCliente(Cliente cliente)
+        public Cliente EditarCliente(Cliente cliente)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace SISTOR.Repository
             return cliente;
         }
 
-        public void Delete(int id)
+        public void ExcluirCliente(int id)
         {
             try
             {
@@ -214,7 +214,7 @@ namespace SISTOR.Repository
             return _context.Cliente.Where(x => x.Pessoa.Nome.Contains(nome)).Include(prop => prop.Pessoa).ToList();
         }
 
-        public List<Cliente> buscaCliente(string busca)
+        public List<Cliente> BuscarCliente(string busca)
         {
             //return _context.Cliente.Include(x => x.Pessoa.Nome.Contains(busca) || x.Pessoa.NomeFantasia.Contains(busca)).OrderBy(x => x.Pessoa.Nome).ToList();
             return _context.Cliente.Where(x => x.Pessoa.Nome.Contains(busca) || x.Pessoa.NomeFantasia.Contains(busca) || x.Pessoa.Email.Contains(busca) || x.Pessoa.CPF.Contains(busca)
@@ -222,7 +222,10 @@ namespace SISTOR.Repository
                 .Include(prop => prop.Pessoa).ToList();
         }
 
-       
+       public int GetTotalCliente()
+        {
+            return _context.Cliente.Count();
+        }
 
     }
 }

@@ -26,6 +26,15 @@ namespace SISTOR.Repository
         {
             return _context.OrdemServico.Where(p => p.Id == id).FirstOrDefault();
         }
-
+        public int GetOrdemAberta()
+        {
+            int count = _context.OrdemServico.Where(x => (int)x.Situacao == 1).Count();
+            return count;
+        }
+        public int GetOrdemFechada()
+        {
+            int count = _context.OrdemServico.Where(x => (int)x.Situacao == 2).Count();
+            return count;
+        }
     }
 }

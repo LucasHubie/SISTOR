@@ -27,14 +27,8 @@ namespace SISTOR.Controllers
             return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
         }
 
-        //public IActionResult Index()
-        //{
-        //    List<Funcionario> funcionario = _funcionarioRepositorio.GetFuncionarios();
-        //    return Json(funcionario);
-        //}
-
         [HttpPost]
-        public IActionResult Create([FromBody] Funcionario funcionario)
+        public IActionResult CriarFuncionario([FromBody] Funcionario funcionario)
         {
             bool sucess = true;
             var description = "";
@@ -56,14 +50,14 @@ namespace SISTOR.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update([FromBody] Funcionario funcionario)
+        public IActionResult EditarFuncionario([FromBody] Funcionario funcionario)
         {
             bool sucess = true;
             var description = "";
 
             try
             {
-                _funcionarioRepositorio.Atualizarfuncionario(funcionario);
+                _funcionarioRepositorio.EditarFuncionario(funcionario);
                 sucess = true;
                 description = "Funcionário atualizado com sucesso!";
                 return Json(new { sucess = sucess, description = description });
@@ -97,7 +91,7 @@ namespace SISTOR.Controllers
 
         }
 
-        public IActionResult Excluir(int id)
+        public IActionResult ExcluirFuncionario(int id)
         {
             bool sucess = true;
             var description = "";
@@ -106,7 +100,7 @@ namespace SISTOR.Controllers
                 var funcionario = _funcionarioRepositorio.GetFuncionarioById(id);
                 if (funcionario != null)
                 {
-                    _funcionarioRepositorio.Delete(funcionario.Id);
+                    _funcionarioRepositorio.ExcluirFuncionario(funcionario.Id);
                     sucess = true;
                     description = "Funcionário excluido com sucesso!";
                     return Json(new { sucess = sucess, description = description });
@@ -127,7 +121,7 @@ namespace SISTOR.Controllers
             }
         }
 
-        public IActionResult buscaFuncionario(string busca)
+        public IActionResult BuscarFuncionario(string busca)
         {
             bool sucess = true;
             var description = "";
@@ -135,7 +129,7 @@ namespace SISTOR.Controllers
             try
             {
                 List<Funcionario> obj = new List<Funcionario>();
-                obj = _funcionarioRepositorio.buscaFuncionario(busca);
+                obj = _funcionarioRepositorio.BuscarFuncionario(busca);
                 if (obj != null)
                 {
                     sucess = true;
@@ -163,24 +157,11 @@ namespace SISTOR.Controllers
             return Json(funcionario);
         }
 
-        //public IActionResult CriarFuncionario(Pessoa funcionario)
-        //{
-        //    bool sucess = true;
-        //    var description = "";
+        public IActionResult GetTotalFuncionario()
+        {
+            int funcionario = _funcionarioRepositorio.GetTotalFuncionario();
+            return Json(funcionario);
+        }
 
-        //    if (funcionario != null)
-        //    {
-        //        _funcionarioRepositorio.CriarFuncionario(funcionario);
-        //        sucess = true;
-        //        description = "Funcionário criado com sucesso!";
-        //        return Json(new { sucess = sucess, description = description });
-        //    }
-        //    else
-        //    {
-        //        sucess = false;
-        //        description = "Funcionário não criado";
-        //        return Json(new { sucess = sucess, description = description });
-        //    }
-        //}
     }
 }

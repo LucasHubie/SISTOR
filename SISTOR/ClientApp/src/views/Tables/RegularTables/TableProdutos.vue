@@ -35,7 +35,7 @@
             </base-input>
           </b-col>
           <b-col lg="1">
-            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="buscaProduto">
+            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="BuscarProduto">
               <span class="btn-inner--text">Filtrar</span>
             </base-button>
           </b-col>
@@ -377,10 +377,10 @@
             alert(error);
           });
       },
-      buscaProduto() {
+      BuscarProduto() {
         var busca = this.filtro.nome
         console.log(this.produtos)
-        axios.get("https://localhost:44376/Produto/BuscaProduto", {
+        axios.get("https://localhost:44376/Produto/BuscarProduto", {
           params: { "busca": busca }
         }).then(response => {
           if (busca != "") {

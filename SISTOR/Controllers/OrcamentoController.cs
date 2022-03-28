@@ -198,5 +198,13 @@ namespace SISTOR.Controllers
                 return Json(new { sucess = sucess, description = ex.Message });
             }
         }
+
+        public IActionResult GetOrcamentoSituacao()
+        {
+            int orcamentos = _orcamentoRepositorio.GetOrcamentoAprovado();
+            int orcamentosAguardando = _orcamentoRepositorio.GetOrcamentoAguardando();
+            return Json(new { orcamentos = orcamentos, orcamentosAguardando = orcamentosAguardando });
+        }
+
     }
 }

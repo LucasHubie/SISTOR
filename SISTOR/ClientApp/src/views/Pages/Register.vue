@@ -137,7 +137,7 @@
       },
       onSubmit() {
 
-        axios.get("https://localhost:44376/Usuario/Create", {
+        axios.get("https://localhost:44376/Usuario/CriarUsuario", {
           params: this.model
         }).then(response => {
           console.log(response)

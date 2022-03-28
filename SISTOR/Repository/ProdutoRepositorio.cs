@@ -151,7 +151,7 @@ namespace SISTOR.Repository
             }
         }
 
-        public List<Produto> BuscaProduto(string busca)
+        public List<Produto> BuscarProduto(string busca)
         {
             return _context.Produto.Where(x => x.Descricao.Contains(busca) || x.Codigo.ToString().Contains(busca)).ToList();
         }

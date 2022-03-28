@@ -10,5 +10,7 @@ namespace SISTOR.Interfaces
     {
         List<OrdemServico> GetOrdemServico();
         OrdemServico GetOrdemServioById(int id);
+        int GetOrdemAberta();
+        int GetOrdemFechada();
     }
 }

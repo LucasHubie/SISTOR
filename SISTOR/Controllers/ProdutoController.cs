@@ -55,7 +55,7 @@ namespace SISTOR.Controllers
             }
         }
 
-        public IActionResult BuscaProduto(string busca)
+        public IActionResult BuscarProduto(string busca)
         {
             bool sucess = true;
             var description = "";
@@ -63,7 +63,7 @@ namespace SISTOR.Controllers
             try
             {
                 List<Produto> obj = new List<Produto>();
-                obj = _produtoRepositorio.BuscaProduto(busca);
+                obj = _produtoRepositorio.BuscarProduto(busca);
                 if (obj != null)
                 {
                     sucess = true;

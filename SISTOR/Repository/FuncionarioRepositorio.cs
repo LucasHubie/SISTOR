@@ -64,7 +64,7 @@ namespace SISTOR.Repository
             return funcionario;
         }
 
-        public Funcionario Atualizarfuncionario(Funcionario funcionario)
+        public Funcionario EditarFuncionario(Funcionario funcionario)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace SISTOR.Repository
             return funcionario;
         }
 
-        public void Delete(int id)
+        public void ExcluirFuncionario(int id)
         {
             try
             {
@@ -179,11 +179,14 @@ namespace SISTOR.Repository
             return _context.Funcionario.Where(p => p.Id == id).Include(p => p.Pessoa).FirstOrDefault();
         }
 
-        public List<Funcionario> buscaFuncionario(string busca)
+        public List<Funcionario> BuscarFuncionario(string busca)
         {
             return _context.Funcionario.Where(x => x.Pessoa.Nome.Contains(busca) || x.Pessoa.Email.Contains(busca) || x.Pessoa.CPF.Contains(busca)
             || x.Pessoa.RG.Contains(busca)).Include(prop => prop.Pessoa).ToList();
         }
-
+        public int GetTotalFuncionario()
+        {
+            return _context.Funcionario.Count();
+        }
     }
 }

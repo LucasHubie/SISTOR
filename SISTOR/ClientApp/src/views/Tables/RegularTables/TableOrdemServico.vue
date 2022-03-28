@@ -124,7 +124,7 @@
             <h6 class="heading-small text-muted mb-4">Produtos</h6>
 
             <div class="">
-              <!--<b-row>
+              <b-row>
                 <b-col lg="12">
                   <base-button size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px; margin-bottom: 10px;" v-on:click="showNovoProduto = !showNovoProduto">
                     <b-icon icon="clipboard-plus" font-scale="1"></b-icon>
@@ -133,39 +133,38 @@
                 </b-col>
               </b-row>
               <b-row v-if="showNovoProduto">
-                <b-col lg="6">
+                <b-col lg="3">
                   <base-input type="text"
-                              label="Descrição"
-                              placeholder="Descrição"
-                              v-model="produto.descricao">
-                  </base-input>
-                </b-col>
-                <b-col lg="3">
-                  <base-input type="number"
-                              label="Quantidade"
-                              placeholder="Quantidade"
-                              v-model="produto.quantidade">
-                  </base-input>
-                </b-col>
-                <b-col lg="3">
-                  <base-input type="number"
-                              label="Valor"
-                              placeholder="Valor"
-                              v-model="produto.valor">
+                              label="Informe o Código/Descrição"
+                              placeholder="Código/Descrição"
+                              v-model="buscaproduto">
                   </base-input>
                 </b-col>
               </b-row>
-              <b-row v-if="showNovoProduto">
-                <b-col lg="12">
-                  <base-button size="sm" type="success" class="float-right" style="margin-right: 10px;" v-on:click="addProduto">
-                    <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
-                    <span class="btn-inner--text">Incluir</span>
-                  </base-button>
-                  <base-button size="sm" type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="showNovoProduto = !showNovoProduto">
-                    <span class="btn-inner--text">Cancelar</span>
-                  </base-button>
-                </b-col>
-              </b-row>-->
+              <b-row>
+                <div v-if="produtos.length > 0" class="container">
+                  <table class="table table-striped table-bordered">
+                    <tbody>
+                      <tr v-for="produtoloop in produtos" style=" background-color: white;" :key="produtoloop.id">
+                        <td style="vertical-align: middle; " class="tdpading05">{{produtoloop.codigo}}</td>
+                        <td style="vertical-align: middle; ">{{produtoloop.descricao}}</td>
+                        <td style="vertical-align: middle; ">R${{produtoloop.valor}}</td>
+                        <td style="text-align: right; width: 10%">
+                          <input type="number"
+                                 label="Quantidade"
+                                 placeholder="Quantidade"
+                                 v-model="produtoloop.quantidade">
+                        </td>
+                        <td style="width:10%">
+                          <base-button size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v-on:click="addProduto(produtoloop)">
+                            <span class="btn-inner--text">Adicionar</span>
+                          </base-button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </b-row>
               <b-row>
                 <el-table class="table-responsive table"
                           header-row-class-name="thead-light"
@@ -182,7 +181,7 @@
                     </template>
                   </el-table-column>
                   <el-table-column label="Qntd"
-                                   min-width="70px"
+                                   min-width="50px"
                                    prop="name">
                     <template v-slot="{row}">
                       <b-media no-body class="align-items-center">
@@ -193,7 +192,7 @@
                     </template>
                   </el-table-column>
                   <el-table-column label="Valor Unitario"
-                                   min-width="100px"
+                                   min-width="310px"
                                    prop="name">
                     <template v-slot="{row}">
                       <b-media no-body class="align-items-center">
@@ -204,7 +203,7 @@
                     </template>
                   </el-table-column>
                   <el-table-column label="Valor Total"
-                                   min-width="100px"
+                                   min-width="310px"
                                    prop="name">
                     <template v-slot="{row}">
                       <b-media no-body class="align-items-center">
@@ -214,6 +213,9 @@
                       </b-media>
                     </template>
                   </el-table-column>
+                  <template slot="empty">
+                    Sem Registros
+                  </template>
                 </el-table>
               </b-row>
 
@@ -360,6 +362,7 @@
         qntdRegistros: 0,
         disable: false,
         tpOperacao: 'Incluir',
+        buscaproduto: '',
         ordemServico: {
           dataInclusao: '',
           horasTrabalhadas: '',
@@ -460,7 +463,14 @@
           });
       },
 
-
+      addProduto(produto) {
+        console.log(produto);
+        produto.valorItem = produto.valor;
+        produto.valortotal = (produto.valor * produto.quantidade);
+        this.lstprodutos.push(produto);
+        //  this.produto = {};
+        // this.showNovoProduto = false;
+      },
 
       getFuncionarios() {
         axios.get("https://localhost:44376/Funcionario/GetFuncionario", {
@@ -478,19 +488,32 @@
           });
       },
 
-      getProdutos() {
-        axios.get("https://localhost:44376/Produto/GetProduto", {
-        }).then(response => {
-          console.log('func', response.data);
-          for (var i = 0; i < response.data.length; i++) {
-            var opt = { value: response.data[i].id, text: response.data[i].descricao };
-            this.produtos.push(opt);
-          }
-          console.log('lstprodutos', this.produtos);
+      //getProdutos() {
+      //  axios.get("https://localhost:44376/Produto/GetProduto", {
+      //  }).then(response => {
+      //    console.log('func', response.data);
+      //    for (var i = 0; i < response.data.length; i++) {
+      //      var opt = { value: response.data[i].id, text: response.data[i].descricao };
+      //      this.produtos.push(opt);
+      //    }
+      //    console.log('lstprodutos', this.produtos);
 
+      //  })
+      //    .catch(function (error) {
+      //      alert("Falha ao Carregar Funcionarios");
+      //    });
+      //},
+
+      getProdutos(busca, pageN, pageS) {
+        axios.get("https://localhost:44376/Produto/Index", {
+          params: { "busca": busca, "pageNumber": pageN, "pageSize": pageS }
+        }).then(response => {
+          console.log(response.data)
+          this.produtos = response.data.lst;
+          // this.qntdRegistros = response.data.qntdRegistros;
         })
           .catch(function (error) {
-            alert("Falha ao Carregar Funcionarios");
+            // alert("Falha ao Carregar Produtos");
           });
       },
 
@@ -515,9 +538,22 @@
     {
       this.getOrdemServico();
       this.getFuncionarios();
-      this.getProdutos();
+      //this.getProdutos();
       this.GetItensOrcamento();
       this.getClientes();
+    },
+    watch: {
+      currentPage: function (novo, velho) {
+      },
+
+      buscaproduto: function (novo, velho) {
+        if (novo == '') {
+          this.produtos = [];
+        }
+        else {
+          this.getProdutos(novo, 1, 5)
+        }
+      },
     }
   }
 </script>

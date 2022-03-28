@@ -4,67 +4,84 @@
     <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success">
       <!-- Card stats -->
       <b-row>
-        <b-col xl="3" md="6">
-          <stats-card title="Orçamentos"
-                      type="gradient-red"
-                      sub-title="15 Realizados"
-                      icon="ni ni-chart-bar-32"
-                      class="mb-4">
+        <b-row>
+          <b-col xl="5" md="6">
+            <stats-card title="Orçamentos"
+                        type="gradient-red"
+                        :sub-title="orcamentosAprovados + ' Aprovado(s)'"
+                        icon="ni ni-chart-bar-32"
+                        class="mb-4">
 
-            <template slot="footer">
-              <span class="text-nowrap">3 Cancelados</span>
-            </template>
-          </stats-card>
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card title="Orçamentos"
-                      type="gradient-red"
-                      sub-title="5 Não Realizados"
-                      icon="ni ni-chart-bar-32"
-                      class="mb-4">
+              <template slot="footer">
+                <a href="#/orcamentos" class="card-link">Todos os orçamentos</a>
+              </template>
+            </stats-card>
+          </b-col>
+          <b-col xl="5" md="6">
+            <stats-card title="Orçamentos"
+                        type="gradient-red"
+                        :sub-title="orcamentosAguardando +  ' Aguardando aprovação'"
+                        icon="ni ni-chart-bar-32"
+                        class="mb-4">
 
-            <template slot="footer">
-              <span class="text-nowrap">Aguardando Aprovação</span>
-            </template>
-          </stats-card>
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card title="Ordens de Serviço"
-                      type="gradient-orange"
-                      sub-title="5 Pendentes"
-                      icon="ni ni-chart-pie-35"
-                      class="mb-4">
+              <template slot="footer">
+                <a href="#/orcamentos" class="card-link">Todos os orçamentos</a>
+              </template>
+            </stats-card>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col xl="5" md="6">
+            <stats-card title="Ordens de Serviço"
+                        type="gradient-orange"
+                        :sub-title="ordemServicoAberto + ' Abertas'"
+                        icon="ni ni-chart-pie-35"
+                        class="mb-4">
 
-            <template slot="footer">
-              <span class="text-nowrap">Data Prevista: 15/10</span>
-            </template>
-          </stats-card>
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card title="Clientes"
-                      type="gradient-info"
-                      sub-title="6"
-                      icon="ni ni-single-02"
-                      class="mb-4">
+              <template slot="footer">
+                <a href="#/ordemServico" class="card-link">Todos as ordens de serviço</a>
+              </template>
+            </stats-card>
+          </b-col>
+          <b-col xl="5" md="6">
+            <stats-card title="Ordens de Serviço"
+                        type="gradient-orange"
+                        :sub-title="ordemServicoFechado + ' Fechadas'"
+                        icon="ni ni-chart-pie-35"
+                        class="mb-4">
 
-            <template slot="footer">
-              <span class="text-nowrap">Aguardando Item</span>
-            </template>
-          </stats-card>
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card title="Funcionários"
-                      type="gradient-info"
-                      sub-title="2"
-                      icon="ni ni-circle-08"
-                      class="mb-4">
+              <template slot="footer">
+                <a href="#/ordemServico" class="card-link">Todos as ordens de serviço</a>
+              </template>
+            </stats-card>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col xl="5" md="6">
+            <stats-card title="Clientes"
+                        type="gradient-info"
+                        :sub-title="clientes + ' Cadastrados'"
+                        icon="ni ni-single-02"
+                        class="mb-4">
 
-            <template slot="footer">
-              <span class="text-nowrap">Lucas Noga</span>
-              <span class="text-nowrap">, Rafael Souza</span>
-            </template>
-          </stats-card>
-        </b-col>
+              <template slot="footer">
+                <a href="#/clientes" class="card-link">Todos os clientes</a>
+              </template>
+            </stats-card>
+          </b-col>
+          <b-col xl="5" md="6">
+            <stats-card title="Funcionários"
+                        type="gradient-info"
+                        :sub-title="funcionarios + ' Cadastrados'"
+                        icon="ni ni-circle-08"
+                        class="mb-4">
+
+              <template slot="footer">
+                <a href="#/funcionarios" class="card-link">Todos os funcionários</a>
+              </template>
+            </stats-card>
+          </b-col>
+        </b-row>
       </b-row>
     </base-header>
 
@@ -97,6 +114,12 @@
     },
     data() {
       return {
+        orcamentosAprovados: [],
+        orcamentosAguardando: [],
+        ordemServicoAberto: [],
+        ordemServicoFechado: [],
+        funcionarios: [],
+        clientes: [],
         forecasts: [],
         bigLineChart: {
           allData: [
@@ -128,6 +151,52 @@
       };
     },
     methods: {
+      
+      GetOrcamento() {
+        axios.get("https://localhost:44376/Orcamento/GetOrcamentoSituacao").then(response => {
+          
+          this.orcamentosAprovados = response.data.orcamentos;
+          this.orcamentosAguardando = response.data.orcamentosAguardando
+            console.log(this.orcamentos)
+          
+        })
+          .catch(function (error) {
+            //this.showAlert("Falha ao carregar orçamentos", "danger");
+          });
+      },
+
+      GetOrdemServico() {
+        axios.get("https://localhost:44376/OrdemServico/GetOrdemServicoSituacao").then(response => {
+
+          this.ordemServicoAberto = response.data.ordemAberta
+          this.ordemServicoFechado = response.data.ordemFechada
+
+        })
+          .catch(function (error) {
+            //this.showAlert("Falha ao carregar orçamentos", "danger");
+          });
+      },
+
+      GetClientes() {
+        axios.get("https://localhost:44376/Cliente/GetTotalCliente").then(response => {
+
+          this.clientes = response.data
+
+        })
+          .catch(function (error) {
+          });
+      },
+
+      GetFuncionarios() {
+        axios.get("https://localhost:44376/Funcionario/GetTotalFuncionario").then(response => {
+
+          this.funcionarios = response.data
+
+        })
+          .catch(function (error) {
+          });
+      },
+
       initBigChart(index) {
         let chartData = {
           datasets: [
@@ -144,7 +213,10 @@
     
     },
     mounted() {
-
+      this.GetOrcamento();
+      this.GetOrdemServico();
+      this.GetClientes();
+      this.GetFuncionarios();
     }
   };
 </script>

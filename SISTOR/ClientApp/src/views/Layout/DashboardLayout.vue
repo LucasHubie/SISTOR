@@ -4,7 +4,7 @@
     <side-bar>
       <template slot="links">
         <sidebar-item :link="{
-            name: 'Dashboard',
+            name: 'Painel inicial',
             path: '/dashboard',
             icon: 'ni ni-tv-2 text-blue',
           }">

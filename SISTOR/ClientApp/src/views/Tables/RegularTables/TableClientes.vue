@@ -41,7 +41,7 @@
             </base-input>
           </b-col>
           <b-col lg="1">
-            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="buscacliente">
+            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="BuscarCliente">
               <span class="btn-inner--text">Filtrar</span>
             </base-button>
           </b-col>
@@ -938,7 +938,7 @@
 
       buscacliente() {
         var busca = this.filtro.nome
-        axios.get("https://localhost:44376/cliente/buscacliente", {
+        axios.get("https://localhost:44376/cliente/BuscarCliente", {
           params: { "busca": busca  }
         }).then(response => {
           if (busca != "") {
@@ -955,9 +955,9 @@
       },
 
       sendForm() {
-        var url = "https://localhost:44376/cliente/Create"
+        var url = "https://localhost:44376/cliente/CriarCliente"
         if (this.tpOperacao == "Alterar") {
-          url = "https://localhost:44376/cliente/Update";
+          url = "https://localhost:44376/cliente/EditarCliente";
         }
         axios.post(url, this.cliente).then(response => {
           if (response.data.sucess == true) {
@@ -1006,7 +1006,7 @@
       },
 
       deletecliente(id) {
-      axios.get("https://localhost:44376/cliente/Excluir", {
+        axios.get("https://localhost:44376/cliente/ExcluirCliente", {
         params: { "id": id }
       }).then(response => {
         if (response.data.sucess = true) {

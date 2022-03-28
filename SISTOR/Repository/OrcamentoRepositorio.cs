@@ -124,7 +124,17 @@ namespace SISTOR.Repository
             return objretorno;
         }
 
+        public int GetOrcamentoAprovado()
+        {
+            int count = _context.Orcamento.Where(x => (int)x.Situacao == 1).Count();
+            return count;
+        }
 
+        public int GetOrcamentoAguardando()
+        {
+            int count = _context.Orcamento.Where(x => (int)x.Situacao == 3).Count();
+            return count;
+        }
         public List<Itens> GetItensOrcamento()
         {
             return _context.Itens.Include("Produto").ToList();

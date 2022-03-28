@@ -47,5 +47,13 @@ namespace SISTOR.Controllers
                 return Json(new { sucess = sucess, description = ex.Message });
             }
         }
+
+        public IActionResult GetOrdemServicoSituacao()
+        {
+            int ordemAberta = _ordemServicoRepositorio.GetOrdemAberta();
+            int ordemFechada = _ordemServicoRepositorio.GetOrdemFechada();
+            return Json(new { ordemAberta = ordemAberta, ordemFechada = ordemFechada });
+        }
+
     }
 }

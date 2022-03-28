@@ -18,15 +18,16 @@ namespace SISTOR.Interfaces
 
         Cliente GetClienteById(int id);
 
-        Cliente AtualizarCliente(Cliente cliente);
+        Cliente EditarCliente(Cliente cliente);
 
         List<Pessoa> GetPessoaCliente();
 
-        void Delete(int id);
+        void ExcluirCliente(int id);
         Pessoa GetPessoa(int? id);
-        List<Cliente> buscaCliente(string busca);
+        List<Cliente> BuscarCliente(string busca);
 
         retornoClientes GetClientes(int pageNumber, int pageSize);
+        int GetTotalCliente();
 
         public class retornoClientes
         {

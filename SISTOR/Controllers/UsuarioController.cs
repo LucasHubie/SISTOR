@@ -29,7 +29,7 @@ namespace SISTOR.Controllers
             return View();
         }
 
-        public IActionResult Create(Usuario user)
+        public IActionResult CriarUsuario(Usuario user)
         {
             bool sucess = true;
             var description = "";

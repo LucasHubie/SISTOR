@@ -22,26 +22,14 @@ namespace SISTOR.Controllers
             _clienteRepositorio = clienteRepositorio;
         }
 
-
-        //public IActionResult Index()
-        //{
-        //    List<Cliente> cliente = _clienteRepositorio.GetClientes();
-            
-        //    return Json(cliente);
-        //}
-
         public IActionResult Index(int pageNumber, int pageSize)
         {
-            //List<Cliente> cliente = _clienteRepositorio.GetClientes();
-
-
             retornoClientes retorno = _clienteRepositorio.GetClientes(pageNumber, pageSize);
             return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
         }
 
-
         [HttpPost]
-        public IActionResult Create([FromBody]Cliente cliente)
+        public IActionResult CriarCliente([FromBody]Cliente cliente)
         {
             bool sucess = true;
             var description = "";
@@ -63,14 +51,14 @@ namespace SISTOR.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update([FromBody] Cliente cliente)
+        public IActionResult EditarCliente([FromBody] Cliente cliente)
         {
             bool sucess = true;
             var description = "";
 
             try
             {
-                _clienteRepositorio.AtualizarCliente(cliente);
+                _clienteRepositorio.EditarCliente(cliente);
                 sucess = true;
                 description = "Cliente atualizado com sucesso!";
                 return Json(new { sucess = sucess, description = description });
@@ -83,7 +71,7 @@ namespace SISTOR.Controllers
             }
         }
 
-        public IActionResult Excluir(int id)
+        public IActionResult ExcluirCliente(int id)
         {
             bool sucess = true;
             var description = "";
@@ -92,7 +80,7 @@ namespace SISTOR.Controllers
                 var cliente = _clienteRepositorio.GetClienteById(id);
                 if (cliente != null)
                 {
-                    _clienteRepositorio.Delete(cliente.Id);
+                    _clienteRepositorio.ExcluirCliente(cliente.Id);
                     sucess = true;
                     description = "Cliente excluido com sucesso!";
                     return Json(new { sucess = sucess, description = description });
@@ -183,7 +171,7 @@ namespace SISTOR.Controllers
             }
         }
 
-        public IActionResult buscaCliente(string busca)
+        public IActionResult BuscarCliente(string busca)
         {
             bool sucess = true;
             var description = "";
@@ -191,7 +179,7 @@ namespace SISTOR.Controllers
             try
             {
                 List<Cliente> obj = new List<Cliente>();
-                obj = _clienteRepositorio.buscaCliente(busca);
+                obj = _clienteRepositorio.BuscarCliente(busca);
                 if (obj != null)
                 {
                     sucess = true;
@@ -216,6 +204,11 @@ namespace SISTOR.Controllers
         public IActionResult GetCliente()
         {
             List<Cliente> cliente = _clienteRepositorio.GetClientes();
+            return Json(cliente);
+        }
+        public IActionResult GetTotalCliente()
+        {
+            int cliente = _clienteRepositorio.GetTotalCliente();
             return Json(cliente);
         }
 
