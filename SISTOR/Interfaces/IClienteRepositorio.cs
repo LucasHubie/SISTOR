@@ -24,8 +24,14 @@ namespace SISTOR.Interfaces
 
         void ExcluirCliente(int id);
         Pessoa GetPessoa(int? id);
-        List<Cliente> BuscarCliente(string busca);
+        retornoClientes buscaCliente(string busca, int pageNumber, int pageSize);
 
+        retornoClientes buscaClienteReduzido(string busca, int pageNumber, int pageSize);
+
+        
+
+        List<Cliente> buscaCliente(string busca);
+        List<Cliente> BuscarCliente(string busca);
         retornoClientes GetClientes(int pageNumber, int pageSize);
         int GetTotalCliente();
 
