@@ -2,6 +2,7 @@
 using SISTOR.Configuration;
 using SISTOR.Interfaces;
 using SISTOR.Models;
+using SISTOR.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,66 @@ namespace SISTOR.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult CriarOrdemServico([FromBody] OrdemServicoVM obj)
+        {
+            bool sucess = true;
+            var description = "";
+
+            try
+            {
+                _ordemServicoRepositorio.CriarOrdemServico(obj);
+                sucess = true;
+                description = "OrdemServico criado com sucesso!";
+                return Json(new { sucess = sucess, description = description });
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "OrdemServico não criado";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult EditarOrdemServico([FromBody] OrdemServicoVM obj)
+        {
+            bool sucess = true;
+            var description = "";
+            try
+            {
+                _ordemServicoRepositorio.UpdateOrdemServico(obj);
+                sucess = true;
+                description = "Ordem de Servico alterado com sucesso!";
+                return Json(new { sucess = sucess, description = description });
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "Ordem de Servico não alterado";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
+        }
+
+        public IActionResult ExcluirOrdemServico(int id)
+        {
+            bool sucess = true;
+            var description = "";
+            try
+            {
+                _ordemServicoRepositorio.Delete(id);
+                sucess = true;
+                description = "OrdemServico excluido com sucesso!";
+                return Json(new { sucess = sucess, description = description });
+            }
+            catch (Exception ex)
+            {
+                sucess = false;
+                description = "OrdemServico não excluido";
+                return Json(new { sucess = sucess, description = ex.Message });
+            }
         }
 
         public IActionResult GetOrdemServico()

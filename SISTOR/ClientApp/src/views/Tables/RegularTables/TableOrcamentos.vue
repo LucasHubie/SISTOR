@@ -946,6 +946,7 @@
         console.log(this.cliente.id);
         if (this.cliente.id == null) {
           $this.showAlert("Informe o cliente do Orçamento", "warning");
+          return;
         }
         if (isValid) {
        

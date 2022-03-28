@@ -1,17 +1,13 @@
 <template>
   <div>
 
-    <b-alert :show="dismissCountDown"
-             dismissible
-             variant="warning"
-             @dismissed="dismissCountDown=0"
-             @dismiss-count-down="countDownChanged">
-      Confirmado com sucesso! <!--{{ dismissCountDown }}-->
+    <b-alert :show="dismissCountDown" dismissible @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged" :variant="variant">
+      {{txtAlert}}
     </b-alert>
 
     <b-card style="box-shadow: 3px 0px 5px 3px #0000007d;" no-body>
       <b-card-header class="border-0">
-        <h3 class="mb-0 float-left">clientes</h3>
+        <h3 class="mb-0 float-left">Clientes</h3>
 
         <base-button v-b-modal.modal-scrollable type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="">
           <b-icon icon="question-circle-fill" aria-label="Help"></b-icon>
@@ -23,7 +19,7 @@
         </base-button>
 
 
-        <base-button v-b-modal.modal-1 type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="resetModal">
+        <base-button v-b-modal.modal-multi-2 type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="resetModal">
           <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Adicionar</span>
         </base-button>
@@ -41,7 +37,7 @@
             </base-input>
           </b-col>
           <b-col lg="1">
-            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="BuscarCliente">
+            <base-button class="float-right" style="background-color: rgb(58 99 167); margin: 0; position: absolute; top: 53%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-on:click="getclientes(1,10)">
               <span class="btn-inner--text">Filtrar</span>
             </base-button>
           </b-col>
@@ -129,16 +125,196 @@
               <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="cancelarHelp">
                 <span class="btn-inner--text">Fechar</span>
               </base-button>
-              
+
             </b-col>
           </b-row>
         </template>
 
       </b-modal>
-      
 
+      <b-modal id="modal-multi-2" title="Incluir Cliente" size="xl">
+        <validation-observer v-slot="{handleSubmit}" ref="formValidator">
+          <b-form @submit.prevent="handleSubmit(sendForm)">
+            <h6 class="heading-small text-muted mb-4">Informações do Cliente</h6>
+            <div class="">
+              <b-form-group>
+                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
+                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
+              </b-form-group>
+              <b-row>
+                <b-col lg="4" v-if="selected == 'F'">
+                  <base-input type="text"
+                              label="Nome"
+                              name="Nome"
+                              :rules="{required: true}"
+                              placeholder="Nome"
+                              v-model="cliente.pessoa.nome">
+                  </base-input>
+                </b-col>
+                <b-col lg="3" v-if="selected == 'J'">
+                  <base-input type="text"
+                              label="Nome Fantasia"
+                              name="Nome Fantasia"
+                              placeholder="Nome Fantasia"
+                              v-model="cliente.pessoa.nome"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="3" v-if="selected == 'F'">
+                  <base-input type="text"
+                              label="CPF"
+                              name="CPF"
+                              placeholder="000.000.000-00"
+                              v-mask="'###.###.###-##'"
+                              v-model="cliente.pessoa.cpf"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="3" v-if="selected == 'J'">
+                  <base-input type="text"
+                              label="CNPJ"
+                              name="CNPJ"
+                              v-mask="'##.###.###/####-##'"
+                              placeholder="00.000.000/0000-00"
+                              v-model="cliente.pessoa.cnpj"
+                              required>
+                  </base-input>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col lg="6" v-if="selected == 'F'">
+                  <base-input type="text"
+                              label="RG"
+                              name="RG"
+                              placeholder="RG"
+                              v-model="cliente.pessoa.rg"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="6" v-if="selected == 'J'">
+                  <base-input type="text"
+                              label="Razão Social"
+                              name="Razão Social"
+                              placeholder="Razão Social"
+                              v-model="cliente.pessoa.razaoSocial"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="6">
+                  <base-input type="text"
+                              label="E-mail"
+                              name="E-mail"
+                              placeholder="E-mail"
+                              v-model="cliente.pessoa.email"
+                              required>
+                  </base-input>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col lg="6">
+                  <base-input type="text"
+                              label="Telefone"
+                              name="Telefone"
+                              placeholder="Telefone"
+                              v-model="cliente.pessoa.telefone"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="6">
+                  <base-input type="text"
+                              label="Telefone Celular"
+                              name="Telefone Celular"
+                              placeholder="Telefone Celular"
+                              v-model="cliente.pessoa.celular"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="6">
+
+                  <b-form-group label="Cidade*"
+                                label-for="cidade-input"
+                                name="Cidade"
+                                invalid-feedback="Cidade é obrigatória">
+                    <b-form-input id="cidade-input"
+                                  placeholder="Cidade"
+                                  v-model="cliente.pessoa.cidade"
+                                  required></b-form-input>
+                  </b-form-group>
+
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col lg="12">
+                  <base-input type="text"
+                              label="Endereço"
+                              name="Endereço"
+                              placeholder="Endereço"
+                              v-model="cliente.pessoa.endereco"
+                              required>
+                  </base-input>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col lg="6">
+                  <base-input type="text"
+                              label="CEP"
+                              name="CEP"
+                              placeholder="CEP"
+                              v-model="cliente.pessoa.cep"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="6">
+                  <base-input type="text"
+                              label="Número"
+                              name="Número"
+                              placeholder="Número"
+                              v-model="cliente.pessoa.numero"
+                              required>
+                  </base-input>
+                </b-col>
+
+              </b-row>
+              <b-row>
+                <b-col lg="6">
+                  <base-input type="text"
+                              label="Referência"
+                              name="Referência"
+                              placeholder="Referência"
+                              v-model="cliente.pessoa.referencia">
+                  </base-input>
+                </b-col>
+                <b-col lg="6">
+                  <base-input type="text"
+                              label="Complemento"
+                              name="Complemento"
+                              placeholder="Complemento"
+                              v-model="cliente.pessoa.complemento">
+                  </base-input>
+                </b-col>
+              </b-row>
+            </div>
+            <b-alert :show="dismissCountDown" dismissible @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged" :variant="variant">
+              {{txtAlert}}
+            </b-alert>
+          </b-form>
+        </validation-observer>
+        <template #modal-footer="{ cancel }">
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+            </b-col>
+          </b-row>
+        </template>
+
+      </b-modal>
       <!--Modal inclusão-->
-      <b-modal id="modal-1" title="Incluir cliente" size="xl" 
+      <b-modal id="modal-1" title="Incluir cliente" size="xl"
                @hidden="resetModal"
                @ok="handleOk">
 
@@ -664,7 +840,7 @@
               <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOKdetail">
                 <span class="btn-inner--text">Fechar</span>
               </base-button>
-              
+
             </b-col>
           </b-row>
         </template>
@@ -709,6 +885,8 @@
         razaosocialState: null,
         dismissSecs: 5,
         dismissCountDown: 0,
+        variant: "info",
+        txtAlert: "",
         disable: false,
         showFiltrar: false,
         filtro: { nome: '' },
@@ -808,9 +986,7 @@
       countDownChanged(dismissCountDown) {
         this.dismissCountDown = dismissCountDown
       },
-      showAlert() {
-        this.dismissCountDown = this.dismissSecs
-      },
+
 
       checkFormValidity() {
         const valid = this.$refs.form.checkValidity()
@@ -851,6 +1027,7 @@
         this.handleSubmitDetail()
       },
       handleSubmit() {
+        console.log('tete');
         // Exit when the form isn't valid
         if (!this.checkFormValidity()) {
           return
@@ -859,7 +1036,7 @@
           this.sendForm();
         // Hide the modal manually
         this.$nextTick(() => {
-          this.$bvModal.hide('modal-1')
+          this.$bvModal.hide('modal-multi-2')
         })
       },
       
@@ -871,7 +1048,7 @@
       cancelarInclusao() {
         this.resetModal()
         this.$nextTick(() => {
-          this.$bvModal.hide('modal-1')
+          this.$bvModal.hide('modal-multi-2')
         })
       },
       
@@ -898,9 +1075,19 @@
       //    });
       //},
 
+      showAlert(message, variant) {
+        // success
+        // danger
+        // warning
+        this.dismissCountDown = this.dismissSecs
+        this.variant = variant
+        this.txtAlert = message
+      },
       getclientes(pageN, pageS) {
+        let $this = this;
+        var busca = this.filtro.nome
         axios.get("https://localhost:44376/cliente/Index", {
-          params: { "pageNumber": pageN, "pageSize": pageS }
+          params: { "busca": busca,"pageNumber": pageN, "pageSize": pageS }
         }).then(response => {
           console.log(response.data)
           this.clientes = response.data.lst;
@@ -926,7 +1113,7 @@
           console.log(this.cliente)
 
           if (tpOperacao == "Alterar") {
-            this.$bvModal.show("modal-1");
+            this.$bvModal.show("modal-multi-2");
             this.tpOperacao = tpOperacao
           }
 
@@ -954,27 +1141,38 @@
           });
       },
 
-      sendForm() {
-        var url = "https://localhost:44376/cliente/CriarCliente"
-        if (this.tpOperacao == "Alterar") {
-          url = "https://localhost:44376/cliente/EditarCliente";
-        }
-        axios.post(url, this.cliente).then(response => {
-          if (response.data.sucess == true) {
-            console.log(response.data)
-            //alert(response.data.description)
-            //window.location.href = "#/funcionarios"
-            this.showAlert()
-            this.$bvModal.hide("modal-1")
-            this.getclientes(1, 10)
+      async sendForm() {
+        let $this = this;
+        const isValid = await this.$refs.formValidator.validate();
+        console.log(isValid);
+        if (isValid) {
+          if (this.selected == 'J') {
+            this.cliente.pessoa.tipoPessoa = 2;
           }
           else {
-            alert(response.data.description)
+            this.cliente.pessoa.tipoPessoa = 1;
           }
-        })
-          .catch(function (error) {
-            alert(error);
-          });
+          var url = "https://localhost:44376/cliente/CriarCliente"
+          if (this.tpOperacao == "Alterar") {
+            url = "https://localhost:44376/cliente/EditarCliente";
+          }
+          axios.post(url, this.cliente).then(response => {
+            if (response.data.sucess == true) {
+              console.log(response.data)
+              //alert(response.data.description)
+              //window.location.href = "#/funcionarios"
+              $this.showAlert(response.data.description, "success");
+              this.$bvModal.hide("modal-multi-2")
+              this.getclientes(1, 10)
+            }
+            else {
+                 $this.showAlert(response.data.description, "warning");
+            }
+          })
+            .catch(function (error) {
+              $this.showAlert('Erro ao criar Cliente', "danger");
+            });
+        }
         // this will be called only after form is valid. You can do api call here to login
       },
 
@@ -1012,7 +1210,6 @@
         if (response.data.sucess = true) {
           console.log(response.data)
           /*alert(response.data.description)*/
-          this.showAlert()
           this.getclientes(1, 10)
         }
         else {
