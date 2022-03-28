@@ -335,7 +335,7 @@
         <template #modal-footer>
           <b-row>
             <b-col lg="12">
-              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOk()">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
                 <span class="btn-inner--text">Confirmar</span>
                 
               </base-button>
@@ -715,11 +715,11 @@
         this.tpOperacao = 'Incluir'
       },
       tipoPessoa() {
-          this.funcionario.pessoa.tipoPessoa = 1
+          this.Funcionario.Pessoa.TipoPessoa = 1
       },
       handleOk(bvModalEvt) {
         // Prevent modal from closing
-        //bvModalEvt.preventDefault()
+        bvModalEvt.preventDefault()
         // chama função tipoPessoa
         this.tipoPessoa()
         // Trigger submit handler
