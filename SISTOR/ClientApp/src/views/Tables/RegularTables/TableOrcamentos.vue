@@ -44,7 +44,7 @@
                 header-row-class-name="thead-light"
                 :data="orcamentos">
         <el-table-column label="Tag Identificação"
-                         min-width="150px"
+                         min-width="160px"
                          prop="tagidentificacao">
           <template v-slot="{row}">
             <b-media no-body class="align-items-center">
@@ -56,7 +56,7 @@
         </el-table-column>
         <el-table-column label="Cliente"
                          prop="cliente.pessoa.nome"
-                         min-width="200px">
+                         min-width="180px">
         </el-table-column>
 
         <el-table-column label="Status"
@@ -69,7 +69,7 @@
           </template>
         </el-table-column>
         <el-table-column label="Data de inclusão"
-                         min-width="150px"
+                         min-width="160px"
                          prop="datainclusao">
           <template v-slot="{row}">
             <b-media no-body class="align-items-center">
@@ -80,13 +80,13 @@
           </template>
         </el-table-column>
         <el-table-column label="Ações"
-                         min-width="170px"
+                         min-width="200px"
                          prop="">
           <template v-slot="{row}">
             <el-dropdown trigger="click" class="dropdown">
               <base-button size="sm" type="default" style="background-color: rgb(58 99 167); margin-right: .5rem;"><b-icon icon="three-dots" font-scale="1"></b-icon></base-button>
               <el-dropdown-menu class="dropdown-menu dropdown-menu-arrow show" slot="dropdown">
-                <b-dropdown-item v-on:click="showModalOS(row.id, row.cliente.id, row.tagIdentificacao)">Gerar Ordem de Serviço</b-dropdown-item>
+                <b-dropdown-item v-if="orcamento.situacao == 1" v-on:click="showModalOS(row.id, row.cliente.id, row.tagIdentificacao)">Gerar Ordem de Serviço</b-dropdown-item>
                 <b-dropdown-item v-on:click="showModalSituacao(row.id)">Alterar Situação</b-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>

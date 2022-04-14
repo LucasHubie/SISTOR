@@ -39,7 +39,7 @@
                         class="mb-4">
 
               <template slot="footer">
-                <a href="#/ordemServico" class="card-link">Todos as ordens de serviço</a>
+                <a href="#/ordensServico" class="card-link">Todos as ordens de serviço</a>
               </template>
             </stats-card>
           </b-col>

@@ -45,20 +45,21 @@ namespace SISTOR.Repository
                     if (obj.cliente.Id != 0)
                     {
                         obj.orcamento.IdCliente = obj.cliente.Id;
+                        //obj.orcamento.Cliente = obj.cliente;
                     }
                     else
                     {
                         obj.orcamento.Cliente = obj.cliente;
                     }
 
-                    if (!String.IsNullOrEmpty(obj.orcamento.Cliente.Pessoa.CPF))
-                    {
-                        obj.orcamento.Cliente.Pessoa.CPF = SemFormatacao(obj.orcamento.Cliente.Pessoa.CPF);
-                    }
-                    if (!String.IsNullOrEmpty(obj.orcamento.Cliente.Pessoa.CNPJ))
-                    {
-                        obj.orcamento.Cliente.Pessoa.CNPJ = SemFormatacao(obj.orcamento.Cliente.Pessoa.CNPJ);
-                    }
+                    //if (!String.IsNullOrEmpty(obj.orcamento.Cliente.Pessoa.CPF))
+                    //{
+                    //    obj.orcamento.Cliente.Pessoa.CPF = SemFormatacao(obj.orcamento.Cliente.Pessoa.CPF);
+                    //}
+                    //if (!String.IsNullOrEmpty(obj.orcamento.Cliente.Pessoa.CNPJ))
+                    //{
+                    //    obj.orcamento.Cliente.Pessoa.CNPJ = SemFormatacao(obj.orcamento.Cliente.Pessoa.CNPJ);
+                    //}
 
                     obj.orcamento.DataInclusao = DateTime.Now;
                     _context.Add(obj.orcamento);

@@ -3,7 +3,7 @@
 
     <b-alert :show="dismissCountDown"
              dismissible
-             variant="warning"
+             variant="success"
              @dismissed="dismissCountDown=0"
              @dismiss-count-down="countDownChanged">
       Confirmado com sucesso! <!--{{ dismissCountDown }}-->
@@ -22,7 +22,7 @@
           <span class="btn-inner--text">Filtrar</span>
         </base-button>
 
-        <base-button v-b-modal.modal-1 type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="resetModal">
+        <base-button v-b-modal.modal-multi-2 v-on:click="tpOperacao = 'Adicionar'; funcionario = { pessoa: {}};" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
           <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Adicionar</span>
         </base-button>
@@ -127,7 +127,177 @@
               <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="cancelarHelp">
                 <span class="btn-inner--text">Fechar</span>
               </base-button>
-              
+
+            </b-col>
+          </b-row>
+        </template>
+
+      </b-modal>
+      <b-modal id="modal-multi-2" title="Incluir Funcionário" size="xl">
+        <validation-observer v-slot="{handleSubmit}" ref="formValidator">
+          <b-form @submit.prevent="handleSubmit(sendForm)">
+            <h6 class="heading-small text-muted mb-4">Informações do Funcionário</h6>
+            <h5 class="redHeading">* Indica item obrigatório (todos os campos obrigatórios devem ser preenchidos)</h5>
+            <div class="">
+              <!--<b-form-group>
+                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
+                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
+              </b-form-group>-->
+              <b-row>
+                <b-col lg="6" v-if="selected == 'F'">
+                  <base-input type="text"
+                              label="Nome*"
+                              name="Nome"
+                              :rules="{required: true}"
+                              placeholder="Nome"
+                              v-model="funcionario.pessoa.nome">
+                  </base-input>
+                </b-col>
+                
+                <b-col lg="3">
+                  <base-input type="text"
+                              label="CPF*"
+                              name="CPF"
+                              placeholder="000.000.000-00"
+                              v-mask="'###.###.###-##'"
+                              v-model="funcionario.pessoa.cpf"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="3">
+                  <base-input type="number"
+                              label="RG*"
+                              name="RG"
+                              placeholder="RG"
+                              v-model="funcionario.pessoa.rg"
+                              required>
+                  </base-input>
+                </b-col>
+                
+                
+              </b-row>
+              <b-row>
+
+                <b-col lg="6">
+                  <base-input type="email"
+                              label="E-mail*"
+                              name="E-mail"
+                              placeholder="E-mail"
+                              v-model="funcionario.pessoa.email"
+                              required>
+                  </base-input>
+                </b-col>
+
+
+                <b-col lg="3">
+                  <base-input type="text"
+                              label="Telefone"
+                              name="Telefone"
+                              placeholder="Telefone"
+                              v-model="funcionario.pessoa.telefone">
+                  </base-input>
+                </b-col>
+                <b-col lg="3">
+                  <base-input type="text"
+                              label="Celular"
+                              name="Celular"
+                              placeholder="Celular"
+                              v-model="funcionario.pessoa.celular">
+                  </base-input>
+                </b-col>
+              </b-row>
+              <b-row>
+
+                <b-col lg="6">
+
+                  <base-input type="text"
+                              label="Cidade*"
+                              name="Cidade"
+                              placeholder="Cidade"
+                              v-model="funcionario.pessoa.cidade"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="3">
+                  <!--<b-form-group label="UF*"
+                                label-for="uf-input"
+                                invalid-feedback="UF é obrigatório"
+                                :state="ufState">-->
+                  <label>UF*</label>
+                    <b-form-select 
+                                   :state="ufState"
+                                   name="UF"
+                                   v-model="funcionario.pessoa.uf"
+                                   :options="options"
+                                   required>
+
+                    </b-form-select>
+
+                  <!--</b-form-group>-->
+                </b-col>
+                <b-col lg="3">
+                  <base-input type="number"
+                              label="CEP*"
+                              name="CEP"
+                              placeholder="CEP"
+                              v-model="funcionario.pessoa.cep"
+                              required>
+                  </base-input>
+                </b-col>
+              </b-row>
+              <b-row>
+
+                <b-col lg="3">
+                  <base-input type="text"
+                              label="Endereço*"
+                              name="Endereço"
+                              placeholder="Endereço"
+                              v-model="funcionario.pessoa.endereco"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="3">
+                  <base-input type="number"
+                              label="Número*"
+                              name="Número"
+                              placeholder="Número"
+                              v-model="funcionario.pessoa.numero"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="3">
+                  <base-input type="text"
+                              label="Referência"
+                              name="Referência"
+                              placeholder="Referência"
+                              v-model="funcionario.pessoa.referencia">
+                  </base-input>
+                </b-col>
+                <b-col lg="3">
+                  <base-input type="text"
+                              label="Complemento"
+                              name="Complemento"
+                              placeholder="Complemento"
+                              v-model="funcionario.pessoa.complemento">
+                  </base-input>
+                </b-col>
+              </b-row>
+
+            </div>
+            <b-alert :show="dismissCountDown" dismissible @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged" :variant="variant">
+              {{txtAlert}}
+            </b-alert>
+          </b-form>
+        </validation-observer>
+        <template #modal-footer="{ cancel }">
+          <b-row>
+            <b-col lg="12">
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
             </b-col>
           </b-row>
         </template>
@@ -135,7 +305,7 @@
       </b-modal>
 
       <!--Modal inclusão-->
-      <b-modal id="modal-1" title="Funcionário" size="xl" 
+      <!--<b-modal id="modal-1" title="Funcionário" size="xl"
                @hidden="resetModal"
                @ok="handleOk">
 
@@ -172,14 +342,14 @@
                                 label-for="cpf-input"
                                 invalid-feedback="CPF é obrigatório"
                                 :state="cpfState">
-                     <b-form-input id="cpf-input"
-                                placeholder="000.000.000-00"
-                                v-mask="'###.###.###-##'"
-                                v-model="funcionario.pessoa.cpf"
-                                :state="cpfState"
-                                required>
+                    <b-form-input id="cpf-input"
+                                  placeholder="000.000.000-00"
+                                  v-mask="'###.###.###-##'"
+                                  v-model="funcionario.pessoa.cpf"
+                                  :state="cpfState"
+                                  required>
 
-                     </b-form-input>
+                    </b-form-input>
 
                   </b-form-group>
                 </b-col>
@@ -335,9 +505,9 @@
         <template #modal-footer>
           <b-row>
             <b-col lg="12">
-              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleSubmit()">
                 <span class="btn-inner--text">Confirmar</span>
-                
+
               </base-button>
               <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarInclusao">
 
@@ -347,7 +517,7 @@
           </b-row>
         </template>
 
-      </b-modal>
+      </b-modal>-->
 
 
       <!--Modal detail-->
@@ -364,88 +534,68 @@
             <div class="">
 
               <b-row>
-
                 <b-col lg="6" v-if="selected == 'F'">
-
-                  <b-form-group label="Nome"
-                                label-for="name-input"
-                                invalid-feedback="Nome é obrigatório"
-                                :state="nameState">
-                    <b-form-input id="name-input"
-                                  placeholder="Nome"
-                                  v-model="funcionario.pessoa.nome"
-                                  :state="nameState"
-                                  :disabled="disable"
-                                  required></b-form-input>
-                  </b-form-group>
-
+                  <base-input type="text"
+                              label="Nome*"
+                              name="Nome"
+                              :rules="{required: true}"
+                              placeholder="Nome"
+                              :disabled="disable"
+                              v-model="funcionario.pessoa.nome">
+                  </base-input>
                 </b-col>
 
-                <b-col lg="6" v-if="selected == 'F'">
-
-                  <b-form-group label="CPF"
-                                label-for="cpf-input"
-                                invalid-feedback="CPF é obrigatório"
-                                :state="cpfState">
-                    <b-form-input id="cpf-input"
-                                  placeholder="000.000.000-00"
-                                  v-model="funcionario.pessoa.cpf"
-                                  :state="cpfState"
-                                  :disabled="disable"
-                                  required></b-form-input>
-                  </b-form-group>
-
+                <b-col lg="3">
+                  <base-input type="text"
+                              label="CPF*"
+                              name="CPF"
+                              placeholder="000.000.000-00"
+                              v-mask="'###.###.###-##'"
+                              :disabled="disable"
+                              v-model="funcionario.pessoa.cpf"
+                              required>
+                  </base-input>
                 </b-col>
+                <b-col lg="3">
+                  <base-input type="number"
+                              label="RG*"
+                              name="RG"
+                              placeholder="RG"
+                              :disabled="disable"
+                              v-model="funcionario.pessoa.rg"
+                              required>
+                  </base-input>
+                </b-col>
+
 
               </b-row>
               <b-row>
 
-                <b-col lg="6" v-if="selected == 'F'">
-
-                  <b-form-group label="RG"
-                                label-for="rg-input"
-                                invalid-feedback="RG é obrigatório"
-                                :state="rgState">
-                    <b-form-input id="rg-input"
-                                  placeholder="RG"
-                                  v-model="funcionario.pessoa.rg"
-                                  :state="rgState"
-                                  :disabled="disable"
-                                  required></b-form-input>
-                  </b-form-group>
-
+                <b-col lg="6">
+                  <base-input type="email"
+                              label="E-mail*"
+                              name="E-mail"
+                              placeholder="E-mail"
+                              :disabled="disable"
+                              v-model="funcionario.pessoa.email"
+                              required>
+                  </base-input>
                 </b-col>
 
 
-                <b-col lg="6">
-
-                  <b-form-group label="E-mail"
-                                label-for="email-input"
-                                invalid-feedback="E-mail é obrigatório"
-                                :state="emailState">
-                    <b-form-input id="email-input"
-                                  placeholder="E-mail"
-                                  v-model="funcionario.pessoa.email"
-                                  :state="emailState"
-                                  :disabled="disable"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-              </b-row>
-              <b-row>
-                <b-col lg="6">
+                <b-col lg="3">
                   <base-input type="text"
                               label="Telefone"
+                              name="Telefone"
                               placeholder="Telefone"
                               :disabled="disable"
                               v-model="funcionario.pessoa.telefone">
                   </base-input>
                 </b-col>
-                <b-col lg="6">
+                <b-col lg="3">
                   <base-input type="text"
                               label="Celular"
+                              name="Celular"
                               placeholder="Celular"
                               :disabled="disable"
                               v-model="funcionario.pessoa.celular">
@@ -453,23 +603,20 @@
                 </b-col>
               </b-row>
               <b-row>
+
                 <b-col lg="6">
 
-                  <b-form-group label="Cidade"
-                                label-for="cidade-input"
-                                invalid-feedback="Cidade é obrigatória"
-                                :state="cidadeState">
-                    <b-form-input id="cidade-input"
-                                  placeholder="Cidade"
-                                  v-model="funcionario.pessoa.cidade"
-                                  :state="cidadeState"
-                                  :disabled="disable"
-                                  required></b-form-input>
-                  </b-form-group>
-
+                  <base-input type="text"
+                              label="Cidade*"
+                              name="Cidade"
+                              placeholder="Cidade"
+                              :disabled="disable"
+                              v-model="funcionario.pessoa.cidade"
+                              required>
+                  </base-input>
                 </b-col>
                 <b-col lg="3">
-                  <b-form-group label="UF"
+                  <b-form-group label="UF*"
                                 label-for="uf-input"
                                 invalid-feedback="UF é obrigatório"
                                 :state="ufState">
@@ -480,68 +627,55 @@
                                    :options="options">
 
                     </b-form-select>
+
                   </b-form-group>
                 </b-col>
-              </b-row>
-              <b-row>
-
-                <b-col lg="6">
-
-                  <b-form-group label="CEP"
-                                label-for="cep-input"
-                                invalid-feedback="CEP é obrigatório"
-                                :state="cepState">
-                    <b-form-input id="cep-input"
-                                  placeholder="CEP"
-                                  v-model="funcionario.pessoa.cep"
-                                  :state="cepState"
-                                  :disabled="disable"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-              </b-row>
-              <b-row>
-
-                <b-col lg="6">
-
-                  <b-form-group label="Endereco"
-                                label-for="endereco-input"
-                                invalid-feedback="Endereço é obrigatório"
-                                :state="enderecoState">
-                    <b-form-input id="endereco-input"
-                                  placeholder="Endereço"
-                                  v-model="funcionario.pessoa.endereco"
-                                  :state="enderecoState"
-                                  :disabled="disable"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-                <b-col lg="4">
-                  <base-input type="text"
-                              label="Número"
-                              placeholder="Número"
+                <b-col lg="3">
+                  <base-input type="number"
+                              label="CEP*"
+                              name="CEP"
+                              placeholder="CEP"
                               :disabled="disable"
-                              v-model="funcionario.pessoa.numero">
+                              v-model="funcionario.pessoa.cep"
+                              required>
                   </base-input>
                 </b-col>
-
               </b-row>
               <b-row>
-                <b-col lg="6">
+
+                <b-col lg="3">
+                  <base-input type="text"
+                              label="Endereço*"
+                              name="Endereço"
+                              placeholder="Endereço"
+                              :disabled="disable"
+                              v-model="funcionario.pessoa.endereco"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="3">
+                  <base-input type="number"
+                              label="Número*"
+                              name="Número"
+                              placeholder="Número"
+                              :disabled="disable"
+                              v-model="funcionario.pessoa.numero"
+                              required>
+                  </base-input>
+                </b-col>
+                <b-col lg="3">
                   <base-input type="text"
                               label="Referência"
+                              name="Referência"
                               placeholder="Referência"
                               :disabled="disable"
                               v-model="funcionario.pessoa.referencia">
                   </base-input>
                 </b-col>
-                <b-col lg="6">
+                <b-col lg="3">
                   <base-input type="text"
                               label="Complemento"
+                              name="Complemento"
                               placeholder="Complemento"
                               :disabled="disable"
                               v-model="funcionario.pessoa.complemento">
@@ -564,7 +698,7 @@
               <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleOKdetail">
                 <span class="btn-inner--text">Fechar</span>
               </base-button>
-              
+
             </b-col>
           </b-row>
         </template>
@@ -672,9 +806,9 @@
       countDownChanged(dismissCountDown) {
         this.dismissCountDown = dismissCountDown
       },
-      showAlert() {
-        this.dismissCountDown = this.dismissSecs
-      },
+      //showAlert() {
+      //  this.dismissCountDown = this.dismissSecs
+      //},
 
       checkFormValidity() {
         const valid = this.$refs.form.checkValidity()
@@ -741,7 +875,7 @@
         this.sendForm();
         // Hide the modal manually
         this.$nextTick(() => {
-          this.$bvModal.hide('modal-1')
+          this.$bvModal.hide('modal-multi-2')
         })
       },
       
@@ -753,7 +887,7 @@
       cancelarInclusao() {
         this.resetModal()
         this.$nextTick(() => {
-          this.$bvModal.hide('modal-1')
+          this.$bvModal.hide('modal-multi-2')
         })
       },
       
@@ -767,6 +901,15 @@
         this.$nextTick(() => {
           this.$bvModal.hide('modal-scrollable')
         })
+      },
+
+      showAlert(message, variant) {
+        // success
+        // danger
+        // warning
+        this.dismissCountDown = this.dismissSecs
+        this.variant = variant
+        this.txtAlert = message
       },
 
       getFuncionarios(pageN, pageS) {
@@ -799,7 +942,7 @@
           console.log(this.Funcionario)
 
           if (tpOperacao == "Alterar") {
-            this.$bvModal.show("modal-1");
+            this.$bvModal.show("modal-multi-2");
             this.tpOperacao = tpOperacao
           }
 
@@ -825,27 +968,32 @@
           });
       },
 
-      sendForm() {
-        var url = "https://localhost:44376/Funcionario/CriarFuncionario"
-        if (this.tpOperacao == "Alterar") {
-          url = "https://localhost:44376/Funcionario/EditarFuncionario";
+      async sendForm() {
+        let $this = this;
+        const isValid = await this.$refs.formValidator.validate();
+        if (isValid) {
+          var url = "https://localhost:44376/Funcionario/CriarFuncionario"
+          if (this.tpOperacao == "Alterar") {
+            url = "https://localhost:44376/Funcionario/EditarFuncionario";
+          }
+          axios.post(url, this.funcionario).then(response => {
+            if (response.data.sucess == true) {
+              console.log(response.data)
+              //alert(response.data.description)
+              //window.location.href = "#/funcionarios"
+              $this.showAlert(response.data.description, "success");
+              this.$bvModal.hide("modal-multi-2")
+              this.getFuncionarios(1, 10)
+            }
+            else {
+              $this.showAlert(response.data.description, "warning");
+            }
+          })
+            .catch(function (error) {
+              $this.showAlert('Erro ao criar Funcionário', "danger");
+            });
         }
-        axios.post(url, this.funcionario).then(response => {
-          if (response.data.sucess == true) {
-            console.log(response.data)
-            //alert(response.data.description)
-            //window.location.href = "#/funcionarios"
-            this.showAlert();
-            this.$bvModal.hide("modal-1")
-            this.getFuncionarios(1, 10)
-          }
-          else {
-            alert(response.data.description)
-          }
-        })
-          .catch(function (error) {
-            alert(error);
-          });
+        
         // this will be called only after form is valid. You can do api call here to login
       },
 
@@ -877,21 +1025,22 @@
       },
 
       deleteFuncionario(id) {
+        let $this = this;
         axios.get("https://localhost:44376/Funcionario/ExcluirFuncionario", {
           params: { "id": id }
         }).then(response => {
           if (response.data.sucess == true) {
             console.log(response.data)
             /*alert(response.data.description)*/
-            this.showAlert()
+            $this.showAlert(response.data.description, "success");
             this.getFuncionarios(1, 10)
           }
           else {
-            alert(response.data.description)
+            $this.showAlert(response.data.description, "danger");
           }
         })
           .catch(function (error) {
-            alert(error);
+            $this.showAlert(error, "danger");
           });
       },
 

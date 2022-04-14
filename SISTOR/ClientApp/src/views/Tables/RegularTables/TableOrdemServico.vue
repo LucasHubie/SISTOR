@@ -25,7 +25,7 @@
                 header-row-class-name="thead-light"
                 :data="ordensServico">
         <el-table-column label="Nº Ordem"
-                         min-width="90px"
+                         min-width="120px"
                          prop="name">
           <template v-slot="{row}">
             <b-media no-body class="align-items-center">
@@ -36,7 +36,7 @@
           </template>
         </el-table-column>
         <el-table-column label="Tag Identificação"
-                         min-width="90px"
+                         min-width="160px"
                          prop="name">
           <template v-slot="{row}">
             <b-media no-body class="align-items-center">
@@ -59,11 +59,11 @@
   </el-table-column>-->
         <el-table-column label="Funcionário"
                          prop="funcionario.pessoa.nome"
-                         min-width="130px">
+                         min-width="160px">
         </el-table-column>
         <el-table-column label="Cliente"
                          prop="cliente.pessoa.nome"
-                         min-width="100px">
+                         min-width="160px">
         </el-table-column>
 
         <el-table-column label="Ações"
