@@ -64,7 +64,11 @@
                          prop="status">
           <template v-slot="{row}">
             <badge class="badge-dot mr-4" type="">
-              <span class="status text-success">{{ getTextoSituacao(row.situacao) }}</span>
+              <span v-if="row.situacao == 1" class="status text-success">{{ getTextoSituacao(row.situacao) }}</span>
+              <span v-if="row.situacao == 2" class="status text-danger">{{ getTextoSituacao(row.situacao) }}</span>
+              <span v-if="row.situacao == 3" class="status text-primary">{{ getTextoSituacao(row.situacao) }}</span>
+              <span v-if="row.situacao == 4" class="status text-success">{{ getTextoSituacao(row.situacao) }}</span>
+              <span v-if="row.situacao == 5" class="status text-danger">{{ getTextoSituacao(row.situacao) }}</span>
             </badge>
           </template>
         </el-table-column>
@@ -86,7 +90,7 @@
             <el-dropdown trigger="click" class="dropdown">
               <base-button size="sm" type="default" style="background-color: rgb(58 99 167); margin-right: .5rem;"><b-icon icon="three-dots" font-scale="1"></b-icon></base-button>
               <el-dropdown-menu class="dropdown-menu dropdown-menu-arrow show" slot="dropdown">
-                <b-dropdown-item v-if="orcamento.situacao == 1" v-on:click="showModalOS(row.id, row.cliente.id, row.tagIdentificacao)">Gerar Ordem de Serviço</b-dropdown-item>
+                <b-dropdown-item v-if="row.situacao == 1" v-on:click="showModalOS(row.id, row.cliente.id, row.tagIdentificacao)">Gerar Ordem de Serviço</b-dropdown-item>
                 <b-dropdown-item v-on:click="showModalSituacao(row.id)">Alterar Situação</b-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -267,7 +271,7 @@
             <hr class="my-4">
             <h6 class="heading-small text-muted mb-4">Descrição Orçamento</h6>
             <b-row>
-              <b-col lg="3">
+              <b-col lg="3" v-if="tpOperacao == 'Visualizar'">
                 <base-input type="text"
                             label="Tag Identificação*"
                             placeholder="Tag Identificação"
@@ -328,7 +332,7 @@
                       <tr v-for="produtoloop in produtos" style=" background-color: white;" :key="produtoloop.id">
                         <td style="vertical-align: middle; " class="tdpading05">{{produtoloop.codigo}}</td>
                         <td style="vertical-align: middle; " class="tdpading05">{{produtoloop.descricao}}</td>
-                        <td style="vertical-align: middle; " class="tdpading05">R$ {{produtoloop.valor}}</td>
+                        <td style="vertical-align: middle; " class="tdpading05"> {{produtoloop.valor}}</td>
                         <td style="text-align: right; width: 10%" class="tdpading05">
                           <input type="number"
                                  label="Quantidade"

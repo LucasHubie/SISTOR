@@ -1,13 +1,17 @@
 <template>
   <div>
 
-    <b-alert :show="dismissCountDown"
-             dismissible
-             variant="success"
-             @dismissed="dismissCountDown=0"
-             @dismiss-count-down="countDownChanged">
-      Confirmado com sucesso! <!--{{ dismissCountDown }}-->
+    <b-alert :show="dismissCountDown" dismissible @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged" :variant="variant">
+      {{txtAlert}}
     </b-alert>
+    <!--<b-alert :show="dismissCountDown"
+           dismissible
+           variant="success"
+           @dismissed="dismissCountDown=0"
+           @dismiss-count-down="countDownChanged">
+    Confirmado com sucesso!-->
+    <!--{{ dismissCountDown }}-->
+    <!--</b-alert>-->
 
     <b-card style="box-shadow: 3px 0px 5px 3px #0000007d;" no-body>
       <b-card-header class="border-0">
@@ -140,9 +144,9 @@
             <h5 class="redHeading">* Indica item obrigatório (todos os campos obrigatórios devem ser preenchidos)</h5>
             <div class="">
               <!--<b-form-group>
-                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
-                <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
-              </b-form-group>-->
+              <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="F">Pessoa Fisica</b-form-radio>
+              <b-form-radio class="custom-control-inline" v-model="selected" name="some-radios" value="J">Pessoa Júridica</b-form-radio>
+            </b-form-group>-->
               <b-row>
                 <b-col lg="6" v-if="selected == 'F'">
                   <base-input type="text"
@@ -153,7 +157,7 @@
                               v-model="funcionario.pessoa.nome">
                   </base-input>
                 </b-col>
-                
+
                 <b-col lg="3">
                   <base-input type="text"
                               label="CPF*"
@@ -173,8 +177,8 @@
                               required>
                   </base-input>
                 </b-col>
-                
-                
+
+
               </b-row>
               <b-row>
 
@@ -220,18 +224,17 @@
                 </b-col>
                 <b-col lg="3">
                   <!--<b-form-group label="UF*"
-                                label-for="uf-input"
-                                invalid-feedback="UF é obrigatório"
-                                :state="ufState">-->
+                              label-for="uf-input"
+                              invalid-feedback="UF é obrigatório"
+                              :state="ufState">-->
                   <label>UF*</label>
-                    <b-form-select 
-                                   :state="ufState"
-                                   name="UF"
-                                   v-model="funcionario.pessoa.uf"
-                                   :options="options"
-                                   required>
+                  <b-form-select :state="ufState"
+                                 name="UF"
+                                 v-model="funcionario.pessoa.uf"
+                                 :options="options"
+                                 required>
 
-                    </b-form-select>
+                  </b-form-select>
 
                   <!--</b-form-group>-->
                 </b-col>
@@ -306,220 +309,218 @@
 
       <!--Modal inclusão-->
       <!--<b-modal id="modal-1" title="Funcionário" size="xl"
-               @hidden="resetModal"
-               @ok="handleOk">
+             @hidden="resetModal"
+             @ok="handleOk">
 
-        <form ref="form" id="FormFuncionario" @submit.stop.prevent="handleSubmit">
+      <form ref="form" id="FormFuncionario" @submit.stop.prevent="handleSubmit">
 
-          <b-form-group>
+        <b-form-group>
 
-            <h6 class="heading-small text-muted mb-4">Informações do Funcionário</h6>
+          <h6 class="heading-small text-muted mb-4">Informações do Funcionário</h6>
 
-            <h5 class="redHeading">* Indica item obrigatório (todos os campos obrigatórios devem ser preenchidos)</h5>
+          <h5 class="redHeading">* Indica item obrigatório (todos os campos obrigatórios devem ser preenchidos)</h5>
 
-            <div class="">
+          <div class="">
 
-              <b-row>
+            <b-row>
 
-                <b-col lg="6" v-if="selected == 'F'">
+              <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="Nome*"
-                                label-for="name-input"
-                                invalid-feedback="Nome é obrigatório"
-                                :state="nameState">
-                    <b-form-input id="name-input"
-                                  placeholder="Nome"
-                                  v-model="funcionario.pessoa.nome"
-                                  :state="nameState"
-                                  required></b-form-input>
-                  </b-form-group>
+                <b-form-group label="Nome*"
+                              label-for="name-input"
+                              invalid-feedback="Nome é obrigatório"
+                              :state="nameState">
+                  <b-form-input id="name-input"
+                                placeholder="Nome"
+                                v-model="funcionario.pessoa.nome"
+                                :state="nameState"
+                                required></b-form-input>
+                </b-form-group>
 
-                </b-col>
+              </b-col>
 
-                <b-col lg="6" v-if="selected == 'F'">
+              <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="CPF*"
-                                label-for="cpf-input"
-                                invalid-feedback="CPF é obrigatório"
-                                :state="cpfState">
-                    <b-form-input id="cpf-input"
-                                  placeholder="000.000.000-00"
-                                  v-mask="'###.###.###-##'"
-                                  v-model="funcionario.pessoa.cpf"
-                                  :state="cpfState"
-                                  required>
+                <b-form-group label="CPF*"
+                              label-for="cpf-input"
+                              invalid-feedback="CPF é obrigatório"
+                              :state="cpfState">
+                  <b-form-input id="cpf-input"
+                                placeholder="000.000.000-00"
+                                v-mask="'###.###.###-##'"
+                                v-model="funcionario.pessoa.cpf"
+                                :state="cpfState"
+                                required>
 
-                    </b-form-input>
+                  </b-form-input>
 
-                  </b-form-group>
-                </b-col>
+                </b-form-group>
+              </b-col>
 
-              </b-row>
-              <b-row>
+            </b-row>
+            <b-row>
 
-                <b-col lg="6" v-if="selected == 'F'">
+              <b-col lg="6" v-if="selected == 'F'">
 
-                  <b-form-group label="RG*"
-                                label-for="rg-input"
-                                invalid-feedback="RG é obrigatório"
-                                :state="rgState">
-                    <b-form-input id="rg-input"
-                                  placeholder="RG"
-                                  v-model="funcionario.pessoa.rg"
-                                  :state="rgState"
-                                  required></b-form-input>
-                  </b-form-group>
+                <b-form-group label="RG*"
+                              label-for="rg-input"
+                              invalid-feedback="RG é obrigatório"
+                              :state="rgState">
+                  <b-form-input id="rg-input"
+                                placeholder="RG"
+                                v-model="funcionario.pessoa.rg"
+                                :state="rgState"
+                                required></b-form-input>
+                </b-form-group>
 
-                </b-col>
-
-
-                <b-col lg="6">
-
-                  <b-form-group label="E-mail*"
-                                label-for="email-input"
-                                invalid-feedback="E-mail é obrigatório"
-                                :state="emailState">
-                    <b-form-input id="email-input"
-                                  placeholder="E-mail"
-                                  v-model="funcionario.pessoa.email"
-                                  :state="emailState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-              </b-row>
-              <b-row>
-                <b-col lg="6">
-                  <base-input type="text"
-                              label="Telefone"
-                              placeholder="Telefone"
-                              v-model="funcionario.pessoa.telefone">
-                  </base-input>
-                </b-col>
-                <b-col lg="6">
-                  <base-input type="text"
-                              label="Celular"
-                              placeholder="Celular"
-                              v-model="funcionario.pessoa.celular">
-                  </base-input>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col lg="6">
-
-                  <b-form-group label="Cidade*"
-                                label-for="cidade-input"
-                                invalid-feedback="Cidade é obrigatória"
-                                :state="cidadeState">
-                    <b-form-input id="cidade-input"
-                                  placeholder="Cidade"
-                                  v-model="funcionario.pessoa.cidade"
-                                  :state="cidadeState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-                <b-col lg="3">
-                  <b-form-group label="UF*"
-                                label-for="uf-input"
-                                invalid-feedback="UF é obrigatório"
-                                :state="ufState">
-                    <b-form-select v-model="funcionario.pessoa.uf"
-                                   :state="ufState"
-                                   required
-                                   :options="options">
-
-                    </b-form-select>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-
-                <b-col lg="6">
-
-                  <b-form-group label="CEP*"
-                                label-for="cep-input"
-                                invalid-feedback="CEP é obrigatório"
-                                :state="cepState">
-                    <b-form-input id="cep-input"
-                                  placeholder="CEP"
-                                  v-model="funcionario.pessoa.cep"
-                                  :state="cepState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-              </b-row>
-              <b-row>
-
-                <b-col lg="6">
-
-                  <b-form-group label="Endereco*"
-                                label-for="endereco-input"
-                                invalid-feedback="Endereço é obrigatório"
-                                :state="enderecoState">
-                    <b-form-input id="endereco-input"
-                                  placeholder="Endereço"
-                                  v-model="funcionario.pessoa.endereco"
-                                  :state="enderecoState"
-                                  required></b-form-input>
-                  </b-form-group>
-
-                </b-col>
-
-                <b-col lg="4">
-                  <base-input type="text"
-                              label="Número"
-                              placeholder="Número"
-                              v-model="funcionario.pessoa.numero">
-                  </base-input>
-                </b-col>
-
-              </b-row>
-              <b-row>
-                <b-col lg="6">
-                  <base-input type="text"
-                              label="Referência"
-                              placeholder="Referência"
-                              v-model="funcionario.pessoa.referencia">
-                  </base-input>
-                </b-col>
-                <b-col lg="6">
-                  <base-input type="text"
-                              label="Complemento"
-                              placeholder="Complemento"
-                              v-model="funcionario.pessoa.complemento">
-                  </base-input>
-                </b-col>
-              </b-row>
-              <hr class="my-4">
-
-            </div>
-
-          </b-form-group>
-
-        </form>
-
-        <template #modal-footer>
-          <b-row>
-            <b-col lg="12">
-              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleSubmit()">
-                <span class="btn-inner--text">Confirmar</span>
-
-              </base-button>
-              <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarInclusao">
-
-                <span class="btn-inner--text">Cancelar</span>
-              </base-button>
-            </b-col>
-          </b-row>
-        </template>
-
-      </b-modal>-->
+              </b-col>
 
 
+              <b-col lg="6">
+
+                <b-form-group label="E-mail*"
+                              label-for="email-input"
+                              invalid-feedback="E-mail é obrigatório"
+                              :state="emailState">
+                  <b-form-input id="email-input"
+                                placeholder="E-mail"
+                                v-model="funcionario.pessoa.email"
+                                :state="emailState"
+                                required></b-form-input>
+                </b-form-group>
+
+              </b-col>
+
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Telefone"
+                            placeholder="Telefone"
+                            v-model="funcionario.pessoa.telefone">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Celular"
+                            placeholder="Celular"
+                            v-model="funcionario.pessoa.celular">
+                </base-input>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+
+                <b-form-group label="Cidade*"
+                              label-for="cidade-input"
+                              invalid-feedback="Cidade é obrigatória"
+                              :state="cidadeState">
+                  <b-form-input id="cidade-input"
+                                placeholder="Cidade"
+                                v-model="funcionario.pessoa.cidade"
+                                :state="cidadeState"
+                                required></b-form-input>
+                </b-form-group>
+
+              </b-col>
+              <b-col lg="3">
+                <b-form-group label="UF*"
+                              label-for="uf-input"
+                              invalid-feedback="UF é obrigatório"
+                              :state="ufState">
+                  <b-form-select v-model="funcionario.pessoa.uf"
+                                 :state="ufState"
+                                 required
+                                 :options="options">
+
+                  </b-form-select>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+
+              <b-col lg="6">
+
+                <b-form-group label="CEP*"
+                              label-for="cep-input"
+                              invalid-feedback="CEP é obrigatório"
+                              :state="cepState">
+                  <b-form-input id="cep-input"
+                                placeholder="CEP"
+                                v-model="funcionario.pessoa.cep"
+                                :state="cepState"
+                                required></b-form-input>
+                </b-form-group>
+
+              </b-col>
+
+            </b-row>
+            <b-row>
+
+              <b-col lg="6">
+
+                <b-form-group label="Endereco*"
+                              label-for="endereco-input"
+                              invalid-feedback="Endereço é obrigatório"
+                              :state="enderecoState">
+                  <b-form-input id="endereco-input"
+                                placeholder="Endereço"
+                                v-model="funcionario.pessoa.endereco"
+                                :state="enderecoState"
+                                required></b-form-input>
+                </b-form-group>
+
+              </b-col>
+
+              <b-col lg="4">
+                <base-input type="text"
+                            label="Número"
+                            placeholder="Número"
+                            v-model="funcionario.pessoa.numero">
+                </base-input>
+              </b-col>
+
+            </b-row>
+            <b-row>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Referência"
+                            placeholder="Referência"
+                            v-model="funcionario.pessoa.referencia">
+                </base-input>
+              </b-col>
+              <b-col lg="6">
+                <base-input type="text"
+                            label="Complemento"
+                            placeholder="Complemento"
+                            v-model="funcionario.pessoa.complemento">
+                </base-input>
+              </b-col>
+            </b-row>
+            <hr class="my-4">
+
+          </div>
+
+        </b-form-group>
+
+      </form>
+
+      <template #modal-footer>
+        <b-row>
+          <b-col lg="12">
+            <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="handleSubmit()">
+              <span class="btn-inner--text">Confirmar</span>
+
+            </base-button>
+            <base-button type="secondary" class="float-right" style="margin-right: 10px;" v-on:click="cancelarInclusao">
+
+              <span class="btn-inner--text">Cancelar</span>
+            </base-button>
+          </b-col>
+        </b-row>
+      </template>
+
+    </b-modal>-->
       <!--Modal detail-->
       <b-modal id="modal-3" title="Detalhes do Funcionário" size="xl" @show="resetModal"
                @hidden="resetModal"

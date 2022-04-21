@@ -34,18 +34,23 @@ namespace SISTOR.Repository
             {
                 //  obj.cliente.Pessoa.CPF = Md5Hash.CalculaHash(obj.cliente.Pessoa.CPF);
                 // obj.cliente.Pessoa.RG = Md5Hash.CalculaHash(obj.cliente.Pessoa.RG);
-                Orcamento orc = new Orcamento();
-                orc = GetOrcamentoByTag(obj.orcamento.TagIdentificacao);
-                if (orc != null && orc.TagIdentificacao == obj.orcamento.TagIdentificacao)
-                {
-                    throw new Exception("Falha ao criar novo Orcamento! Tag de identificação já existe!");
-                }
-                else
-                {
+                //obj.orcamento.Cliente = obj.cliente;
+                
+                var count = _context.Orcamento.Count();
+                obj.orcamento.TagIdentificacao = (count + 1).ToString();
+
+                
+                //Orcamento orc = new Orcamento();
+                //orc = GetOrcamentoByTag(obj.orcamento.TagIdentificacao);
+                //if (orc != null && orc.TagIdentificacao == obj.orcamento.TagIdentificacao)
+                //{
+                //    throw new Exception("Falha ao criar novo Orcamento! Tag de identificação já existe!");
+                //}
+                //else
+                //{
                     if (obj.cliente.Id != 0)
                     {
                         obj.orcamento.IdCliente = obj.cliente.Id;
-                        //obj.orcamento.Cliente = obj.cliente;
                     }
                     else
                     {
@@ -74,7 +79,7 @@ namespace SISTOR.Repository
                         _context.Add(objItem);
                     }
                     _context.SaveChanges();
-                }
+                
                 
             }
 

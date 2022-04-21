@@ -159,9 +159,9 @@ namespace SISTOR.Repository
                 if (ex.InnerException is SqlException)
                 {
                     var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
-                    throw new Exception(msg, ex);
+                    throw new Exception("Não foi possível excluir o cliente, pois está vinculado a um orçamento ou ordem de serviço!", ex);
                 }
-                throw new Exception("Falha ao criar novo Cliente", ex);
+                throw new Exception("Falha ao excluir Cliente", ex);
             }
         }
 

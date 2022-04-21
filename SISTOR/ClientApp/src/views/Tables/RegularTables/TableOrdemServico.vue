@@ -302,7 +302,7 @@
         qntdRegistros: 0,
         disable: false,
         tpOperacao: 'Incluir',
-        buscaproduto: '',
+        /*buscaproduto: '',*/
         ordemServico: {
           dataInclusao: '',
           horasTrabalhadas: '',

@@ -172,10 +172,11 @@
                   </base-input>
                 </b-col>
                 <b-col lg="3" v-if="selected == 'F'">
-                  <base-input type="number"
+                  <base-input type="text"
                               label="RG*"
                               name="RG"
-                              placeholder="RG"
+                              placeholder="00.000.000-0"
+                              v-mask="'##.###.###-#'"
                               v-model="cliente.pessoa.rg"
                               required>
                   </base-input>

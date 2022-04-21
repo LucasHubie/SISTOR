@@ -133,9 +133,9 @@ namespace SISTOR.Repository
                 if (ex.InnerException is SqlException)
                 {
                     var msg = ex.InnerException.Message.Substring(0, ex.InnerException.Message.IndexOf("\r"));
-                    throw new Exception(msg, ex);
+                    throw new Exception("Não foi possível excluir o funcionário, pois está vinculado a um orçamento ou ordem de serviço!", ex);
                 }
-                throw new Exception("Falha ao criar novo funcionario", ex);
+                throw new Exception("Falha ao excluir funcionario", ex);
             }
         }
 
