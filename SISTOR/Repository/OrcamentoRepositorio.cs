@@ -57,20 +57,12 @@ namespace SISTOR.Repository
                         obj.orcamento.Cliente = obj.cliente;
                     }
 
-                    //if (!String.IsNullOrEmpty(obj.orcamento.Cliente.Pessoa.CPF))
-                    //{
-                    //    obj.orcamento.Cliente.Pessoa.CPF = SemFormatacao(obj.orcamento.Cliente.Pessoa.CPF);
-                    //}
-                    //if (!String.IsNullOrEmpty(obj.orcamento.Cliente.Pessoa.CNPJ))
-                    //{
-                    //    obj.orcamento.Cliente.Pessoa.CNPJ = SemFormatacao(obj.orcamento.Cliente.Pessoa.CNPJ);
-                    //}
-
                     obj.orcamento.DataInclusao = DateTime.Now;
                     _context.Add(obj.orcamento);
+                    
                     foreach (var itemloop in obj.lstprodutos)
                     {
-
+                    
                         Itens objItem = new Itens();
                         objItem.IdProduto = itemloop.idProduto;
                         objItem.Orcamento = obj.orcamento;
@@ -115,8 +107,8 @@ namespace SISTOR.Repository
                     {
                         obj.orcamento.Cliente.Pessoa.CNPJ = SemFormatacao(obj.orcamento.Cliente.Pessoa.CNPJ);
                     }
-                    obj.orcamento.IdCliente = obj.cliente.Id;
-                    obj.orcamento.Cliente = obj.cliente;
+                    //obj.orcamento.IdCliente = obj.cliente.Id;
+                    //obj.orcamento.Cliente = obj.cliente;
 
                     _context.Update(obj.orcamento);
 

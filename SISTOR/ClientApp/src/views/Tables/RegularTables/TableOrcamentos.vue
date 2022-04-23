@@ -9,6 +9,10 @@
         <base-button v-b-modal.modal-scrollable type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;" v:onclick="">
           <b-icon icon="question-circle-fill" aria-label="Help"></b-icon>
         </base-button>
+        <base-button v-on:click="showRelatorio = !showRelatorio" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
+          <b-icon icon="card-list" font-scale="1"></b-icon>
+          <span class="btn-inner--text">Relatórios</span>
+        </base-button>
         <base-button v-on:click="showFiltrar = !showFiltrar" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
           <b-icon icon="filter-square-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Filtrar</span>
@@ -17,10 +21,7 @@
           <b-icon icon="plus-circle-fill" font-scale="1"></b-icon>
           <span class="btn-inner--text">Adicionar</span>
         </base-button>
-        <!--<base-button v-on:click="funcDesenv()" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px;">
-      <b-icon icon="card-list" font-scale="1"></b-icon>
-      <span class="btn-inner--text">Gerar Relatórios</span>
-    </base-button>-->
+
 
       </b-card-header>
       <div v-if="showFiltrar" class="modal-body">
@@ -39,6 +40,38 @@
           </b-col>
 
         </b-row>
+      </div>
+      <div v-if="showRelatorio" class="modal-body">
+        
+        <b-row>
+          <b-col lg="9">
+            <b-row>
+              <b-col lg="3">
+                <label>Total mensal</label>
+                <month-picker-input v-model="relatorio.mes"></month-picker-input>
+                
+              </b-col>
+              <b-col lg="4">
+                <base-button type="success" class="float-right" style="  top: 40%" v-b-modal.modal-rel v-on:click="getOrcamentos(1,10)">
+                  <span class="btn-inner--text">Gerar Relatório</span>
+                </base-button>
+              </b-col>
+              
+            </b-row>
+
+          </b-col>
+          
+          <!--<b-col lg="3" v-if="selected == 'F'">
+
+            <base-button type="success" class="float-right" style=" margin: 0; position: absolute; top: 50%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-b-modal.modal-rel v-on:click="getOrcamentos(1,10)">
+              <span class="btn-inner--text">Gerar Relatório</span>
+            </base-button>
+          </b-col>-->
+
+
+        </b-row>
+
+
       </div>
       <el-table class="table-responsive table"
                 header-row-class-name="thead-light"
@@ -146,6 +179,46 @@
           </b-row>
         </template>
 
+      </b-modal>
+
+      <b-modal id="modal-rel" title="Relatório" size="xl">
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              Listagem de orçamentos
+            </tr>
+            <tr>
+              <th>Descrição</th>
+              <th>Status</th>
+              <th>Cliente</th>
+              <th>Valor do itens</th>
+              <th>Valor mão de obra</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="orcamentoloop in todosOrcamentos" style=" background-color: white;" :key="orcamentoloop.id">
+              <td style="vertical-align: middle; " class="tdpading05">{{orcamentoloop.descricao}}</td>
+              <td v-if="orcamentoloop.situacao == 1" style="vertical-align: middle; " class="tdpading05">Aprovado</td>
+              <td v-if="orcamentoloop.situacao == 2" style="vertical-align: middle; " class="tdpading05">Negado</td>
+              <td v-if="orcamentoloop.situacao == 3" style="vertical-align: middle; " class="tdpading05">Aguardando Aprovação</td>
+              <td v-if="orcamentoloop.situacao == 4" style="vertical-align: middle; " class="tdpading05">Encerrado</td>
+              <td v-if="orcamentoloop.situacao == 5" style="vertical-align: middle; " class="tdpading05">Cancelado</td>
+
+              <td v-if="orcamentoloop.cliente.pessoa.tipoPessoa == 1" style="vertical-align: middle; " class="tdpading05"> {{orcamentoloop.cliente.pessoa.nome}}</td>
+              <td v-if="orcamentoloop.cliente.pessoa.tipoPessoa == 2" style="vertical-align: middle; " class="tdpading05"> {{orcamentoloop.cliente.pessoa.nomeFantasia}}</td>
+              <td style="vertical-align: middle; " class="tdpading05"> {{orcamentoloop.valorItem}}</td>
+              <td style="vertical-align: middle; " class="tdpading05"> {{orcamentoloop.maoDeObra}}</td>
+              <td style="vertical-align: middle; " class="tdpading05"> {{orcamentoloop.valorTotal}}</td>
+
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              Valor total dos orçamentos: {{somaRelatorio}}
+            </tr>
+          </tfoot>
+        </table>
       </b-modal>
 
       <b-modal id="modal-1" :title="tpOperacao + ' Orçamento'" size="xl">
@@ -302,13 +375,13 @@
 
             <div class="">
               <!--<b-row>
-            <b-col lg="12">
-              <base-button size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px; margin-bottom: 10px;" v-on:click="showNovoProduto = !showNovoProduto">
-                <b-icon icon="clipboard-plus" font-scale="1"></b-icon>
-                <span class="btn-inner--text">Adicionar Produto</span>
-              </base-button>
-            </b-col>
-          </b-row>-->
+                <b-col lg="12">
+                  <base-button size="sm" type="default" class="float-right" style="background-color: rgb(58 99 167); margin-right: 10px; margin-bottom: 10px;" v-on:click="showNovoProduto = !showNovoProduto">
+                    <b-icon icon="clipboard-plus" font-scale="1"></b-icon>
+                    <span class="btn-inner--text">Adicionar Produto</span>
+                  </base-button>
+                </b-col>
+              </b-row>-->
               <b-row v-if="tpOperacao != 'Visualizar'">
                 <b-col lg="3">
                   <base-input type="text"
@@ -416,12 +489,13 @@
         <template #modal-footer="{ cancel }">
           <b-row v-if="tpOperacao != 'Visualizar'">
             <b-col lg="12">
-              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
-                <span class="btn-inner--text">Confirmar</span>
-              </base-button>
               <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
                 <span class="btn-inner--text">Cancelar</span>
               </base-button>
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendForm()">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+
             </b-col>
           </b-row>
           <b-row v-else>
@@ -644,12 +718,13 @@
         <template #modal-footer="{ cancel }">
           <b-row>
             <b-col lg="12">
-              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendFormOS()">
-                <span class="btn-inner--text">Confirmar</span>
-              </base-button>
               <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
                 <span class="btn-inner--text">Cancelar</span>
               </base-button>
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendFormOS()">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+
             </b-col>
           </b-row>
         </template>
@@ -672,12 +747,13 @@
         <template #modal-footer>
           <b-row>
             <b-col lg="12">
-              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendFormSituacao()">
-                <span class="btn-inner--text">Confirmar</span>
-              </base-button>
               <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancelaSituacao()">
                 <span class="btn-inner--text">Cancelar</span>
               </base-button>
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="sendFormSituacao()">
+                <span class="btn-inner--text">Confirmar</span>
+              </base-button>
+
             </b-col>
           </b-row>
         </template>
@@ -687,7 +763,12 @@
 </template>
 <script>
   import axios from 'axios'
+  import { parse } from 'date-fns';
+  import Datepicker from 'vuejs-datepicker';
+  import { MonthPickerInput } from 'vue-month-picker'
   import { Table, TableColumn, DropdownMenu, DropdownItem, Dropdown } from 'element-ui'
+
+  
   export default {
     name: 'table-orcamentos',
     components: {
@@ -696,6 +777,8 @@
       [Dropdown.name]: Dropdown,
       [DropdownItem.name]: DropdownItem,
       [DropdownMenu.name]: DropdownMenu,
+      Datepicker,
+      MonthPickerInput
     },
     data() {
       return {
@@ -708,8 +791,11 @@
         txtAlert: "",
         qntdRegistros: 0,
         showFiltrar: false,
+        showRelatorio: false,
         filtro: { nome: '' },
+        relatorio: { mes: '' },
         orcamentos: [],
+        todosOrcamentos: [],
         clientes: [],
         produtos: [],
         options: [
@@ -769,6 +855,7 @@
       };
     },
     methods: {
+      
       showAlert(message, variant) {
         // success
         // danger
@@ -780,7 +867,7 @@
       countDownChanged(dismissCountDown) {
         this.dismissCountDown = dismissCountDown
       },
-      dataAtualFormatada(data){
+      dataAtualFormatada(data) {
         var dataF = new Date(data);
         var dataFormatada = dataF.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
         console.log(dataFormatada)
@@ -815,6 +902,19 @@
         this.$nextTick(() => {
           this.$bvModal.hide('modal-scrollable')
         })
+      },
+
+      getTodosOrcamentos() {
+        let $this = this;
+        axios.get("https://localhost:44376/Orcamento/Index")
+          .then(response => {
+
+            this.todosOrcamentos = response.data;
+            console.log('relatorio', this.todosOrcamentos);
+          })
+          .catch(function (error) {
+            $this.showAlert("Falha ao Carregar Orcamentos", "danger");
+          });
       },
 
       getOrcamentos(pageN, pageS) {
@@ -853,13 +953,13 @@
         axios.get("https://localhost:44376/Cliente/BuscarCliente", {
           params: { "busca": busca, "pageNumber": pageN, "pageSize": pageS }
         }).then(response => {
-            this.clientes = response.data.lst;
-            $this.msgBuscando = "";
-            this.showNovoCliente = false;
-            if (this.clientes.length == 0) {
-              $this.msgBuscando = "Cliente não encontrado";
-              this.showNovoCliente = true;
-            }
+          this.clientes = response.data.lst;
+          $this.msgBuscando = "";
+          this.showNovoCliente = false;
+          if (this.clientes.length == 0) {
+            $this.msgBuscando = "Cliente não encontrado";
+            this.showNovoCliente = true;
+          }
         })
           .catch(function (error) {
             $this.msgBuscando = "Falha ao procurar Cliente"
@@ -911,8 +1011,8 @@
           this.orcamento = response.data.obj.orcamento;
           this.cliente = response.data.obj.orcamento.cliente;
         }),
-        //this.orcamento.id = id
-        this.$bvModal.show("modal-3");
+          //this.orcamento.id = id
+          this.$bvModal.show("modal-3");
       },
       showModal(tipo, id) {
         let $this = this;
@@ -952,8 +1052,8 @@
             $this.showAlert("Falha ao procurar Orcamento", "danger");
           }
         }).catch(function (error) {
-            $this.showAlert("Falha ao procurar Orcamento", "danger");
-          });
+          $this.showAlert("Falha ao procurar Orcamento", "danger");
+        });
       },
       deleteOrcamentoConfirmed(id) {
         const found = this.orcamentos.find(element => element.id === id);
@@ -970,7 +1070,7 @@
         })
           .then(value => {
             this.boxTwo = value
-           // console.log(value)
+            // console.log(value)
             if (this.boxTwo == true) {
               this.deleteOrcamento(id)
             } else {
@@ -1044,7 +1144,7 @@
           return;
         }
         if (isValid) {
-       
+
           var url = "https://localhost:44376/Orcamento/CriarOrcamento";
           if (this.tpOperacao == "Editar") {
             url = "https://localhost:44376/Orcamento/EditarOrcamento";
@@ -1144,6 +1244,7 @@
     mounted() {
       this.getOrcamentos(1, 10);
       this.getFuncionarios(1, 10);
+      this.getTodosOrcamentos();
     },
     watch: {
       currentPage: function (novo, velho) {
@@ -1167,20 +1268,23 @@
       },
     },
     computed: {
+      somaRelatorio() {
+        return parseFloat(this.todosOrcamentos.reduce((acc, item) => acc + (item.valorTotal), 0)).toFixed(2);
+      },
       Sum() {
         var retorno = (parseFloat(this.orcamento.maoDeObra) + parseFloat(this.lstprodutos.reduce((Sum, product) => product.valorItem * product.quantidade + Sum, 0))).toFixed(2)
         if (isNaN(retorno)) {
           return 0;
         }
         else {
+          this.orcamento.valorTotal = retorno
           return retorno;
         }
-       
+
       },
     }
   }
 </script>
-
 <style>
   input[type], input[type="*"] {
     color: black

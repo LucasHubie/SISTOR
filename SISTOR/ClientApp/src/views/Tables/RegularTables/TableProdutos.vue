@@ -186,12 +186,11 @@
         <template #modal-footer="{ ok, cancel, hide }">
           <b-row>
             <b-col lg="12">
+              <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
+                <span class="btn-inner--text">Cancelar</span>
+              </base-button>
               <base-button type="success" class="float-right" style="margin-right: 10px;">
                 <span class="btn-inner--text" v-on:click="sendForm()">Confirmar</span>
-              </base-button>
-              <base-button type="secondary" class="float-right" style="margin-right: 10px;" @click="cancel()">
-
-                <span class="btn-inner--text">Cancelar</span>
               </base-button>
             </b-col>
           </b-row>
