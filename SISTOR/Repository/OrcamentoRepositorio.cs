@@ -149,6 +149,11 @@ namespace SISTOR.Repository
             return _context.Orcamento.Include("Cliente.Pessoa").ToList();
         }
 
+        public List<Orcamento> GetOrcamentosPorData(DateTime dataRel)
+        {
+            return _context.Orcamento.Include("Cliente.Pessoa").Where(x => x.DataInclusao.Month == dataRel.Month && x.DataInclusao.Year == dataRel.Year).ToList();
+        }
+
         public retornoOrcamentos GetOrcamentos(int pageNumber, int pageSize)
         {
             retornoOrcamentos objretorno = new retornoOrcamentos();

@@ -48,23 +48,27 @@
             <b-row>
               <b-col lg="3">
                 <label>Total mensal</label>
-                <month-picker-input v-model="relatorio.mes"></month-picker-input>
-                
+                <!--<month-picker-input v-model="relatorio.mes"></month-picker-input>-->
+                <datepicker :language="ptBR" v-model="relatorio.mes"></datepicker>
               </b-col>
               <b-col lg="4">
-                <base-button type="success" class="float-right" style="  top: 40%" v-b-modal.modal-rel v-on:click="getOrcamentos(1,10)">
-                  <span class="btn-inner--text">Gerar Relatório</span>
+                <base-button type="success" class="float-right" style="  top: 40%" v-b-modal.modal-rel v-on:click="getOrcamentosPorData()">
+                  <span class="btn-inner--text">Relatório mensal</span>
                 </base-button>
               </b-col>
-              
+              <b-col lg="3">
+                <base-button type="success" class="float-right" style="  top: 40%" v-b-modal.modal-rel v-on:click="getTodosOrcamentos()">
+                  <span class="btn-inner--text">Relatório total</span>
+                </base-button>
+              </b-col>
             </b-row>
 
           </b-col>
           
-          <!--<b-col lg="3" v-if="selected == 'F'">
+          <!--<b-col lg="3">
 
-            <base-button type="success" class="float-right" style=" margin: 0; position: absolute; top: 50%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-b-modal.modal-rel v-on:click="getOrcamentos(1,10)">
-              <span class="btn-inner--text">Gerar Relatório</span>
+            <base-button type="success" class="float-right" style=" margin: 0; position: absolute; top: 70%; -ms-transform: translateY(-50%); transform: translateY(-50%);" v-b-modal.modal-rel v-on:click="getTodosOrcamentos()">
+              <span class="btn-inner--text">Relatório total</span>
             </base-button>
           </b-col>-->
 
@@ -191,8 +195,8 @@
               <th>Descrição</th>
               <th>Status</th>
               <th>Cliente</th>
-              <th>Valor do itens</th>
-              <th>Valor mão de obra</th>
+              <th>Data de inclusão</th>
+              <!--<th>Valor mão de obra</th>-->
               <th>Total</th>
             </tr>
           </thead>
@@ -207,8 +211,8 @@
 
               <td v-if="orcamentoloop.cliente.pessoa.tipoPessoa == 1" style="vertical-align: middle; " class="tdpading05"> {{orcamentoloop.cliente.pessoa.nome}}</td>
               <td v-if="orcamentoloop.cliente.pessoa.tipoPessoa == 2" style="vertical-align: middle; " class="tdpading05"> {{orcamentoloop.cliente.pessoa.nomeFantasia}}</td>
-              <td style="vertical-align: middle; " class="tdpading05"> {{orcamentoloop.valorItem}}</td>
-              <td style="vertical-align: middle; " class="tdpading05"> {{orcamentoloop.maoDeObra}}</td>
+              <td style="vertical-align: middle; " class="tdpading05"> {{dataAtualFormatada(orcamentoloop.dataInclusao)}}</td>
+              <!--<td style="vertical-align: middle; " class="tdpading05"> {{orcamentoloop.maoDeObra}}</td>-->
               <td style="vertical-align: middle; " class="tdpading05"> {{orcamentoloop.valorTotal}}</td>
 
             </tr>
@@ -219,6 +223,17 @@
             </tr>
           </tfoot>
         </table>
+        
+        <template #modal-footer>
+          <b-row>
+            <b-col lg="12">
+              <base-button type="success" class="float-right" style="margin-right: 10px;" v-on:click="fecharRelatorio">
+                <span class="btn-inner--text">Fechar</span>
+              </base-button>
+
+            </b-col>
+          </b-row>
+        </template>
       </b-modal>
 
       <b-modal id="modal-1" :title="tpOperacao + ' Orçamento'" size="xl">
@@ -766,6 +781,7 @@
   import { parse } from 'date-fns';
   import Datepicker from 'vuejs-datepicker';
   import { MonthPickerInput } from 'vue-month-picker'
+  import { ptBR } from 'vuejs-datepicker/dist/locale'
   import { Table, TableColumn, DropdownMenu, DropdownItem, Dropdown } from 'element-ui'
 
   
@@ -782,6 +798,7 @@
     },
     data() {
       return {
+        ptBR: ptBR,
         disabledall: false,
         nomeclientebusca: '',
         buscaproduto: '',
@@ -876,6 +893,9 @@
       cancelaSituacao() {
         this.$bvModal.hide('modal-3')
       },
+      fecharRelatorio() {
+        this.$bvModal.hide('modal-rel')
+      },
       getTextoSituacao: function (situacao) {
         console.log(situacao);
         var retorno = "";
@@ -925,6 +945,19 @@
         }).then(response => {
           this.orcamentos = response.data.lst;
           this.qntdRegistros = response.data.qntdRegistros;
+        })
+          .catch(function (error) {
+            $this.showAlert("Falha ao Carregar Orcamentos", "danger");
+          });
+      },
+      getOrcamentosPorData() {
+        let $this = this;
+        var dataRel = this.relatorio.mes
+        axios.get("https://localhost:44376/Orcamento/GetOrcamentosPorData", {
+          params: { "dataRel": dataRel }
+        }).then(response => {
+          this.todosOrcamentos = response.data;
+          console.log('por data', this.todosOrcamentos)
         })
           .catch(function (error) {
             $this.showAlert("Falha ao Carregar Orcamentos", "danger");
@@ -1272,12 +1305,13 @@
         return parseFloat(this.todosOrcamentos.reduce((acc, item) => acc + (item.valorTotal), 0)).toFixed(2);
       },
       Sum() {
+        let $this = this;
         var retorno = (parseFloat(this.orcamento.maoDeObra) + parseFloat(this.lstprodutos.reduce((Sum, product) => product.valorItem * product.quantidade + Sum, 0))).toFixed(2)
         if (isNaN(retorno)) {
           return 0;
         }
         else {
-          this.orcamento.valorTotal = retorno
+          $this.orcamento.valorTotal = retorno
           return retorno;
         }
 

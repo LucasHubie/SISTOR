@@ -17,6 +17,7 @@ namespace SISTOR.Interfaces
         public void ExcluirOrcamento(int id);
 
         public List<Orcamento> GetOrcamentos();
+        List<Orcamento> GetOrcamentosPorData(DateTime dataRel);
 
         retornoOrcamentos BuscarOrcamento(string busca, int pageNumber, int pageSize);
 

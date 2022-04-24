@@ -44,6 +44,13 @@ namespace SISTOR.Controllers
             }
             return Json(new { lst = retorno.lst, qntdRegistros = retorno.qntdRegistros });
         }
+        
+            public IActionResult GetOrcamentosPorData(DateTime dataRel)
+        {
+            List<Orcamento> orc = _orcamentoRepositorio.GetOrcamentosPorData(dataRel);
+             
+            return Json(orc);
+        }
 
         public IActionResult GetItensOrcamento()
         {
